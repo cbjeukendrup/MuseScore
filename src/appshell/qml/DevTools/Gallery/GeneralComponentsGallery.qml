@@ -15,16 +15,42 @@ Rectangle {
         id: flickableWrapper
 
         anchors.fill: parent
-        anchors.margins: 12
+        anchors.margins: 30
 
         contentHeight: contentColumn.implicitHeight
+
+        ScrollBar.vertical: StyledScrollBar {}
 
         Column {
             id: contentColumn
 
             width: parent.width
-
             spacing: 24
+
+            ButtonGroup {
+                id: buttonGroup
+            }
+
+            RowLayout {
+                spacing: 12
+
+                StyledTextLabel {
+                    text: "Section Header Type:"
+                    font: ui.theme.bodyBoldFont
+                }
+
+                StyledComboBox {
+                    id: headerTypeComboBox
+                    model: [
+                        { textRole: "Title Only", valueRole: Section.TitleOnly },
+                        { textRole: "CheckBox", valueRole: Section.CheckBox },
+                        { textRole: "RadioButton", valueRole: Section.RadioButton },
+                        { textRole: "Expandable", valueRole: Section.Expandable }
+                    ]
+                    textRoleName: "textRole"
+                    valueRoleName: "valueRole"
+                }
+            }
 
             Repeater {
                 width: parent.width
@@ -59,19 +85,20 @@ Rectangle {
                 delegate: Column {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 8
-
                     spacing: 24
 
-                    StyledTextLabel {
-                        text: modelData["textRole"]
-                    }
+                    SeparatorLine { }
 
-                    Loader {
-                        sourceComponent: modelData["componentRole"]
+                    Section {
+                        title: modelData["textRole"]
+                        headerType: headerTypeComboBox.value
+                        radioButtonGroup: buttonGroup
+                        contentComponent: Column {
+                            Loader {
+                                sourceComponent: modelData["componentRole"]
+                            }
+                        }
                     }
-
-                    SeparatorLine { anchors.margins: -18}
                 }
             }
         }
@@ -335,21 +362,44 @@ Rectangle {
     Component {
         id: expandableBlankSample
 
-        ExpandableBlank {
-            title: isExpanded ? "Collapse me" : "Expand me"
+        Column {
+            spacing: 30
 
-            width: 200
+            ExpandableBlank {
+                title: isExpanded ? "Collapse me" : "Expand me"
 
-            contentItemComponent: Rectangle {
-                implicitHeight: 50
                 width: 200
 
-                color: "gray"
+                contentItemComponent: Rectangle {
+                    implicitHeight: 50
+                    width: 200
 
-                StyledTextLabel {
-                    anchors.fill: parent
+                    color: "gray"
 
-                    text: "Some content"
+                    StyledTextLabel {
+                        anchors.fill: parent
+
+                        text: "Some content"
+                    }
+                }
+            }
+
+            Section {
+                title: isExpanded ? "Collapse me" : "Expand me"
+                headerType: Section.Expandable
+                width: 200
+
+                Rectangle {
+                    implicitHeight: 50
+                    width: 200
+
+                    color: "gray"
+
+                    StyledTextLabel {
+                        anchors.fill: parent
+
+                        text: "Some content"
+                    }
                 }
             }
         }
