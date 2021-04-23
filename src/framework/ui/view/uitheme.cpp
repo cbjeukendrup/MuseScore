@@ -342,9 +342,9 @@ void UiTheme::setupWidgetTheme()
 
     QApplication::setPalette(palette);
 
-    QFont widgetsFont = bodyFont();
-    widgetsFont.setPointSize(configuration()->fontSize(FontSizeType::BODY));
-    QApplication::setFont(widgetsFont);
+    QString styleSheet = QString("*, QSpinBox { font: %1px \"%2\" } ")
+                         .arg(QString::number(bodyFont().pixelSize()), bodyFont().family());
+    qApp->setStyleSheet(styleSheet);
 }
 
 void UiTheme::notifyAboutThemeChanged()
