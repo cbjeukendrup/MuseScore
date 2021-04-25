@@ -41,7 +41,11 @@ class EventsWatcher;
 class DockWindow : public QQuickItem, public ui::IMainWindow
 {
     Q_OBJECT
+
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
+    Q_PROPERTY(bool fileModified READ fileModified WRITE setFileModified NOTIFY fileModifiedChanged)
+
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor NOTIFY borderColorChanged)
 
@@ -61,6 +65,9 @@ public:
     explicit DockWindow(QQuickItem* parent = nullptr);
 
     QString title() const;
+    QString filePath() const;
+    bool fileModified() const;
+
     QColor color() const;
     QColor borderColor() const;
 
@@ -76,6 +83,9 @@ public:
 
 public slots:
     void setTitle(QString title);
+    void setFilePath(QString filePath);
+    void setFileModified(bool fileModified);
+
     void setColor(QColor color);
     void setBorderColor(QColor color);
     void setCurrentPageUri(QString uri);
@@ -83,6 +93,9 @@ public slots:
 
 signals:
     void titleChanged(QString title);
+    void filePathChanged(QString filePath);
+    void fileModifiedChanged(bool fileModified);
+
     void colorChanged(QColor color);
     void borderColorChanged(QColor color);
     void currentPageUriChanged(QString currentPageUri);

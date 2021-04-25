@@ -40,6 +40,7 @@
 #include "view/notationpagemodel.h"
 #include "view/aboutmodel.h"
 #include "view/startupmodel.h"
+#include "view/mainwindowtitleprovider.h"
 #include "view/preferences/preferencesmodel.h"
 #include "view/preferences/generalpreferencesmodel.h"
 #include "view/preferences/updatepreferencesmodel.h"
@@ -130,6 +131,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<NotationPageModel>("MuseScore.AppShell", 1, 0, "NotationPageModel");
     qmlRegisterType<AboutModel>("MuseScore.AppShell", 1, 0, "AboutModel");
     qmlRegisterType<StartupModel>("MuseScore.AppShell", 1, 0, "StartupModel");
+    qmlRegisterType<MainWindowTitleProvider>("MuseScore.AppShell", 1, 0, "MainWindowTitleProvider");
 }
 
 void AppShellModule::onInit(const IApplication::RunMode&)

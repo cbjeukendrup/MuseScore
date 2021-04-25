@@ -35,7 +35,9 @@ import "./DevTools"
 DockWindow {
     id: dockWindow
 
-    title: qsTrc("appshell", "MuseScore 4")
+    title: titleProvider.title
+    filePath: titleProvider.filePath
+    fileModified: titleProvider.fileModified
 
     color: ui.theme.backgroundPrimaryColor
     borderColor: ui.theme.strokeColor
@@ -44,6 +46,7 @@ DockWindow {
         shortcutsModel.load()
         appMenuModel.load()
         startupModel.load()
+        titleProvider.load()
     }
 
     property var provider: InteractiveProvider {
@@ -83,6 +86,7 @@ DockWindow {
     property ShortcutsInstanceModel shortcutsModel: ShortcutsInstanceModel {}
     property AppMenuModel appMenuModel: AppMenuModel {}
     property StartupModel startupModel: StartupModel {}
+    property MainWindowTitleProvider titleProvider: MainWindowTitleProvider {}
 
     property NavigationSection topToolNavSec: NavigationSection {
         name: "TopTool"

@@ -327,6 +327,36 @@ void DockWindow::setTitle(QString title)
     emit titleChanged(m_title);
 }
 
+QString DockWindow::filePath() const
+{
+    return m_window->windowFilePath();
+}
+
+void DockWindow::setFilePath(QString filePath)
+{
+    if (filePath == this->filePath()) {
+        return;
+    }
+
+    m_window->setWindowFilePath(filePath);
+    emit filePathChanged(filePath);
+}
+
+bool DockWindow::fileModified() const
+{
+    return m_window->isWindowModified();
+}
+
+void DockWindow::setFileModified(bool fileModified)
+{
+    if (fileModified == this->fileModified()) {
+        return;
+    }
+
+    m_window->setWindowModified(fileModified);
+    emit fileModifiedChanged(fileModified);
+}
+
 QColor DockWindow::color() const
 {
     return m_color;
