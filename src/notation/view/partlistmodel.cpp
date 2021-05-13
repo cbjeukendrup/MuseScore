@@ -40,6 +40,7 @@ PartListModel::PartListModel(QObject* parent)
 void PartListModel::load()
 {
     beginResetModel();
+    m_notations.clear();
 
     IMasterNotationPtr masterNotation = this->masterNotation();
     if (!masterNotation) {
@@ -144,6 +145,38 @@ bool PartListModel::hasSelection() const
     return m_selectionModel->hasSelection();
 }
 
+bool PartListModel::isMovingUpAvailable() const
+{
+    if (!m_selectionModel->hasSelection()) {
+        return false;
+    }
+
+    auto selectedRowsSorted = this->selectedRowsSorted();
+
+    //! NOTE Main Notation is at 0, so the score at 1 cannot be moved up.
+    return selectedRowsSorted.front() > 1;
+}
+
+bool PartListModel::isMovingDownAvailable() const
+{
+    if (!m_selectionModel->hasSelection()) {
+        return false;
+    }
+
+    auto selectedRowsSorted = this->selectedRowsSorted();
+    if (selectedRowsSorted.back() >= rowCount() - 1) {
+        return false;
+    }
+
+    for (int index : selectedRowsSorted) {
+        if (isMainNotation(m_notations[index])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool PartListModel::isRemovingAvailable() const
 {
     if (!m_selectionModel->hasSelection()) {
@@ -170,6 +203,94 @@ void PartListModel::createNewPart()
 
     int index = m_notations.size();
     insertNotation(index, notation);
+}
+
+void PartListModel::moveSelectedPartsUp()
+{
+    auto selectedRowsSorted = this->selectedRowsSorted();
+    if (selectedRowsSorted.isEmpty()) {
+        return;
+    }
+
+    QList<QList<int> > groups;
+    for (int index : selectedRowsSorted) {
+        if (groups.count() > 0
+            && groups.back().count() > 0
+            && groups.back().back() + 1 == index) {
+            groups.back() << index;
+        } else {
+            groups << QList { index };
+        }
+    }
+
+    int destinationRow = selectedRowsSorted.front() - 1;
+    if (destinationRow < 1) { // Can't move to 0, because 0 is main score
+        return;
+    }
+
+    for (QList<int> group : groups) {
+        int sourceRow = group.front();
+        int count = group.count();
+
+        if (!beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1,
+                           QModelIndex(), destinationRow)) {
+            continue;
+        }
+
+        for (int index : group) {
+            m_notations.move(index, destinationRow);
+            destinationRow++;
+        }
+
+        endMoveRows();
+    }
+
+    emit selectionChanged();
+}
+
+void PartListModel::moveSelectedPartsDown()
+{
+    auto selectedRowsSorted = this->selectedRowsSorted();
+    if (selectedRowsSorted.isEmpty()) {
+        return;
+    }
+
+    QList<QList<int> > groups;
+    for (int index : selectedRowsSorted) {
+        if (groups.count() > 0
+            && groups.back().count() > 0
+            && groups.back().back() + 1 == index) {
+            groups.back() << index;
+        } else {
+            groups << QList { index };
+        }
+    }
+
+    int destinationRow = selectedRowsSorted.back() + 1;
+    if (destinationRow > rowCount()) {
+        return;
+    }
+
+    int moved = 0;
+    for (QList<int> group : groups) {
+        int sourceRow = group.front() - moved;
+        int count = group.count();
+
+        if (!beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1,
+                           QModelIndex(), destinationRow + 1)) {
+            continue;
+        }
+
+        for (int index : group) {
+            UNUSED(index);
+            m_notations.move(sourceRow, destinationRow);
+        }
+
+        moved += count;
+        endMoveRows();
+    }
+
+    emit selectionChanged();
 }
 
 void PartListModel::selectPart(int partIndex)
@@ -341,6 +462,14 @@ QList<int> PartListModel::selectedRows() const
     for (const QModelIndex& index: m_selectionModel->selectedIndexes()) {
         result << index.row();
     }
+
+    return result;
+}
+
+QList<int> PartListModel::selectedRowsSorted() const
+{
+    QList<int> result = selectedRows();
+    std::sort(result.begin(), result.end());
 
     return result;
 }

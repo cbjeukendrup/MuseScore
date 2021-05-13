@@ -57,24 +57,20 @@ StyledDialogView {
         anchors.fill: parent
         spacing: 0
 
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: childrenRect.height
+        RowLayout {
             Layout.topMargin: privateProperties.sideMargin
+            Layout.leftMargin: privateProperties.sideMargin
+            Layout.rightMargin: privateProperties.buttonsMargin
 
             StyledTextLabel {
-                anchors.left: parent.left
-                anchors.leftMargin: privateProperties.sideMargin
-
+                Layout.fillWidth: true
                 text: qsTrc("notation", "Parts")
                 font: ui.theme.headerBoldFont
+                horizontalAlignment: Text.AlignLeft
             }
 
             FlatButton {
                 text: qsTrc("notation", "Create new part")
-
-                anchors.right: deleteButton.left
-                anchors.rightMargin: 8
 
                 onClicked: {
                     partsModel.createNewPart()
@@ -82,13 +78,25 @@ StyledDialogView {
             }
 
             FlatButton {
-                id: deleteButton
+                icon: IconCode.ARROW_UP
+                enabled: partsModel.isMovingUpAvailable
 
-                anchors.right: parent.right
-                anchors.rightMargin: privateProperties.buttonsMargin
+                onClicked: {
+                    partsModel.moveSelectedPartsUp()
+                }
+            }
 
+            FlatButton {
+                icon: IconCode.ARROW_DOWN
+                enabled: partsModel.isMovingDownAvailable
+
+                onClicked: {
+                    partsModel.moveSelectedPartsDown()
+                }
+            }
+
+            FlatButton {
                 icon: IconCode.DELETE_TANK
-
                 enabled: partsModel.isRemovingAvailable
 
                 onClicked: {
