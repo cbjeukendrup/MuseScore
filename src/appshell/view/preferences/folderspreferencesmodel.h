@@ -63,6 +63,7 @@ private:
         Undefined,
         Scores,
         Styles,
+        MusicFonts,
         Templates,
         Plugins,
         SoundFonts,
@@ -80,6 +81,7 @@ private:
 
     QString scoresPath() const;
     QString stylesPath() const;
+    QString musicFontsPath() const;
     QString templatesPath() const;
     QString pluginsPath() const;
     QString extensionsPath() const;

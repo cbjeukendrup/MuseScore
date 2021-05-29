@@ -110,6 +110,9 @@ public:
     io::path partStyleFilePath() const override;
     void setPartStyleFilePath(const io::path& path) override;
 
+    ValCh<io::path> musicFontsPath() const override;
+    void setMusicFontsPath(const io::path& path) override;
+
     bool isMidiInputEnabled() const override;
     void setIsMidiInputEnabled(bool enabled) override;
 
@@ -162,6 +165,7 @@ private:
     async::Channel<int> m_currentZoomChanged;
     async::Channel<framework::Orientation> m_canvasOrientationChanged;
     async::Channel<io::path> m_stylesPathChanged;
+    async::Channel<io::path> m_musicFontsPathChanged;
     async::Channel<int> m_selectionColorChanged;
 };
 }

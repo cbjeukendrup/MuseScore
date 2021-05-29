@@ -83,6 +83,7 @@ void FoldersPreferencesModel::load()
     m_folders = {
         { FolderType::Scores, qtrc("appshell", "Scores"), scoresPath() },
         { FolderType::Styles, qtrc("appshell", "Styles"), stylesPath() },
+        { FolderType::MusicFonts, qtrc("appshell", "Music Fonts"), musicFontsPath() },
         { FolderType::Templates, qtrc("appshell", "Templates"), templatesPath() },
         { FolderType::Plugins, qtrc("appshell", "Plugins"), pluginsPath() },
         { FolderType::SoundFonts, qtrc("appshell", "SoundFonts"), "" }, // todo: need implement
@@ -103,6 +104,10 @@ void FoldersPreferencesModel::setupConnections()
 
     notationConfiguration()->stylesPath().ch.onReceive(this, [this](const io::path& path) {
         setPath(FolderType::Styles, path.toQString());
+    });
+
+    notationConfiguration()->musicFontsPath().ch.onReceive(this, [this](const io::path& path) {
+        setPath(FolderType::MusicFonts, path.toQString());
     });
 
     userScoresConfiguration()->templatesPath().ch.onReceive(this, [this](const io::path& path) {
@@ -128,6 +133,9 @@ void FoldersPreferencesModel::savePath(FoldersPreferencesModel::FolderType folde
         break;
     case FolderType::Styles:
         notationConfiguration()->setStylesPath(folderPath);
+        break;
+    case FolderType::MusicFonts:
+        notationConfiguration()->setMusicFontsPath(folderPath);
         break;
     case FolderType::Templates:
         userScoresConfiguration()->setTemplatesPath(folderPath);
@@ -155,6 +163,11 @@ QString FoldersPreferencesModel::scoresPath() const
 QString FoldersPreferencesModel::stylesPath() const
 {
     return notationConfiguration()->stylesPath().val.toQString();
+}
+
+QString FoldersPreferencesModel::musicFontsPath() const
+{
+    return notationConfiguration()->musicFontsPath().val.toQString();
 }
 
 QString FoldersPreferencesModel::templatesPath() const

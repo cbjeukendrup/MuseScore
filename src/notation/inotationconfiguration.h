@@ -107,6 +107,9 @@ public:
     virtual io::path partStyleFilePath() const = 0;
     virtual void setPartStyleFilePath(const io::path& path) = 0;
 
+    virtual ValCh<io::path> musicFontsPath() const = 0;
+    virtual void setMusicFontsPath(const io::path& path) = 0;
+
     virtual bool isMidiInputEnabled() const = 0;
     virtual void setIsMidiInputEnabled(bool enabled) = 0;
 

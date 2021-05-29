@@ -63,6 +63,7 @@ static const Settings::Key MOUSE_ZOOM_PRECISION(module_name, "ui/canvas/zoomPrec
 static const Settings::Key USER_STYLES_PATH(module_name, "application/paths/myStyles");
 static const Settings::Key DEFAULT_STYLE_FILE_PATH(module_name, "score/style/defaultStyleFile");
 static const Settings::Key PART_STYLE_FILE_PATH(module_name, "score/style/partStyleFile");
+static const Settings::Key USER_MUSIC_FONTS_PATH(module_name, "application/paths/myMusicFonts");
 
 static const Settings::Key IS_MIDI_INPUT_ENABLED(module_name, "io/midi/enableInput");
 static const Settings::Key IS_AUTOMATICALLY_PAN_ENABLED(module_name, "application/playback/panPlayback");
@@ -136,6 +137,11 @@ void NotationConfiguration::init()
     settings()->setDefaultValue(USER_STYLES_PATH, Val(globalConfiguration()->sharePath().toStdString() + "Styles"));
     settings()->valueChanged(USER_STYLES_PATH).onReceive(nullptr, [this](const Val& val) {
         m_stylesPathChanged.send(val.toString());
+    });
+
+    settings()->setDefaultValue(USER_MUSIC_FONTS_PATH, Val(globalConfiguration()->sharePath().toStdString() + "MusicFonts"));
+    settings()->valueChanged(USER_MUSIC_FONTS_PATH).onReceive(nullptr, [this](const Val& val) {
+        m_musicFontsPathChanged.send(val.toString());
     });
 
     settings()->setDefaultValue(SELECTION_PROXIMITY, Val(6));
@@ -422,6 +428,20 @@ io::path NotationConfiguration::partStyleFilePath() const
 void NotationConfiguration::setPartStyleFilePath(const io::path& path)
 {
     settings()->setValue(PART_STYLE_FILE_PATH, Val(path.toStdString()));
+}
+
+ValCh<io::path> NotationConfiguration::musicFontsPath() const
+{
+    ValCh<io::path> result;
+    result.ch = m_musicFontsPathChanged;
+    result.val = settings()->value(USER_MUSIC_FONTS_PATH).toString();
+
+    return result;
+}
+
+void NotationConfiguration::setMusicFontsPath(const io::path& path)
+{
+    settings()->setValue(USER_MUSIC_FONTS_PATH, Val(path.toStdString()));
 }
 
 bool NotationConfiguration::isMidiInputEnabled() const
