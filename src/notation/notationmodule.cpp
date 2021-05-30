@@ -37,6 +37,7 @@
 #include "internal/notationwritersregister.h"
 #include "internal/mscznotationreader.h"
 #include "internal/msczmetareader.h"
+#include "internal/scorefontscontroller.h"
 
 #include "view/notationpaintview.h"
 #include "view/notationswitchlistmodel.h"
@@ -74,6 +75,7 @@ static std::shared_ptr<NotationConfiguration> s_configuration = std::make_shared
 static std::shared_ptr<NotationActionController> s_actionController = std::make_shared<NotationActionController>();
 static std::shared_ptr<NotationUiActions> s_notationUiActions = std::make_shared<NotationUiActions>(s_actionController);
 static std::shared_ptr<MidiInputController> s_midiInputController = std::make_shared<MidiInputController>();
+static std::shared_ptr<ScoreFontsController> s_scoreFontsController = std::make_shared<ScoreFontsController>();
 
 static void notationscene_init_qrc()
 {
@@ -183,6 +185,7 @@ void NotationModule::onInit(const IApplication::RunMode&)
     s_actionController->init();
     s_notationUiActions->init();
     s_midiInputController->init();
+    s_scoreFontsController->init();
 
     Notation::init();
 }

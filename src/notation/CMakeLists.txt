@@ -109,6 +109,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/inotationselectionrange.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/instrumentsconverter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/instrumentsconverter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/scorefontscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/scorefontscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/inotationcontextmenu.h
     ${CMAKE_CURRENT_LIST_DIR}/view/notationpaintview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/notationpaintview.h

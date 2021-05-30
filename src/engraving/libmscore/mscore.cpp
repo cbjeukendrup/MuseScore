@@ -68,7 +68,6 @@
 #include "spatium.h"
 #include "barline.h"
 #include "skyline.h"
-#include "scorefont.h"
 
 namespace Ms {
 bool MScore::debugMode = false;
@@ -314,7 +313,6 @@ void MScore::init()
     //
     _baseStyle.precomputeValues();
 
-    ScoreFont::initScoreFonts();
     StaffType::initStaffTypes();
     initDrumset();
     FiguredBass::readConfigFile(0);

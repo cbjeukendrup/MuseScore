@@ -59,6 +59,7 @@ public:
     double textEnclosureThickness();
 
     static void initScoreFonts();
+    static void setUserScoreFonts(const std::vector<ScoreFont>& userfonts);
     static const std::vector<ScoreFont>& availableScoreFonts();
     static ScoreFont* fontByName(const QString& name);
     static ScoreFont* fallbackFont();
@@ -115,7 +116,9 @@ private:
     std::list<std::pair<Sid, QVariant> > m_engravingDefaults;
     double m_textEnclosureThickness = 0;
 
+    static std::vector<ScoreFont> s_allScoreFonts;
     static std::vector<ScoreFont> s_builtinScoreFonts;
+    static std::vector<ScoreFont> s_userScoreFonts;
     static std::array<uint, size_t(SymId::lastSym) + 1> s_mainSymCodeTable;
 };
 }

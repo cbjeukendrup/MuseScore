@@ -49,6 +49,8 @@ std::vector<ScoreFont> ScoreFont::s_builtinScoreFonts {
     ScoreFont("MuseJazz",   "MuseJazz",    ":/fonts/musejazz/",  "MuseJazz.otf"),
     ScoreFont("Petaluma",   "Petaluma",    ":/fonts/petaluma/",  "Petaluma.otf"),
 };
+std::vector<ScoreFont> ScoreFont::s_userScoreFonts { };
+std::vector<ScoreFont> ScoreFont::s_allScoreFonts { };
 
 std::array<uint, size_t(SymId::lastSym) + 1> ScoreFont::s_mainSymCodeTable { { 0 } };
 
@@ -151,6 +153,25 @@ void ScoreFont::initScoreFonts()
     fallbackFont(); // load fallback font
 }
 
+void ScoreFont::setUserScoreFonts(const std::vector<ScoreFont>& userfonts)
+{
+    // TODO: Check for fonts that duplicate built-in fonts
+    s_userScoreFonts.clear();
+
+    // Make sure the fonts are loaded, to avoid the situation that MuseScore
+    // thinks a font exists but in practice it has disappeared.
+    for (const ScoreFont& f : userfonts) {
+        ScoreFont font = f;
+        if (!font.m_loaded) {
+            font.load();
+        }
+        s_userScoreFonts.push_back(font);
+    }
+
+    s_allScoreFonts = s_builtinScoreFonts;
+    s_allScoreFonts.insert(s_allScoreFonts.end(), s_userScoreFonts.cbegin(), s_userScoreFonts.cend());
+}
+
 QJsonObject ScoreFont::initGlyphNamesJson()
 {
     QFile fi(":fonts/smufl/glyphnames.json");
@@ -178,13 +199,13 @@ QJsonObject ScoreFont::initGlyphNamesJson()
 
 const std::vector<ScoreFont>& ScoreFont::availableScoreFonts()
 {
-    return s_builtinScoreFonts;
+    return s_allScoreFonts;
 }
 
 ScoreFont* ScoreFont::fontByName(const QString& name)
 {
     ScoreFont* font = nullptr;
-    for (ScoreFont& f : s_builtinScoreFonts) {
+    for (ScoreFont& f : s_allScoreFonts) {
         if (f.name().toLower() == name.toLower()) { // case insensitive
             font = &f;
             break;
@@ -195,7 +216,7 @@ ScoreFont* ScoreFont::fontByName(const QString& name)
         LOGE() << "ScoreFont not found in list: " << name;
         LOGE() << "ScoreFonts in list:";
 
-        for (const ScoreFont& f : s_builtinScoreFonts) {
+        for (const ScoreFont& f : s_allScoreFonts) {
             LOGE() << "    " << f.name();
         }
 
