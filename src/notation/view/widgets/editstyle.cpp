@@ -385,8 +385,8 @@ EditStyle::EditStyle(QWidget* parent)
         { StyleId::scaleBarlines,            false, scaleBarlines,                resetScaleBarlines },
         { StyleId::crossMeasureValues,       false, crossMeasureValues,           0 },
 
-        { StyleId::MusicalSymbolFont,        false, musicalSymbolFont,            0 },
-        { StyleId::MusicalTextFont,          false, musicalTextFont,              0 },
+        { StyleId::MusicalSymbolFont,        false, musicalSymbolFontComboBox,    0 },
+        { StyleId::MusicalTextFont,          false, musicalTextFontComboBox,      0 },
         { StyleId::autoplaceHairpinDynamicsDistance, false, autoplaceHairpinDynamicsDistance,
           resetAutoplaceHairpinDynamicsDistance },
 
@@ -502,12 +502,7 @@ EditStyle::EditStyle(QWidget* parent)
 
     accidentalsGroup->setVisible(false);   // disable, not yet implemented
 
-    musicalSymbolFont->clear();
-    int idx = 0;
-    for (auto i : Ms::ScoreFont::scoreFonts()) {
-        musicalSymbolFont->addItem(i.name(), i.name());
-        ++idx;
-    }
+    fillScoreFontsComboBoxes();
 
     static const Ms::SymId ids[] = {
         Ms::SymId::systemDivider, Ms::SymId::systemDividerLong, Ms::SymId::systemDividerExtraLong
@@ -1510,33 +1505,40 @@ void EditStyle::setValues()
     doubleSpinFBVertPos->setValue(styleValue(StyleId::figuredBassYOffset).toDouble());
     spinFBLineHeight->setValue(styleValue(StyleId::figuredBassLineHeight).toDouble() * 100.0);
 
-    QString mfont(styleValue(StyleId::MusicalSymbolFont).toString());
-    int idx = 0;
-    for (const auto& i : Ms::ScoreFont::scoreFonts()) {
-        if (i.name().toLower() == mfont.toLower()) {
-            musicalSymbolFont->setCurrentIndex(idx);
-            break;
-        }
-        ++idx;
-    }
-    musicalTextFont->blockSignals(true);
-    musicalTextFont->clear();
-    // CAUTION: the second element, the itemdata, is a font family name!
-    // It's also stored in score file as the musicalTextFont
-    musicalTextFont->addItem("Leland Text", "Leland Text");
-    musicalTextFont->addItem("Bravura Text", "Bravura Text");
-    musicalTextFont->addItem("Emmentaler Text", "MScore Text");
-    musicalTextFont->addItem("Gonville Text", "Gootville Text");
-    musicalTextFont->addItem("MuseJazz Text", "MuseJazz Text");
-    musicalTextFont->addItem("Petaluma Text", "Petaluma Text");
-    QString tfont(styleValue(StyleId::MusicalTextFont).toString());
-    idx = musicalTextFont->findData(tfont);
-    musicalTextFont->setCurrentIndex(idx);
-    musicalTextFont->blockSignals(false);
+    fillScoreFontsComboBoxes();
 
     toggleHeaderOddEven(styleValue(StyleId::headerOddEven).toBool());
     toggleFooterOddEven(styleValue(StyleId::footerOddEven).toBool());
     disableVerticalSpread->setChecked(!styleValue(StyleId::enableVerticalSpread).toBool());
+}
+
+void EditStyle::fillScoreFontsComboBoxes()
+{
+    QString selectedMusicalSymbolFontName = styleValue(StyleId::MusicalSymbolFont).toString();
+    QString selectedMusicalTextFontFamily = styleValue(StyleId::MusicalTextFont).toString();
+
+    musicalSymbolFontComboBox->blockSignals(true);
+    musicalSymbolFontComboBox->clear();
+    musicalTextFontComboBox->blockSignals(true);
+    musicalTextFontComboBox->clear();
+
+    int idx = 0;
+    for (const Ms::ScoreFont& font : Ms::ScoreFont::availableScoreFonts()) {
+        musicalSymbolFontComboBox->addItem(font.name(), font.name());
+        if (font.name().toLower() == selectedMusicalSymbolFontName.toLower()) {
+            musicalSymbolFontComboBox->setCurrentIndex(idx);
+        }
+
+        musicalTextFontComboBox->addItem(font.correspondingTextFontName(), font.correspondingTextFontFamily());
+        if (font.correspondingTextFontFamily().toLower() == selectedMusicalTextFontFamily.toLower()) {
+            musicalTextFontComboBox->setCurrentIndex(idx);
+        }
+
+        ++idx;
+    }
+
+    musicalSymbolFontComboBox->blockSignals(false);
+    musicalTextFontComboBox->blockSignals(false);
 }
 
 //---------------------------------------------------------
@@ -1795,8 +1797,8 @@ const EditStyle::StyleWidget& EditStyle::styleWidget(StyleId idx) const
 
 void EditStyle::valueChanged(int i)
 {
-    StyleId idx       = (StyleId)i;
-    QVariant val  = getValue(idx);
+    StyleId idx = static_cast<StyleId>(i);
+    QVariant val = getValue(idx);
     bool setValue = false;
     if (idx == StyleId::MusicalSymbolFont && optimizeStyleCheckbox->isChecked()) {
         Ms::ScoreFont* scoreFont = Ms::ScoreFont::fontByName(val.toString());

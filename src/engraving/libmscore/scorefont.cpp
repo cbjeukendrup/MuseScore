@@ -41,7 +41,7 @@ using namespace Ms;
 
 static const int FALLBACK_FONT_INDEX = 1; // Bravura
 
-std::vector<ScoreFont> ScoreFont::s_scoreFonts {
+std::vector<ScoreFont> ScoreFont::s_builtinScoreFonts {
     ScoreFont("Leland",     "Leland",      ":/fonts/leland/",    "Leland.otf"),
     ScoreFont("Bravura",    "Bravura",     ":/fonts/bravura/",   "Bravura.otf"),
     ScoreFont("Emmentaler", "MScore",      ":/fonts/mscore/",    "mscore.ttf"),
@@ -84,6 +84,16 @@ const QString& ScoreFont::name() const
 const QString& ScoreFont::family() const
 {
     return m_family;
+}
+
+QString ScoreFont::correspondingTextFontName() const
+{
+    return m_name + " Text";
+}
+
+QString ScoreFont::correspondingTextFontFamily() const
+{
+    return m_family + " Text";
 }
 
 QString ScoreFont::fontPath() const
@@ -166,15 +176,15 @@ QJsonObject ScoreFont::initGlyphNamesJson()
 // Available ScoreFonts
 // =============================================
 
-const std::vector<ScoreFont>& ScoreFont::scoreFonts()
+const std::vector<ScoreFont>& ScoreFont::availableScoreFonts()
 {
-    return s_scoreFonts;
+    return s_builtinScoreFonts;
 }
 
 ScoreFont* ScoreFont::fontByName(const QString& name)
 {
     ScoreFont* font = nullptr;
-    for (ScoreFont& f : s_scoreFonts) {
+    for (ScoreFont& f : s_builtinScoreFonts) {
         if (f.name().toLower() == name.toLower()) { // case insensitive
             font = &f;
             break;
@@ -185,7 +195,7 @@ ScoreFont* ScoreFont::fontByName(const QString& name)
         LOGE() << "ScoreFont not found in list: " << name;
         LOGE() << "ScoreFonts in list:";
 
-        for (const ScoreFont& f : s_scoreFonts) {
+        for (const ScoreFont& f : s_builtinScoreFonts) {
             LOGE() << "    " << f.name();
         }
 
@@ -204,7 +214,7 @@ ScoreFont* ScoreFont::fontByName(const QString& name)
 
 ScoreFont* ScoreFont::fallbackFont()
 {
-    ScoreFont* font = &s_scoreFonts[FALLBACK_FONT_INDEX];
+    ScoreFont* font = &s_builtinScoreFonts[FALLBACK_FONT_INDEX];
 
     if (!font->m_loaded) {
         font->load();

@@ -84,6 +84,8 @@ private:
     QVariant getValue(StyleId idx);
     void setValues();
 
+    void fillScoreFontsComboBoxes();
+
     QVariant styleValue(StyleId id) const;
     QVariant defaultStyleValue(StyleId id) const;
     bool hasDefaultStyleValue(StyleId id) const;
