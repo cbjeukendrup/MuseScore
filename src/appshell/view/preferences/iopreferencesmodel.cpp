@@ -97,7 +97,7 @@ void IOPreferencesModel::setCurrentMidiInputDeviceIndex(int index)
 
     midiConfiguration()->setMidiInputDeviceId(deviceId);
 
-    emit currentMidiInputDeviceIndexChanged(index);
+    emit currentMidiInputDeviceIndexChanged();
 }
 
 int IOPreferencesModel::currentMidiOutputDeviceIndex() const
@@ -119,7 +119,15 @@ int IOPreferencesModel::currentMidiOutputDeviceIndex() const
 
 void IOPreferencesModel::init()
 {
-//    midiConfiguration()
+    midiInPort()->devicesChanged().onNotify(this, [this]() {
+        emit midiInputDevicesChanged();
+        emit currentMidiInputDeviceIndexChanged();
+    });
+
+    midiOutPort()->devicesChanged().onNotify(this, [this]() {
+        emit midiOutputDevicesChanged();
+        emit currentMidiOutputDeviceIndexChanged();
+    });
 }
 
 void IOPreferencesModel::setCurrentMidiOutputDeviceIndex(int index)
@@ -139,7 +147,7 @@ void IOPreferencesModel::setCurrentMidiOutputDeviceIndex(int index)
 
     midiConfiguration()->setMidiOutputDeviceId(deviceId);
 
-    emit currentMidiOutputDeviceIndexChanged(index);
+    emit currentMidiOutputDeviceIndexChanged();
 }
 
 QStringList IOPreferencesModel::audioApiList() const
