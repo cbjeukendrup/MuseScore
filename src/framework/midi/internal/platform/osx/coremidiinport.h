@@ -24,12 +24,10 @@
 
 #include <memory>
 
-#include "async/asyncable.h"
 #include "imidiinport.h"
-#include "internal/midideviceslistener.h"
 
 namespace mu::midi {
-class CoreMidiInPort : public IMidiInPort, public async::Asyncable
+class CoreMidiInPort : public IMidiInPort
 {
 public:
     CoreMidiInPort();
@@ -57,11 +55,11 @@ private:
     struct Core;
     std::unique_ptr<Core> m_core;
     MidiDeviceID m_deviceID;
-    bool m_running = false;
-    async::Channel<std::pair<tick_t, Event> > m_eventReceived;
 
     async::Notification m_devicesChanged;
-    MidiDevicesListener m_devicesListener;
+
+    bool m_running = false;
+    async::Channel<std::pair<tick_t, Event> > m_eventReceived;
 };
 }
 
