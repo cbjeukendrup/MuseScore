@@ -59,6 +59,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/startupmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/startupmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp

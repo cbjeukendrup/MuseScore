@@ -40,6 +40,7 @@
 #include "view/notationstatusbarmodel.h"
 #include "view/aboutmodel.h"
 #include "view/startupmodel.h"
+#include "view/mainwindowtitleprovider.h"
 #include "view/preferences/preferencesmodel.h"
 #include "view/preferences/generalpreferencesmodel.h"
 #include "view/preferences/updatepreferencesmodel.h"
@@ -138,6 +139,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<NotationStatusBarModel>("MuseScore.AppShell", 1, 0, "NotationStatusBarModel");
     qmlRegisterType<AboutModel>("MuseScore.AppShell", 1, 0, "AboutModel");
     qmlRegisterType<StartupModel>("MuseScore.AppShell", 1, 0, "StartupModel");
+    qmlRegisterType<MainWindowTitleProvider>("MuseScore.AppShell", 1, 0, "MainWindowTitleProvider");
     qmlRegisterType<FramelessWindowModel>("MuseScore.AppShell", 1, 0, "FramelessWindowModel");
     qmlRegisterType<PublishToolBarModel>("MuseScore.AppShell", 1, 0, "PublishToolBarModel");
 }
