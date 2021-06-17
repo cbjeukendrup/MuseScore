@@ -50,7 +50,6 @@ StyledPopupView {
             }
         }
 
-
         InspectorPropertyView {
             titleText: qsTrc("inspector", "Interpretation")
             propertyItem: root.model ? root.model.isLiteral : null
