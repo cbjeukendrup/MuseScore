@@ -1468,6 +1468,16 @@ inline uint qHash(Sid id)
 }
 
 //---------------------------------------------------------
+//   ChordSymbolStyle
+//---------------------------------------------------------
+
+struct ChordSymbolStyle {
+    QString styleName;
+    QString fileName;
+    QHash<QString,QHash<QString,bool>> styleDefaults;
+};
+
+//---------------------------------------------------------
 //   MStyle
 ///   \cond PLUGIN_API \private \endcond
 //    the name "Style" gives problems with some microsoft
@@ -1486,6 +1496,19 @@ class MStyle
 public:
     MStyle();
 
+    QList<ChordSymbolStyle> _chordSymbolStylesList = {
+        // Sample styles for testing
+        {"Standard","chords_std.xml",{
+             {"major",{{"maj",0},{"Ma",1}}},
+             {"minor",{{"min",0},{"m",1}}},
+         }
+        },{"Jazz","chords_jazz.xml",{
+               {"major",{{"maj",0},{"Ma",1}}},
+               {"minor",{{"min",0},{"m",1}}},
+           }
+        }
+    };
+
     void precomputeValues();
     const QVariant& value(Sid idx) const;
     qreal pvalue(Sid idx) const { return _precomputedValues[int(idx)]; }
@@ -1501,6 +1524,7 @@ public:
     void setChordList(ChordList*, bool custom = true);      // Style gets ownership of ChordList
     void setCustomChordList(bool t) { _customChordList = t; }
     void checkChordList();
+    QList<ChordSymbolStyle> getChordStyles() { return _chordSymbolStylesList; }
 
     bool load(QFile* qf, bool ign = false);
     void load(XmlReader& e);

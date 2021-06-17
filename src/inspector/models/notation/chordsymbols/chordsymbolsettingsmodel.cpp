@@ -67,8 +67,6 @@ void ChordSymbolSettingsModel::setChordStylesModel(ChordSymbolStylesModel* chord
     }
 
     m_chordStylesModel = chordSymbolStylesModel;
-
-    // TODO: Connect to respective signals for changing styles
 }
 
 ChordSymbolStylesModel* ChordSymbolSettingsModel::chordStylesModel() const
