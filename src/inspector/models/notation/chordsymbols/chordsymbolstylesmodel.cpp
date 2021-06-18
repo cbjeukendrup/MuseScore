@@ -23,10 +23,12 @@
 
 using namespace mu::inspector;
 using namespace mu::notation;
+
 ChordSymbolStylesModel::ChordSymbolStylesModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    m_styles = globalContext()->currentNotation()->score()->style().getChordStyles();
+    styleManager = new ChordSymbolStyleManager();
+    m_styles = styleManager->getChordStyles();
 }
 
 int ChordSymbolStylesModel::rowCount(const QModelIndex&) const
@@ -44,7 +46,7 @@ QHash<int, QByteArray> ChordSymbolStylesModel::roleNames() const
     return roles;
 }
 
-QVariant ChordSymbolStylesModel::data(const QModelIndex &index, int role) const
+QVariant ChordSymbolStylesModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || index.row() >= rowCount() || m_styles.isEmpty()) {
         return QVariant();
@@ -53,26 +55,27 @@ QVariant ChordSymbolStylesModel::data(const QModelIndex &index, int role) const
     Ms::ChordSymbolStyle chordSymbolStyle = m_styles.at(index.row());
 
     switch (role) {
-        case StyleNameRole:
-            return chordSymbolStyle.styleName;
-        case FileRole:
-            return chordSymbolStyle.fileName;
-        default:
-            break;
+    case StyleNameRole:
+        return chordSymbolStyle.styleName;
+    case FileRole:
+        return chordSymbolStyle.fileName;
+    default:
+        break;
     }
 
     return QVariant();
 }
+
 void ChordSymbolStylesModel::setChordStyle(QString styleName) const
 {
-    QString f = "chords_std.xml"; // Fall back
+    QString descriptionFileName = "chords_std.xml"; // Fall back
 
-    for (auto& c: m_styles) {
-        if(c.styleName == styleName){
-            f = c.fileName;
+    for (auto& chordStyle: m_styles) {
+        if (chordStyle.styleName == styleName) {
+            descriptionFileName = chordStyle.fileName;
             break;
         }
     }
 
-    globalContext()->currentNotation()->style()->setStyleValue(StyleId::chordDescriptionFile,f);
+    globalContext()->currentNotation()->style()->setStyleValue(StyleId::chordDescriptionFile, descriptionFileName);
 }

@@ -35,7 +35,7 @@
 
   ]>
 
-<museScore version="1.24">
+<museScore version="1.24" type="chordStyle" styleName="Jazz">
 
 <!--
       Part I: font list
