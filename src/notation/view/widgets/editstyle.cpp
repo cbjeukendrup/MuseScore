@@ -24,6 +24,7 @@
 #include "settings.h"
 
 #include <QButtonGroup>
+#include <QQuickWidget>
 #include <QSignalMapper>
 #include <sstream>
 
@@ -628,6 +629,17 @@ EditStyle::EditStyle(QWidget* parent)
     topBottomMargin /= 2;
     topBottomMargin = topBottomMargin > 4 ? topBottomMargin - 4 : 0;
     automaticCapitalization->layout()->setContentsMargins(9, topBottomMargin, 9, topBottomMargin);
+
+    // ====================================================
+    // Chord Symbols (QML)
+    // ====================================================
+
+    QQuickWidget* chordSymbolsQuickWidget = new QQuickWidget(
+        /*QmlEngine*/ qmlEngineProvider()->qmlEngine(), /*parent*/ PageChordSymbolsTest);
+    chordSymbolsQuickWidget->setObjectName("chordSymbolsQuickWidget");
+    chordSymbolsQuickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+    chordSymbolsQuickWidget->setSource(QUrl(QString::fromUtf8("qrc:/view/widgets/ChordSymbolStyleEditor.qml")));
+    PageChordSymbolsTest->layout()->addWidget(chordSymbolsQuickWidget);
 
     connect(mapper,  SIGNAL(mapped(int)), SLOT(resetStyleValue(int)));
     connect(mapper2, SIGNAL(mapped(int)), SLOT(valueChanged(int)));

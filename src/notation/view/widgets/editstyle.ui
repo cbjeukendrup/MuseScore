@@ -224,7 +224,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Dummy</string>
+        <string>Chord Symbols Test</string>
        </property>
       </item>
       <item>
@@ -11871,25 +11871,8 @@ By default, they will be placed such as that their right end are at the same lev
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="Dummy">
-       <widget class="QQuickWidget" name="DummyWidget">
-        <property name="geometry">
-         <rect>
-          <x>9</x>
-          <y>9</y>
-          <width>607</width>
-          <height>468</height>
-         </rect>
-        </property>
-        <property name="resizeMode">
-         <enum>QQuickWidget::SizeRootObjectToView</enum>
-        </property>
-        <property name="source">
-         <url>
-          <string>qrc:/view/widgets/ChordSymbolStyleEditor.qml</string>
-         </url>
-        </property>
-       </widget>
+      <widget class="QWidget" name="PageChordSymbolsTest">
+       <layout class="QVBoxLayout" name="verticalLayout_25"/>
       </widget>
       <widget class="QWidget" name="PageFretboardDiagrams">
        <layout class="QVBoxLayout" name="verticalLayout_52">
@@ -12840,11 +12823,6 @@ By default, they will be placed such as that their right end are at the same lev
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
   <customwidget>
    <class>Awl::ColorLabel</class>
    <extends>QPushButton</extends>
