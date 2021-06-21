@@ -149,6 +149,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/noteinputbarcustomiseitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/undoredomodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/undoredomodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/widgets/chordsymboleditormodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/widgets/chordsymboleditormodel.cpp
     )
 
 set(MODULE_UI
