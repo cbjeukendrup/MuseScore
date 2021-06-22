@@ -1474,7 +1474,6 @@ inline uint qHash(Sid id)
 struct ChordSymbolStyle {
     QString styleName;
     QString fileName;
-    QHash<QString, QHash<QString, bool> > styleDefaults;
 };
 
 //---------------------------------------------------------

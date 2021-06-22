@@ -26,6 +26,29 @@
 -->
 
 <museScore version="1.24" type="chordStyle" styleName="Standard">
+  <quality q = "major7th">
+    <sym>Maj7</sym>
+    <sym>triangle7</sym>
+    <sym>triangle</sym>
+  </quality>
+  <quality q = "minor">
+    <sym>mi</sym>
+    <sym>-</sym>
+    <sym>min</sym>
+  </quality>
+  <quality q = "augmented">
+    <sym>aug</sym>
+    <sym>+</sym>
+  </quality>
+  <quality q = "diminished">
+    <sym>circle</sym>
+    <sym>dim</sym>
+  </quality>
+  <quality q = "half-diminished">
+    <sym>oslash</sym>
+    <sym>0</sym>
+    <sym>min7b5</sym>
+  </quality>
 
 <!--
       Part I: font list
