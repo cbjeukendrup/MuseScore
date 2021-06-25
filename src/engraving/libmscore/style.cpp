@@ -448,6 +448,12 @@ static const StyleType styleTypes[] {
     { Sid::chordModifierAdjust,     "chordModifierAdjust",     QVariant(0.0) },
     { Sid::concertPitch,            "concertPitch",            QVariant(false) },
 
+    { Sid::chordQualityMajorSeventh, "chordQualityMajorSeventh", QVariant(QString("maj 7")) },
+    { Sid::chordQualityHalfDiminished, "chordQualityHalfDiminished", QVariant(QString("m 7 b5")) },
+    { Sid::chordQualityMinor,       "chordQualityMinor",       QVariant(QString("m")) },
+    { Sid::chordQualityAugmented,   "chordQualityAugmented",   QVariant(QString("aug")) },
+    { Sid::chordQualityDiminished,  "chordQualityDiminished",  QVariant(QString("dim")) },
+
     { Sid::createMultiMeasureRests, "createMultiMeasureRests", QVariant(false) },
     { Sid::minEmptyMeasures,        "minEmptyMeasures",        QVariant(2) },
     { Sid::minMMRestWidth,          "minMMRestWidth",          Spatium(4) },
@@ -2814,6 +2820,7 @@ void MStyle::checkChordList()
             _chordList.read("chords.xml");
         }
         _chordList.read(value(Sid::chordDescriptionFile).toString());
+        setUpQualitySymbols();
     }
 }
 
@@ -2825,6 +2832,17 @@ void MStyle::setChordList(ChordList* cl, bool custom)
 {
     _chordList       = *cl;
     _customChordList = custom;
+    setUpQualitySymbols();
+}
+
+void MStyle::setUpQualitySymbols()
+{
+    _chordList.qualitySymbols.clear();
+    _chordList.qualitySymbols.insert("minor", value(Sid::chordQualityMinor).toString());
+    _chordList.qualitySymbols.insert("half-diminished", value(Sid::chordQualityHalfDiminished).toString());
+    _chordList.qualitySymbols.insert("major7th", value(Sid::chordQualityMajorSeventh).toString());
+    _chordList.qualitySymbols.insert("diminished", value(Sid::chordQualityDiminished).toString());
+    _chordList.qualitySymbols.insert("augmented", value(Sid::chordQualityAugmented).toString());
 }
 
 //---------------------------------------------------------
@@ -3066,6 +3084,7 @@ void MStyle::load(XmlReader& e)
         } else if (tag == "ChordList") {
             _chordList.unload();
             _chordList.read(e);
+            setUpQualitySymbols();
             _customChordList = true;
             chordListTag = true;
         } else if (tag == "lyricsDashMaxLegth") { // pre-3.6 typo

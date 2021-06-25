@@ -36,9 +36,10 @@
   ]>
 
 <museScore version="1.24" type="chordStyle" styleName="Jazz">
+
   <quality q = "major7th">
-    <sym>Maj7</sym>
-    <sym>triangle7</sym>
+    <sym>Maj 7</sym>
+    <sym>triangle 7</sym>
     <sym>triangle</sym>
   </quality>
   <quality q = "minor">
@@ -57,7 +58,7 @@
   <quality q = "half-diminished">
     <sym>oslash</sym>
     <sym>0</sym>
-    <sym>min7b5</sym>
+    <sym>min 7 b5</sym>
   </quality>
 
 <!--

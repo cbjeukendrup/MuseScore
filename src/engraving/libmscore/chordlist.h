@@ -265,6 +265,7 @@ public:
     QList<RenderAction> renderListFunction;
     QList<RenderAction> renderListBase;
     QList<ChordToken> chordTokenList;
+    QHash<QString, QString> qualitySymbols;
     static int privateID;
 
     bool autoAdjust() const { return _autoAdjust; }

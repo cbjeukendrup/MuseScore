@@ -432,6 +432,11 @@ enum class Sid {
     chordExtensionAdjust,
     chordModifierMag,
     chordModifierAdjust,
+    chordQualityMajorSeventh,
+    chordQualityHalfDiminished,
+    chordQualityMinor,
+    chordQualityAugmented,
+    chordQualityDiminished,
     concertPitch,
     createMultiMeasureRests,
     minEmptyMeasures,
@@ -1510,6 +1515,7 @@ public:
     void setChordList(ChordList*, bool custom = true);      // Style gets ownership of ChordList
     void setCustomChordList(bool t) { _customChordList = t; }
     void checkChordList();
+    void setUpQualitySymbols();
 
     bool load(QFile* qf, bool ign = false);
     void load(XmlReader& e);

@@ -26,10 +26,10 @@
 -->
 
 <museScore version="1.24" type="chordStyle" styleName="Standard">
+
   <quality q = "major7th">
-    <sym>Maj7</sym>
-    <sym>triangle7</sym>
-    <sym>triangle</sym>
+    <sym>maj 7</sym>
+    <sym>ma 7</sym>
   </quality>
   <quality q = "minor">
     <sym>mi</sym>
@@ -41,13 +41,12 @@
     <sym>+</sym>
   </quality>
   <quality q = "diminished">
-    <sym>circle</sym>
     <sym>dim</sym>
+    <sym>circle</sym>
   </quality>
   <quality q = "half-diminished">
-    <sym>oslash</sym>
-    <sym>0</sym>
-    <sym>min7b5</sym>
+    <sym>m 7 b5</sym>
+    <sym>min 7 b5</sym>
   </quality>
 
 <!--
