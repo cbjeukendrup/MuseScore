@@ -78,6 +78,7 @@ public:
     void updatePropertyIndices();
     void updateQualitySymbolsIndices();
     void setQualitySymbolsLists();
+    void refreshChordSymbols();
 
     Q_INVOKABLE void setChordStyle(QString styleName);
     Q_INVOKABLE void setChordSpelling(QString spelling);
