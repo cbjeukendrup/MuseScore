@@ -36,6 +36,8 @@ class ChordSymbolStylesModel : public QAbstractListModel
 
     Q_OBJECT
 
+    Q_PROPERTY(int currentStyleIndex READ currentStyleIndex NOTIFY currentStyleIndexChanged)
+
 public:
     explicit ChordSymbolStylesModel(QObject* parent = nullptr);
 
@@ -43,7 +45,14 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void setChordStyle(QString styleName) const;
+    int currentStyleIndex() const;
+
+    void initCurrentStyleIndex();
+
+    Q_INVOKABLE void setChordStyle(QString styleName);
+
+signals:
+    void currentStyleIndexChanged();
 
 private:
     enum RoleNames {
@@ -53,6 +62,8 @@ private:
 
     QList<Ms::ChordSymbolStyle> m_styles;
     ChordSymbolStyleManager* styleManager;
+
+    int m_currentStyleIndex;
 };
 }
 #endif // CHORDSYMBOLSTYLESMODEL_H
