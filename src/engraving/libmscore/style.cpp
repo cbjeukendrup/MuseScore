@@ -442,16 +442,20 @@ static const StyleType styleTypes[] {
     { Sid::chordStyle,              "chordStyle",              QVariant(QString("std")) },
     { Sid::chordsXmlFile,           "chordsXmlFile",           QVariant(false) },
     { Sid::chordDescriptionFile,    "chordDescriptionFile",    QVariant(QString("chords_std.xml")) },
+    { Sid::chordQualityMag,         "chordQualityMag",         QVariant(1.0) },
+    { Sid::chordQualityAdjust,      "chordQualityAdjust",      QVariant(0.0) },
     { Sid::chordExtensionMag,       "chordExtensionMag",       QVariant(1.0) },
     { Sid::chordExtensionAdjust,    "chordExtensionAdjust",    QVariant(0.0) },
     { Sid::chordModifierMag,        "chordModifierMag",        QVariant(1.0) },
     { Sid::chordModifierAdjust,     "chordModifierAdjust",     QVariant(0.0) },
 
+    { Sid::chordQualitySelectionHistory, "chordQualitySelectionHistory", QVariant(QString("Standard|maj 7,m 7 b5,mi,aug,dim,omit")) },
     { Sid::chordQualityMajorSeventh, "chordQualityMajorSeventh", QVariant(QString("maj 7")) },
     { Sid::chordQualityHalfDiminished, "chordQualityHalfDiminished", QVariant(QString("m 7 b5")) },
     { Sid::chordQualityMinor,       "chordQualityMinor",       QVariant(QString("mi")) },
     { Sid::chordQualityAugmented,   "chordQualityAugmented",   QVariant(QString("aug")) },
     { Sid::chordQualityDiminished,  "chordQualityDiminished",  QVariant(QString("dim")) },
+    { Sid::chordModifierOmit, "chordModifierOmit", QVariant(QString("omit")) },
 
     { Sid::concertPitch,            "concertPitch",            QVariant(false) },
     { Sid::createMultiMeasureRests, "createMultiMeasureRests", QVariant(false) },
@@ -2811,11 +2815,13 @@ void MStyle::checkChordList()
 {
     // make sure we have a chordlist
     if (!_chordList.loaded()) {
+        qreal qmag = value(Sid::chordQualityMag).toDouble();
+        qreal qadjust = value(Sid::chordQualityAdjust).toDouble();
         qreal emag = value(Sid::chordExtensionMag).toDouble();
         qreal eadjust = value(Sid::chordExtensionAdjust).toDouble();
         qreal mmag = value(Sid::chordModifierMag).toDouble();
         qreal madjust = value(Sid::chordModifierAdjust).toDouble();
-        _chordList.configureAutoAdjust(emag, eadjust, mmag, madjust);
+        _chordList.configureAutoAdjust(qmag, qadjust, emag, eadjust, mmag, madjust);
         if (value(Sid::chordsXmlFile).toBool()) {
             _chordList.read("chords.xml");
         }
@@ -2838,11 +2844,13 @@ void MStyle::setChordList(ChordList* cl, bool custom)
 void MStyle::setUpQualitySymbols()
 {
     _chordList.qualitySymbols.clear();
+    _chordList.qualitySymbols.insert("major", "");
     _chordList.qualitySymbols.insert("minor", value(Sid::chordQualityMinor).toString());
     _chordList.qualitySymbols.insert("half-diminished", value(Sid::chordQualityHalfDiminished).toString());
     _chordList.qualitySymbols.insert("major7th", value(Sid::chordQualityMajorSeventh).toString());
     _chordList.qualitySymbols.insert("diminished", value(Sid::chordQualityDiminished).toString());
     _chordList.qualitySymbols.insert("augmented", value(Sid::chordQualityAugmented).toString());
+    _chordList.qualitySymbols.insert("omit", value(Sid::chordModifierOmit).toString());
 }
 
 //---------------------------------------------------------

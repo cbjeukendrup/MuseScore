@@ -1484,6 +1484,8 @@ qreal ChordList::position(const QStringList& names, ChordTokenClass ctc) const
 {
     QString name = names.empty() ? "" : names.first();
     switch (ctc) {
+    case ChordTokenClass::QUALITY:
+        return _qadjust;
     case ChordTokenClass::EXTENSION:
         return _eadjust;
     case ChordTokenClass::MODIFIER: {
@@ -1522,7 +1524,7 @@ void ParsedChord::stripParenthesis()
 }
 
 //---------------------------------------------------------
-//   respellQualitySymbols
+//   respellQualitySymbols (also omit symbol)
 //---------------------------------------------------------
 
 void ParsedChord::respellQualitySymbols(const ChordList* cl)
@@ -1537,7 +1539,12 @@ void ParsedChord::respellQualitySymbols(const ChordList* cl)
     // Major seventh chords
     bool isMajorSeventh = false;
     bool hasSeven = true;
-    if ((_quality == "major" || _quality == "dominant") && _extension == "7") {
+    if ((_quality == "major" || _quality == "dominant") && (_extension.contains("7") || _modifierList.contains("7"))) {
+        if (_modifierList.contains("7")) {
+            // moving extension 7 to the correct place
+            _extension += "7";
+            _modifierList.removeAll("7");
+        }
         isMajorSeventh = true;
     }
 
@@ -1555,7 +1562,13 @@ void ParsedChord::respellQualitySymbols(const ChordList* cl)
     // Half-diminished chords with input: <minor>7b5
     bool isHalfDiminished = false;
     bool hasSevenFlatFive = false;
-    if (_quality == "minor" && _extension.contains("7") && _modifierList.contains("b5")) {
+    // 7 when surrounded by parenthesis is considered as modifier. Why??? Any reason??
+    if (_quality == "minor" && (_extension.contains("7") || _modifierList.contains("7")) && _modifierList.contains("b5")) {
+        if (_modifierList.contains("7")) {
+            // moving extension 7 to the correct place
+            _extension += "7";
+            _modifierList.removeAll("7");
+        }
         isHalfDiminished = true;
     }
 
@@ -1661,6 +1674,18 @@ void ParsedChord::respellQualitySymbols(const ChordList* cl)
                 qualTok.tokenClass = ChordTokenClass::QUALITY;
                 _tokenList.removeAt(index);
                 _tokenList.insert(index, qualTok);
+            }
+        }
+
+        // For omit/no modifier
+        if (tok.tokenClass == ChordTokenClass::MODIFIER && cl) {
+            if (tok.names.contains("omit") || tok.names.contains("no")) {
+                QString sym = cl->qualitySymbols.value("omit");
+                ChordToken omitTok;
+                omitTok.names += sym;
+                omitTok.tokenClass = ChordTokenClass::MODIFIER;
+                _tokenList.removeAt(index);
+                _tokenList.insert(index, omitTok);
             }
         }
     }
@@ -1907,8 +1932,10 @@ int ChordList::privateID = -1000;
 //   configureAutoAdjust
 //---------------------------------------------------------
 
-void ChordList::configureAutoAdjust(qreal emag, qreal eadjust, qreal mmag, qreal madjust)
+void ChordList::configureAutoAdjust(qreal qmag, qreal qadjust, qreal emag, qreal eadjust, qreal mmag, qreal madjust)
 {
+    _qmag = qmag;
+    _qadjust = qadjust;
     _emag = emag;
     _eadjust = eadjust;
     _mmag = mmag;
@@ -1991,6 +2018,8 @@ void ChordList::read(XmlReader& e)
                     f.mag *= _emag;
                 } else if (f.fontClass == "modifier") {
                     f.mag *= _mmag;
+                } else if (f.fontClass == "quality") {
+                    f.mag *= _qmag;
                 }
             }
             fonts.append(f);
