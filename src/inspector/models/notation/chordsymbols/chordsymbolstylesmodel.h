@@ -48,6 +48,8 @@ public:
     int currentStyleIndex() const;
 
     void initCurrentStyleIndex();
+    void updateQualitySymbols();
+    void extractSelectionHistory(QString selectionHistory);
 
     Q_INVOKABLE void setChordStyle(QString styleName);
 
@@ -62,6 +64,7 @@ private:
 
     QList<Ms::ChordSymbolStyle> m_styles;
     ChordSymbolStyleManager* styleManager;
+    QHash<QString, QStringList> m_selectionHistory;
 
     int m_currentStyleIndex;
 };
