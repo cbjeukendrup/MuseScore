@@ -52,6 +52,7 @@ class ChordSymbolEditorModel : public QAbstractListModel
     Q_PROPERTY(int augmentedIndex READ augmentedIndex NOTIFY augmentedIndexChanged)
     Q_PROPERTY(int diminishedIndex READ diminishedIndex NOTIFY diminishedIndexChanged)
     Q_PROPERTY(int omitIndex READ omitIndex NOTIFY omitIndexChanged)
+    Q_PROPERTY(int stackModifiersIndex READ stackModifiersIndex NOTIFY stackModifiersIndexChanged)
 
     Q_PROPERTY(qreal qualityMag READ qualityMag NOTIFY qualityMagChanged)
     Q_PROPERTY(qreal qualityAdjust READ qualityAdjust NOTIFY qualityAdjustChanged)
@@ -89,6 +90,7 @@ public:
     int augmentedIndex() const;
     int diminishedIndex() const;
     int omitIndex() const;
+    int stackModifiersIndex() const;
 
     qreal qualityMag() const;
     qreal qualityAdjust() const;
@@ -103,7 +105,6 @@ public:
     qreal maxChordShiftBelow() const;
     qreal capoFretPosition() const;
 
-    void initChordSpellingList();
     void initCurrentStyleIndex();
     void initProperties();
     void updatePropertyIndices();
@@ -135,6 +136,7 @@ signals:
     void augmentedIndexChanged();
     void diminishedIndexChanged();
     void omitIndexChanged();
+    void stackModifiersIndexChanged();
 
     void qualityMagChanged();
     void qualityAdjustChanged();
@@ -176,6 +178,7 @@ private:
     int m_augmentedIndex;
     int m_diminishedIndex;
     int m_omitIndex;
+    int m_stackModifiersIndex;
 
     qreal m_qualityMag;
     qreal m_qualityAdjust;

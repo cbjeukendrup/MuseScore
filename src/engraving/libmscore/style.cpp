@@ -439,6 +439,7 @@ static const StyleType styleTypes[] {
     { Sid::lowerCaseMinorChords,    "lowerCaseMinorChords",    QVariant(false) },
     { Sid::lowerCaseBassNotes,      "lowerCaseBassNotes",      QVariant(false) },
     { Sid::allCapsNoteNames,        "allCapsNoteNames",        QVariant(false) },
+    { Sid::stackModifiers,          "stackModifiers",          QVariant(false) },
     { Sid::chordStyle,              "chordStyle",              QVariant(QString("std")) },
     { Sid::chordsXmlFile,           "chordsXmlFile",           QVariant(false) },
     { Sid::chordDescriptionFile,    "chordDescriptionFile",    QVariant(QString("chords_std.xml")) },
@@ -2826,7 +2827,7 @@ void MStyle::checkChordList()
             _chordList.read("chords.xml");
         }
         _chordList.read(value(Sid::chordDescriptionFile).toString());
-        setUpQualitySymbols();
+        updateChordList();
     }
 }
 
@@ -2838,10 +2839,10 @@ void MStyle::setChordList(ChordList* cl, bool custom)
 {
     _chordList       = *cl;
     _customChordList = custom;
-    setUpQualitySymbols();
+    updateChordList();
 }
 
-void MStyle::setUpQualitySymbols()
+void MStyle::updateChordList()
 {
     _chordList.qualitySymbols.clear();
     _chordList.qualitySymbols.insert("major", "");
@@ -2851,6 +2852,8 @@ void MStyle::setUpQualitySymbols()
     _chordList.qualitySymbols.insert("diminished", value(Sid::chordQualityDiminished).toString());
     _chordList.qualitySymbols.insert("augmented", value(Sid::chordQualityAugmented).toString());
     _chordList.qualitySymbols.insert("omit", value(Sid::chordModifierOmit).toString());
+
+    _chordList.stackModifiers = value(Sid::stackModifiers).toBool();
 }
 
 //---------------------------------------------------------
@@ -3092,7 +3095,7 @@ void MStyle::load(XmlReader& e)
         } else if (tag == "ChordList") {
             _chordList.unload();
             _chordList.read(e);
-            setUpQualitySymbols();
+            updateChordList();
             _customChordList = true;
             chordListTag = true;
         } else if (tag == "lyricsDashMaxLegth") { // pre-3.6 typo

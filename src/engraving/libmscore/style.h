@@ -425,6 +425,7 @@ enum class Sid {
     lowerCaseMinorChords,
     lowerCaseBassNotes,
     allCapsNoteNames,
+    stackModifiers,
     chordStyle,
     chordsXmlFile,
     chordDescriptionFile,
@@ -1519,7 +1520,7 @@ public:
     void setChordList(ChordList*, bool custom = true);      // Style gets ownership of ChordList
     void setCustomChordList(bool t) { _customChordList = t; }
     void checkChordList();
-    void setUpQualitySymbols();
+    void updateChordList();
 
     bool load(QFile* qf, bool ign = false);
     void load(XmlReader& e);
