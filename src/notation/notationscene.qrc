@@ -25,5 +25,6 @@
         <file>view/widgets/ChordSymbolStyleEditor.qml</file>
         <file>view/widgets/ChordSymbolEditorBasic.qml</file>
         <file>view/widgets/ChordSymbolEditorAdvanced.qml</file>
+        <file>view/widgets/SpinBoxWithTitle.qml</file>
     </qresource>
 </RCC>

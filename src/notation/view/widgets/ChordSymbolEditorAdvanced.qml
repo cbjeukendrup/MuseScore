@@ -19,88 +19,85 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 import MuseScore.UiComponents 1.0
 import MuseScore.Ui 1.0
+import MuseScore.NotationScene 1.0 // needed for ChordSymbolEditorModel
 
-Item {
-    id: root
+// Let's remove the `Item {`, because it does not do anything useful
+// I don't re-format the code for now to keep the diff slightly easier to understand
+    Flickable {
+        id: root
 
-    property var editorModel: null
+        // A bit safer to use ChordSymbolEditorModel instead of `var`, and useful for code completion
+        property ChordSymbolEditorModel editorModel: null
 
-    Flickable{
-        id: flickable
+        contentWidth: width
+        contentHeight: content.height
 
-        // Just to make it scroll
-        height: 200
-        width: root.width
-
+        clip: true
         boundsBehavior: Flickable.StopAtBounds
-        interactive: true
-
-        contentHeight: 400
 
         ScrollBar.vertical: StyledScrollBar {}
 
-        Row{
-            Column{
+        Row {
+            id: content
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 24
+
+            Column {
                 id: leftColumn
+                width: (content.width - content.spacing) / 2
+                spacing: 18
 
                 StyledTextLabel{
-                    text: qsTrc("notation","Quality")
+                    text: qsTrc("notation", "Quality")
+                    // The correct font
+                    font: ui.theme.bodyBoldFont
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: 12
+
+                    // Let's make a separate item for this, we'll need it so often
+                    SpinBoxWithTitle {
+                        id: qualityAdjustSpinBox
+                        width: Math.min(126, (parent.width - parent.spacing) / 2)
+                        text: qsTrc("notation", "Vertical Offset")
+
+                        currentValue: root.editorModel.qualityAdjust
+                        step: 1
+                        minValue: -10
+                        maxValue: 10
+
+                        onValueEdited: root.editorModel.setProperty("QualityAdjust", newValue)
+                    }
+
+                    SpinBoxWithTitle {
+                        id: qualityMagSpinBox
+                        width: Math.min(126, (parent.width - parent.spacing) / 2)
+                        text: qsTrc("notation", "Scaling")
+
+                        currentValue: root.editorModel.qualityMag
+                        step: 0.1
+                        minValue: -10
+                        maxValue: 10
+
+                        onValueEdited: root.editorModel.setProperty("QualityMag", newValue)
+                    }
+                }
+
+                // Please use spaces before `{` and after `,`
+                StyledTextLabel {
+                    text: qsTrc("notation", "Extensions")
                 }
 
                 Row{
-                    Column{
-                        StyledTextLabel{
-                            text: qsTrc("notation","Vertical Offset")
-                        }
-
-                        IncrementalPropertyControl {
-                            id: qualityAdjustSpinBox
-
-                            width: root.width/4
-
-                            currentValue: editorModel.qualityAdjust
-
-                            step: 1
-                            minValue: -10
-                            maxValue: 10
-
-                            onValueEdited: editorModel.setProperty("QualityAdjust", newValue)
-                        }
-                    }
-
-                    Column{
-                        StyledTextLabel{
-                            text: qsTrc("notation","Scaling")
-                        }
-
-                        IncrementalPropertyControl {
-                            id: qualityMagSpinBox
-
-                            width: root.width/4
-
-                            currentValue: editorModel.qualityMag
-
-                            step: 0.1
-                            minValue: -10
-                            maxValue: 10
-
-                            onValueEdited: editorModel.setProperty("QualityMag", newValue)
-                        }
-                    }
-
-                }
-
-                StyledTextLabel{
-                    text: qsTrc("notation","Extensions")
-                }
-
-                Row{
+                    // TODO: Replace these ones with the new SpinBoxWithTitle
                     Column{
                         StyledTextLabel{
                             text: qsTrc("notation","Vertical Offset")
@@ -111,13 +108,14 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.extensionAdjust
+                            // `root.editorModel` is better than just `editorModel`
+                            currentValue: root.editorModel.extensionAdjust
 
                             step: 1
                             minValue: -10
                             maxValue: 10
 
-                            onValueEdited: editorModel.setProperty("ExtensionAdjust", newValue)
+                            onValueEdited: root.editorModel.setProperty("ExtensionAdjust", newValue)
                         }
                     }
 
@@ -131,13 +129,13 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.extensionMag
+                            currentValue: root.editorModel.extensionMag
 
                             step: 0.1
                             minValue: -10
                             maxValue: 10
 
-                            onValueEdited: editorModel.setProperty("ExtensionMag", newValue)
+                            onValueEdited: root.editorModel.setProperty("ExtensionMag", newValue)
                         }
                     }
 
@@ -158,13 +156,13 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.modifierAdjust
+                            currentValue: root.editorModel.modifierAdjust
 
                             step: 1
                             minValue: -10
                             maxValue: 10
 
-                            onValueEdited: editorModel.setProperty("ModifierAdjust", newValue)
+                            onValueEdited: root.editorModel.setProperty("ModifierAdjust", newValue)
                         }
                     }
 
@@ -178,13 +176,13 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.modifierMag
+                            currentValue: root.editorModel.modifierMag
 
                             step: 0.1
                             minValue: -10
                             maxValue: 10
 
-                            onValueEdited: editorModel.setProperty("ModifierMag", newValue)
+                            onValueEdited: root.editorModel.setProperty("ModifierMag", newValue)
                         }
                     }
 
@@ -203,14 +201,14 @@ Item {
 
                         width: root.width/4
 
-                        currentValue: editorModel.minHarmonyDistance
+                        currentValue: root.editorModel.minHarmonyDistance
                         measureUnitsSymbol: qsTrc("notation", "sp")
 
                         step: 0.1
                         minValue: -50
                         maxValue: 10
 
-                        onValueEdited: editorModel.setProperty("minHarmonyDistance", newValue)
+                        onValueEdited: root.editorModel.setProperty("minHarmonyDistance", newValue)
                     }
                 }
 
@@ -224,14 +222,14 @@ Item {
 
                         width: root.width/4
 
-                        currentValue: editorModel.maxHarmonyBarDistance
+                        currentValue: root.editorModel.maxHarmonyBarDistance
                         measureUnitsSymbol: qsTrc("notation", "sp")
 
                         step: 0.5
                         minValue: -50
                         maxValue: 50
 
-                        onValueEdited: editorModel.setProperty("maxHarmonyBarDistance", newValue)
+                        onValueEdited: root.editorModel.setProperty("maxHarmonyBarDistance", newValue)
                     }
                 }
 
@@ -245,14 +243,14 @@ Item {
 
                         width: root.width/4
 
-                        currentValue: editorModel.harmonyFretDistance
+                        currentValue: root.editorModel.harmonyFretDistance
                         measureUnitsSymbol: qsTrc("notation", "sp")
 
                         step: 0.5
                         minValue: -10000
                         maxValue: 10000
 
-                        onValueEdited: editorModel.setProperty("HarmonyFretDistance", newValue)
+                        onValueEdited: root.editorModel.setProperty("HarmonyFretDistance", newValue)
                     }
                 }
                 Row{
@@ -266,14 +264,14 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.maxChordShiftAbove
+                            currentValue: root.editorModel.maxChordShiftAbove
                             measureUnitsSymbol: qsTrc("notation", "sp")
 
                             step: 0.5
                             minValue: 0
                             maxValue: 100
 
-                            onValueEdited: editorModel.setProperty("maxChordShiftAbove", newValue)
+                            onValueEdited: root.editorModel.setProperty("maxChordShiftAbove", newValue)
                         }
                     }
 
@@ -287,14 +285,14 @@ Item {
 
                             width: root.width/4
 
-                            currentValue: editorModel.maxChordShiftBelow
+                            currentValue: root.editorModel.maxChordShiftBelow
                             measureUnitsSymbol: qsTrc("notation", "sp")
 
                             step: 0.5
                             minValue: 0
                             maxValue: 100
 
-                            onValueEdited: editorModel.setProperty("maxChordShiftBelow", newValue)
+                            onValueEdited: root.editorModel.setProperty("maxChordShiftBelow", newValue)
                         }
                     }
 
@@ -309,19 +307,27 @@ Item {
 
                         width: root.width/4
 
-                        currentValue: editorModel.capoFretPosition
+                        currentValue: root.editorModel.capoFretPosition
 
                         step: 1
                         minValue: 0
                         maxValue: 11
 
-                        onValueEdited: editorModel.setProperty("capoPosition", newValue)
+                        onValueEdited: root.editorModel.setProperty("capoPosition", newValue)
                     }
                 }
             }
-            Column{
+
+            // I made a beginning with this to check that it will look correct
+            Column {
                 id: rightColumn
+                width: (content.width - content.spacing) / 2
+                spacing: 18
+
+                StyledTextLabel{
+                    text: qsTrc("notation", "Capitalization")
+                    font: ui.theme.bodyBoldFont
+                }
             }
         }
     }
-}

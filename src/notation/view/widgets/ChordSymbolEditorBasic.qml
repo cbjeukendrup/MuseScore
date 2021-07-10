@@ -19,60 +19,70 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 import MuseScore.UiComponents 1.0
 import MuseScore.Ui 1.0
+import MuseScore.NotationScene 1.0
 
-Rectangle {
-    id: root
-
-    property var editorModel: null
-    property var listCellHeight: 50
-    property var listCellWidth: 80
-    property var listCellMargin: 6
-
+// Let's remove the `Rectangle {`, because it does not do anything useful
+// I don't re-format the code for now to keep the diff slightly easier to understand
     Flickable {
-        id: flickableContainer
+        id: root
 
-        height: 200
-        width: root.width
+        // See `ChordSymbolEditorAdvanced.qml`
+        property ChordSymbolEditorModel editorModel: null
 
+        QtObject {
+            id: prv
+
+            // Let's make these properties private and readonly
+            // (QML has no real way to make properties private, but putting them
+            // in a `prv` or `privateProperties` is a common way to do this.)
+            readonly property int listCellHeight: 56
+            readonly property int listCellWidth: 106
+            readonly property int listCellSpacing: 10
+        }
+
+        contentWidth: width
+        contentHeight: content.height
+
+        clip: true
         boundsBehavior: Flickable.StopAtBounds
-        interactive: true
-
-        contentHeight: 400
 
         ScrollBar.vertical: StyledScrollBar {}
-        Column{
-            GridView {
-                id: chordSpellingGridView
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+        Column {
+            id: content
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: 12
 
-                anchors.left: flickableContainer.left
+            // TODO: All these listViews are very similar...
+            // You could try to make a special component for this.
+            ListView {
+                id: chordSpellingListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                model: editorModel.chordSpellingList
-                currentIndex: editorModel.chordSpellingIndex
+                model: root.editorModel.chordSpellingList
+                currentIndex: root.editorModel.chordSpellingIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setChordSpelling(modelData);
+                        root.editorModel.setChordSpelling(modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -80,34 +90,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: majorSeventhGridView
+            ListView {
+                id: majorSeventhListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                anchors.top: chordSpellingGridView.bottom
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
-
-                anchors.left: flickableContainer.left
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                model: editorModel.majorSeventhList
-                currentIndex: editorModel.majorSeventhIndex
+                model: root.editorModel.majorSeventhList
+                currentIndex: root.editorModel.majorSeventhIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("major7th",modelData);
+                        root.editorModel.setQualitySymbol("major7th",modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -115,34 +119,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: halfDiminishedGridView
+            ListView {
+                id: halfDiminishedListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                anchors.left: flickableContainer.left
-
-                anchors.top: majorSeventhGridView.bottom
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                model: editorModel.halfDiminishedList
-                currentIndex: editorModel.halfDiminishedIndex
+                model: root.editorModel.halfDiminishedList
+                currentIndex: root.editorModel.halfDiminishedIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("half-diminished",modelData);
+                        root.editorModel.setQualitySymbol("half-diminished", modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -150,34 +148,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: minorGridView
+            ListView {
+                id: minorListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                anchors.left: flickableContainer.left
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                anchors.top: halfDiminishedGridView.bottom
-
-                model: editorModel.minorList
-                currentIndex: editorModel.minorIndex
+                model: root.editorModel.minorList
+                currentIndex: root.editorModel.minorIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("minor",modelData);
+                        root.editorModel.setQualitySymbol("minor",modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -185,34 +177,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: augmentedGridView
+            ListView {
+                id: augmentedListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                anchors.left: flickableContainer.left
-
-                anchors.top: minorGridView.bottom
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                model: editorModel.augmentedList
-                currentIndex: editorModel.augmentedIndex
+                model: root.editorModel.augmentedList
+                currentIndex: root.editorModel.augmentedIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("augmented",modelData);
+                        root.editorModel.setQualitySymbol("augmented", modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -220,34 +206,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: diminishedGridView
+            ListView {
+                id: diminishedListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                anchors.left: flickableContainer.left
-
-                anchors.top: augmentedGridView.bottom
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                model: editorModel.diminishedList
-                currentIndex: editorModel.diminishedIndex
+                model: root.editorModel.diminishedList
+                currentIndex: root.editorModel.diminishedIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("diminished",modelData);
+                        root.editorModel.setQualitySymbol("diminished",modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -255,34 +235,28 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: omitGridView
+            ListView {
+                id: omitListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
-                anchors.left: flickableContainer.left
-
-                anchors.top: diminishedGridView.bottom
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
-
-                model: editorModel.omitList
-                currentIndex: editorModel.omitIndex
+                model: root.editorModel.omitList
+                currentIndex: root.editorModel.omitIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData
 
                     onClicked: {
-                        editorModel.setQualitySymbol("omit",modelData);
+                        root.editorModel.setQualitySymbol("omit",modelData);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
@@ -290,44 +264,36 @@ Rectangle {
                 }
             }
 
-            GridView {
-                id: stackModifierGridView
+            ListView {
+                id: stackModifierListView
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                height: listCellHeight + 2*listCellMargin
-                width: root.width
-
-                anchors.left: flickableContainer.left
-
-                anchors.top: omitGridView.bottom
-
-                cellHeight: listCellHeight
-                cellWidth: listCellWidth + listCellMargin
+                height: prv.listCellHeight
+                spacing: prv.listCellSpacing
+                orientation: ListView.Horizontal
+                boundsBehavior: Flickable.StopAtBounds
 
                 model: [
-                    {"name" : "Stacked","value" : 1.0},
-                    {"name" : "Non-stacked","value" : 0.0}
+                    { "name" : "Stacked", "value" : 1.0},
+                    { "name" : "Non-stacked", "value" : 0.0}
                 ]
-                currentIndex: editorModel.stackModifiersIndex
+                currentIndex: root.editorModel.stackModifiersIndex
 
                 delegate: FlatButton {
-                    height: listCellHeight
-                    width: listCellWidth
-                    anchors.rightMargin: listCellMargin
+                    height: prv.listCellHeight
+                    width: prv.listCellWidth
                     text: modelData["name"]
 
                     onClicked: {
-                        editorModel.setProperty("stackModifiers", modelData["value"]);
+                        root.editorModel.setProperty("stackModifiers", modelData["value"]);
                     }
                 }
-
-                boundsBehavior: Flickable.StopAtBounds
 
                 highlight: Rectangle {
                     color: ui.theme.accentColor
                     radius: 3
                 }
             }
-
         }
     }
-}

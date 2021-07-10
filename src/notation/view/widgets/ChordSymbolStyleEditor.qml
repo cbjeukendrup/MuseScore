@@ -21,7 +21,7 @@
  */
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.12
+import QtQuick.Layouts 1.15
 
 import MuseScore.UiComponents 1.0
 import MuseScore.Ui 1.0
@@ -35,16 +35,14 @@ Rectangle {
         id: chordSymbolEditorModel
     }
 
-    height: grid.height
-
     Component {
         id: chordStyleDelegate
 
         FlatButton {
             id: button
 
-            width: chordSymbolStyleGrid.cellWidth-5
-            height: chordSymbolStyleGrid.cellHeight-5
+            width: 170
+            height: 76
 
             text: styleName
 
@@ -54,32 +52,36 @@ Rectangle {
         }
     }
 
-    Column {
+    // ColumnLayout makes it easy to have some items with a fixed height,
+    // and make the other items fill the remaining height
+    ColumnLayout {
         anchors.fill: parent
+        spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("notation","Chord symbols")
-            font.pixelSize: ui.theme.bodyFont.pixelSize * 1.5
+            text: qsTrc("notation", "Chord symbols")
+            font: ui.theme.headerBoldFont // Correct font
         }
 
         StyledTextLabel {
-            text: qsTrc("notation","Choose a style")
+            text: qsTrc("notation", "Choose a style")
         }
 
-        GridView {
-            id: chordSymbolStyleGrid
+        // Changed them all to ListViews
+        ListView {
+            id: chordSymbolStyleList
+            Layout.fillWidth: true
 
-            height: 2*cellHeight
-            width: root.width
+            height: 76
+            spacing: 12
 
-            cellWidth: 180
-            cellHeight: 80
+            clip: true
+            orientation: Qt.Horizontal
 
             model: chordSymbolEditorModel
             currentIndex: chordSymbolEditorModel.currentStyleIndex
 
             delegate: chordStyleDelegate
-            clip: true
 
             highlight: Rectangle {
                 color: ui.theme.accentColor
@@ -87,11 +89,8 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            width: root.width
-            height: 2
-            color: ui.theme.backgroundSecondaryColor
-        }
+        // We have a component for this (so that can be used instead of a Rectangle every time)
+        SeparatorLine {}
 
         StyledTextLabel {
             text: qsTrc("notation","Adjust settings for ")
@@ -100,38 +99,34 @@ Rectangle {
         TabBar {
             id: bar
 
-            width: root.width
-            implicitHeight: 60
-
             StyledTabButton {
                 text: qsTrc("notation", "Basic")
-                sideMargin: 120
-                height: 60
+                sideMargin: 40
                 isCurrent: bar.currentIndex === 0
             }
 
             StyledTabButton {
                 text: qsTrc("notation", "Advanced")
-                sideMargin: 120
-                height: 60
+                sideMargin: 40
                 isCurrent: bar.currentIndex === 1
             }
         }
 
         StackLayout {
             id: editorStack
-
-            anchors.top: bar.bottom
+            // We shouldn't use anchors.top in a column. Therefore, I switched to
+            // ColumnLayout and used the attached fillHeight property to make this
+            // item fill the remaining height
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
             currentIndex: bar.currentIndex
 
             ChordSymbolEditorBasic {
-                width: root.width
                 editorModel: chordSymbolEditorModel
             }
 
             ChordSymbolEditorAdvanced {
-                width: root.width
                 editorModel: chordSymbolEditorModel
             }
         }
