@@ -429,6 +429,7 @@ enum class Sid {
     stackModifiers,
     chordStyle,
     chordsXmlFile,
+    useChordSymbolPresets,
     chordDescriptionFile,
     chordQualityMag,
     chordQualityAdjust,
@@ -1489,6 +1490,7 @@ inline uint qHash(Sid id)
 struct ChordSymbolStyle {
     QString styleName;
     QString fileName;
+    bool usePresets = false;
 };
 
 struct QualitySymbol{

@@ -25,7 +25,7 @@
 =====================================================================
 -->
 
-<museScore version="1.24" type="chordStyle" styleName="Standard">
+<museScore version="1.24" type="chordStyle" styleName="Standard" usePresets="true">
 
   <quality q = "major7th">
     <sym>maj 7</sym>

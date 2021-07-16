@@ -35,7 +35,7 @@
 
   ]>
 
-<museScore version="1.24" type="chordStyle" styleName="Jazz">
+<museScore version="1.24" type="chordStyle" styleName="Jazz" usePresets="true">
 
   <quality q = "major7th">
     <sym>Maj 7</sym>

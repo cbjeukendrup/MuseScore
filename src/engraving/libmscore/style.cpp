@@ -443,6 +443,7 @@ static const StyleType styleTypes[] {
     { Sid::stackModifiers,          "stackModifiers",          QVariant(false) },
     { Sid::chordStyle,              "chordStyle",              QVariant(QString("std")) },
     { Sid::chordsXmlFile,           "chordsXmlFile",           QVariant(false) },
+    { Sid::useChordSymbolPresets,   "useChordSymbolPresets",   QVariant(false) },
     { Sid::chordDescriptionFile,    "chordDescriptionFile",    QVariant(QString("chords_std.xml")) },
     { Sid::chordQualityMag,         "chordQualityMag",         QVariant(1.0) },
     { Sid::chordQualityAdjust,      "chordQualityAdjust",      QVariant(0.0) },
@@ -2859,6 +2860,7 @@ void MStyle::updateChordList()
     _chordList.qualitySymbols.insert("augmented", value(Sid::chordQualityAugmented).toString());
     _chordList.qualitySymbols.insert("omit", value(Sid::chordModifierOmit).toString());
 
+    _chordList.usePresets = value(Sid::useChordSymbolPresets).toBool();
     _chordList.stackModifiers = value(Sid::stackModifiers).toBool();
     _chordList.autoCapitalization = value(Sid::automaticCapitalization).toBool();
     _chordList.lowerCaseQualitySymbols = value(Sid::lowerCaseQualitySymbols).toBool();
