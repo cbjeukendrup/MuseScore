@@ -23,7 +23,7 @@ set(MODULE notation)
 set(MODULE_QRC notationscene.qrc)
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
-find_package(Qt5 COMPONENTS Svg REQUIRED)
+find_package(Qt6Svg REQUIRED)
 
 include(${CMAKE_CURRENT_LIST_DIR}/view/widgets/widgets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/view/styledialog/styledialog.cmake)
@@ -167,7 +167,7 @@ else ()
 endif ()
 
 set(MODULE_LINK
-    Qt5::Svg
+    Qt6::Svg
     ${FREETYPE_LIB}
     qzip
     ${Z_LIB}

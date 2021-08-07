@@ -19,7 +19,7 @@ set(_components
     QuickTemplates2
     QuickWidgets
     Xml
-    XmlPatterns
+#    XmlPatterns
     Svg
     Widgets
     PrintSupport
@@ -41,13 +41,11 @@ if (WIN32)
       )
 endif(WIN32)
 
-find_package(Qt5Core ${QT_MIN_VERSION} REQUIRED)
-
 foreach(_component ${_components})
-  find_package(Qt5${_component})
-  list(APPEND QT_LIBRARIES ${Qt5${_component}_LIBRARIES})
-  list(APPEND QT_INCLUDES ${Qt5${_component}_INCLUDE_DIRS})
-  add_definitions(${Qt5${_component}_DEFINITIONS})
+  find_package(Qt6${_component} REQUIRED)
+  list(APPEND QT_LIBRARIES ${Qt6${_component}_LIBRARIES})
+  list(APPEND QT_INCLUDES ${Qt6${_component}_INCLUDE_DIRS})
+  add_definitions(${Qt6${_component}_DEFINITIONS})
 endforeach()
 
 include_directories(${QT_INCLUDES})

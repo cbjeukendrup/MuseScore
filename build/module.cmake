@@ -41,12 +41,12 @@ if (NOT PROJECT_ROOT_DIR)
 endif()
 
 if (MODULE_QRC)
-    qt5_add_resources(RCC_SOURCES ${MODULE_QRC})
+    qt6_add_resources(RCC_SOURCES ${MODULE_QRC})
 endif()
 
 if (MODULE_UI)
-    find_package(Qt5Widgets)
-    QT5_WRAP_UI(ui_headers ${MODULE_UI} )
+    find_package(Qt6Widgets)
+    QT6_WRAP_UI(ui_headers ${MODULE_UI} )
 endif()
 
 if (NOT ${MODULE_QML_IMPORT} STREQUAL "")

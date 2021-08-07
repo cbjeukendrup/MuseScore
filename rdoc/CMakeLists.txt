@@ -25,8 +25,8 @@ add_custom_target(referenceDocumentation
 
 add_custom_command(TARGET referenceDocumentation
       POST_BUILD
-      COMMAND Qt5::qcollectiongenerator ${PROJECT_SOURCE_DIR}/rdoc/en/doc.qhcp -o doc_en.qhc
-      COMMAND Qt5::qcollectiongenerator ${PROJECT_SOURCE_DIR}/rdoc/de/doc.qhcp -o doc_de.qhc
+      COMMAND Qt6::qcollectiongenerator ${PROJECT_SOURCE_DIR}/rdoc/en/doc.qhcp -o doc_en.qhc
+      COMMAND Qt6::qcollectiongenerator ${PROJECT_SOURCE_DIR}/rdoc/de/doc.qhcp -o doc_de.qhc
       )
 
 install(FILES
