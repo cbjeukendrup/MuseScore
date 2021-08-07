@@ -472,14 +472,11 @@ Rectangle {
                 delegate: FlatRadioButton {
                     ButtonGroup.group: textButtonList.radioButtonGroup
 
-                    checked: textButtonList.currentValue === modelData["valueRole"]
+                    text: modelData["textRole"]
 
+                    checked: textButtonList.currentValue === modelData["valueRole"]
                     onToggled: {
                         textButtonList.currentValue = modelData["valueRole"]
-                    }
-
-                    StyledTextLabel {
-                        text: modelData["textRole"]
                     }
                 }
             }

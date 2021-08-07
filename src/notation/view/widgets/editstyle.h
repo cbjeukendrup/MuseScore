@@ -51,6 +51,8 @@ public slots:
     void accept();
     void reject();
 
+    Q_INVOKABLE void doSomethingFromQml();
+
 private:
     void showEvent(QShowEvent*);
     void hideEvent(QHideEvent*);

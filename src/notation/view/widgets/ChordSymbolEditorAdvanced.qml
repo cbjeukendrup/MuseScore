@@ -460,9 +460,7 @@ Flickable {
 
                     ButtonGroup.group: suspensionsParentheses.radioButtonGroup
 
-                    StyledTextLabel{
-                        text: qsTrc("notation", modelData["name"])
-                    }
+                    text: qsTrc("notation", modelData["name"])
                     checked: editorModel.suspensionsParentheses === modelData["value"]
 
                     onToggled: {
@@ -491,9 +489,7 @@ Flickable {
 
                     ButtonGroup.group: minMajParentheses.radioButtonGroup
 
-                    StyledTextLabel{
-                        text: qsTrc("notation", modelData["name"])
-                    }
+                    text: qsTrc("notation", modelData["name"])
                     checked: editorModel.minMajParentheses === modelData["value"]
 
                     onToggled: {
@@ -522,9 +518,7 @@ Flickable {
 
                     ButtonGroup.group: addOmitParentheses.radioButtonGroup
 
-                    StyledTextLabel{
-                        text: qsTrc("notation", modelData["name"])
-                    }
+                    text: qsTrc("notation", modelData["name"])
                     checked: editorModel.addOmitParentheses === modelData["value"]
 
                     onToggled: {

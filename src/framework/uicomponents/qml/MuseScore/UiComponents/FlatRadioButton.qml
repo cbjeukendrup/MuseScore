@@ -26,7 +26,7 @@ import MuseScore.Ui 1.0
 RadioDelegate {
     id: root
 
-    default property Component contentComponent
+    default property Component contentComponent: null
 
     property alias radius: backgroundRect.radius
 
@@ -65,7 +65,7 @@ RadioDelegate {
         border.width: navCtrl.active ? 2 : 0
         border.color: ui.theme.focusColor
 
-        color: normalStateColor
+        color: root.normalStateColor
         opacity: ui.theme.buttonOpacityNormal
 
         radius: 2
@@ -79,7 +79,15 @@ RadioDelegate {
 
             anchors.fill: parent
 
-            sourceComponent: contentComponent
+            sourceComponent: root.contentComponent ?? defaultComponent
+        }
+    }
+
+    Component {
+        id: defaultComponent
+
+        StyledTextLabel {
+            text: root.text
         }
     }
 
@@ -92,7 +100,7 @@ RadioDelegate {
 
             PropertyChanges {
                 target: backgroundRect
-                color: hoverStateColor
+                color: root.hoverStateColor
                 opacity: ui.theme.buttonOpacityHover
             }
         },
@@ -103,7 +111,7 @@ RadioDelegate {
 
             PropertyChanges {
                 target: backgroundRect
-                color: pressedStateColor
+                color: root.pressedStateColor
                 opacity: ui.theme.buttonOpacityHit
             }
         },
@@ -114,7 +122,7 @@ RadioDelegate {
 
             PropertyChanges {
                 target: backgroundRect
-                color: selectedStateColor
+                color: root.selectedStateColor
                 opacity: ui.theme.buttonOpacityNormal
             }
         }

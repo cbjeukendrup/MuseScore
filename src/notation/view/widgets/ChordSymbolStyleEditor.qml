@@ -31,11 +31,14 @@ Rectangle {
     id: root
     color: ui.theme.backgroundPrimaryColor
 
+    property EditStyle editStyleDialog
+
     ChordSymbolEditorModel {
         id: chordSymbolEditorModel
     }
 
-    height: grid.height
+    // `grid` is not defined
+    //height: grid.height
 
     Component {
         id: chordStyleDelegate
@@ -89,6 +92,17 @@ Rectangle {
         }
 
         SeparatorLine {}
+
+        FlatButton {
+            text: "Tell EditStyleDialog to do something"
+            onClicked: {
+                if (!root.editStyleDialog) {
+                    return
+                }
+
+                root.editStyleDialog.doSomethingFromQml()
+            }
+        }
 
         // To be modified still
         StyledTextLabel {

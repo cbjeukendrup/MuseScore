@@ -23,6 +23,7 @@
 #include "editstyle.h"
 
 #include <QButtonGroup>
+#include <QQuickItem>
 #include <QQuickWidget>
 #include <QSignalMapper>
 
@@ -660,12 +661,19 @@ EditStyle::EditStyle(QWidget* parent)
     // New Chord Symbols Page(QML)
     // ====================================================
 
-    QQuickWidget* chordSymbolsQuickWidget = new QQuickWidget(
-        /*QmlEngine*/ qmlEngineProvider()->qmlEngine(), /*parent*/ PageChordSymbolsNew);
-    chordSymbolsQuickWidget->setObjectName("chordSymbolsQuickWidget");
-    chordSymbolsQuickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
-    chordSymbolsQuickWidget->setSource(QUrl(QString::fromUtf8("qrc:/view/widgets/ChordSymbolStyleEditor.qml")));
-    PageChordSymbolsNew->layout()->addWidget(chordSymbolsQuickWidget);
+    {
+        QQuickWidget* chordSymbolsQuickWidget
+            = new QQuickWidget(/*QmlEngine*/ qmlEngineProvider()->qmlEngine(), /*parent*/ PageChordSymbolsNew);
+        chordSymbolsQuickWidget->setObjectName("chordSymbolsQuickWidget");
+        chordSymbolsQuickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+        chordSymbolsQuickWidget->setSource(QUrl(QString::fromUtf8("qrc:/view/widgets/ChordSymbolStyleEditor.qml")));
+        QQuickItem* rootItem = chordSymbolsQuickWidget->rootObject();
+        Q_ASSERT(rootItem);
+        if (rootItem) {
+            rootItem->setProperty("editStyleDialog", QVariant::fromValue(this));
+        }
+        PageChordSymbolsNew->layout()->addWidget(chordSymbolsQuickWidget);
+    }
 
     textStyles->clear();
     for (auto ss : Ms::allTextStyles()) {
@@ -1298,6 +1306,11 @@ void EditStyle::reject()
 {
     globalContext()->currentNotation()->undoStack()->rollbackChanges();
     QDialog::reject();
+}
+
+void EditStyle::doSomethingFromQml()
+{
+    LOGI() << "Doing something from QML...";
 }
 
 //---------------------------------------------------------

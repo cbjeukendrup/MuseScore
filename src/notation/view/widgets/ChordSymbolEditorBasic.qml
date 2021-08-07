@@ -260,7 +260,8 @@ Flickable {
 
             height: 30
 
-            anchors.top: omitGridView.bottom
+            // Never use anchors.top/bottom in a Column
+            //anchors.top: omitGridView.bottom
 
             model: [
                 { name: "Stacked", value: 1.0 },
@@ -270,13 +271,14 @@ Flickable {
             delegate: FlatRadioButton {
                 ButtonGroup.group: stackModifiers.radioButtonGroup
 
-                StyledTextLabel{
-                    text: qsTrc("notation",modelData["name"])
-                }
-                checked: editorModel.stackModifiers === modelData["value"]
+                text: qsTrc("notation",modelData["name"])
+
+                // Don't forget `root.` (at this moment, it's still valid without it,
+                // But in a future version of QML, this will break
+                checked: root.editorModel.stackModifiers === modelData["value"]
 
                 onToggled: {
-                    editorModel.setProperty("stackModifiers", modelData["value"])
+                    root.editorModel.setProperty("stackModifiers", modelData["value"])
                 }
             }
         }
