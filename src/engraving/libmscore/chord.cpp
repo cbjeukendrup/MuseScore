@@ -1154,7 +1154,7 @@ void Chord::read(XmlReader& e)
 
 bool Chord::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "Note") {
         Note* note = Factory::createNote(this);

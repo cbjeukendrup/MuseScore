@@ -226,7 +226,7 @@ void Groups::write(XmlWriter& xml) const
 void Groups::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Node") {
             GroupNode n;
             n.pos    = e.intAttribute("pos");

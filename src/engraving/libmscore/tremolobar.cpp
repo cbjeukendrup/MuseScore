@@ -141,7 +141,7 @@ void TremoloBar::write(XmlWriter& xml) const
 void TremoloBar::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        auto tag = e.name();
+        const QString& tag = e.name().toString();
         if (tag == "point") {
             PitchValue pv;
             pv.time    = e.intAttribute("time");

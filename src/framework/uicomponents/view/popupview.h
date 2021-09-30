@@ -180,7 +180,7 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
 
-    bool isMouseWithinBoundaries(const QPoint& mousePos) const;
+    bool isMouseWithinBoundaries(const QPointF& mousePos) const;
 
     QWindow* qWindow() const;
     virtual void beforeShow();

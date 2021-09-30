@@ -30,7 +30,6 @@ namespace mu::ui {
 class MainWindowProviderMock : public IMainWindow
 {
 public:
-
     MOCK_METHOD(QWindow*, qWindow, (), (const, override));
 
     MOCK_METHOD(void, requestShowOnBack, (), (override));

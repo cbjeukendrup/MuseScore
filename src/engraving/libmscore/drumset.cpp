@@ -109,13 +109,13 @@ bool Drumset::readProperties(XmlReader& e, int pitch)
         return false;
     }
 
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "head") {
         _drum[pitch].notehead = TConv::fromXml(e.readElementText(), NoteHeadGroup::HEAD_NORMAL);
     } else if (tag == "noteheads") {
         _drum[pitch].notehead = NoteHeadGroup::HEAD_CUSTOM;
         while (e.readNextStartElement()) {
-            const QStringRef& nhTag(e.name());
+            QStringView nhTag = e.name();
             int noteType = int(TConv::fromXml(nhTag.toString(), NoteHeadType::HEAD_AUTO));
             if (noteType > int(NoteHeadType::HEAD_TYPES) - 1 || noteType < 0) {
                 return false;
@@ -138,12 +138,12 @@ bool Drumset::readProperties(XmlReader& e, int pitch)
         _drum[pitch].shortcut = isNum ? i : toupper(val[0].toLatin1());
     } else if (tag == "variants") {
         while (e.readNextStartElement()) {
-            const QStringRef& tagv(e.name());
+            const QString& tagv(e.name().toString());
             if (tagv == "variant") {
                 DrumInstrumentVariant div;
                 div.pitch = e.attribute("pitch").toInt();
                 while (e.readNextStartElement()) {
-                    const QStringRef& taga(e.name());
+                    const QString& taga(e.name().toString());
                     if (taga == "articulation") {
                         div.articulationName = e.readElementText();
                     } else if (taga == "tremolo") {

@@ -117,7 +117,7 @@ bool Score::pasteStaff(XmlReader& e, Segment* dst, int dstStaff, Fraction scale)
         if (done) {
             break;
         }
-        if (e.name() != "StaffList") {
+        if (e.name().toString() != "StaffList") {
             e.unknown();
             break;
         }
@@ -146,7 +146,7 @@ bool Score::pasteStaff(XmlReader& e, Segment* dst, int dstStaff, Fraction scale)
             if (done) {
                 break;
             }
-            if (e.name() != "Staff") {
+            if (e.name().toString() != "Staff") {
                 e.unknown();
                 break;
             }
@@ -165,7 +165,7 @@ bool Score::pasteStaff(XmlReader& e, Segment* dst, int dstStaff, Fraction scale)
 
             while (e.readNextStartElement()) {
                 pasted = true;
-                const QStringRef& tag(e.name());
+                const QString& tag = e.name().toString();
 
                 if (tag == "transposeChromatic") {
                     e.setTransposeChromatic(e.readInt());
@@ -175,7 +175,7 @@ bool Score::pasteStaff(XmlReader& e, Segment* dst, int dstStaff, Fraction scale)
                     int voiceOffset[VOICES];
                     std::fill(voiceOffset, voiceOffset + VOICES, -1);
                     while (e.readNextStartElement()) {
-                        if (e.name() != "voice") {
+                        if (e.name().toString() != "voice") {
                             e.unknown();
                         }
                         int voiceId = e.attribute("id", "-1").toInt();
@@ -788,7 +788,7 @@ void Score::pasteSymbols(XmlReader& e, ChordRest* dst)
         if (done) {
             break;
         }
-        if (e.name() != "SymbolList") {
+        if (e.name().toString() != "SymbolList") {
             e.unknown();
             break;
         }
@@ -801,7 +801,7 @@ void Score::pasteSymbols(XmlReader& e, ChordRest* dst)
             if (done) {
                 break;
             }
-            const QStringRef& tag(e.name());
+            const QString& tag = e.name().toString();
 
             if (tag == "trackOffset") {
                 destTrack = startTrack + e.readInt();

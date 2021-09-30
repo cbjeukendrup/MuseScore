@@ -146,7 +146,7 @@ void LedgerLine::writeProperties(XmlWriter& xml) const
 
 bool LedgerLine::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "lineWidth") {
         _width = e.readDouble() * spatium();

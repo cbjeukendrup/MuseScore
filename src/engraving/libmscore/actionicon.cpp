@@ -86,7 +86,7 @@ void ActionIcon::write(XmlWriter& xml) const
 void ActionIcon::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "action") {
             m_actionCode = e.readElementText().toStdString();
         } else if (tag == "subtype") {

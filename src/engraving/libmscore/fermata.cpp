@@ -79,7 +79,7 @@ void Fermata::read(XmlReader& e)
 
 bool Fermata::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "subtype") {
         QString s = e.readElementText();
@@ -351,7 +351,7 @@ void Fermata::resetProperty(Pid id)
 //   propertyId
 //---------------------------------------------------------
 
-Pid Fermata::propertyId(const QStringRef& xmlName) const
+Pid Fermata::propertyId(const QString& xmlName) const
 {
     if (xmlName == "subtype") {
         return Pid::SYMBOL;

@@ -29,6 +29,8 @@
 #include "excerpt.h"
 #include "libmscore/masterscore.h"
 
+Q_MOC_INCLUDE("plugins/api/selection.h")
+
 namespace Ms {
 class InstrumentTemplate;
 

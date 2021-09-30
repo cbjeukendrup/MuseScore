@@ -828,7 +828,7 @@ void Score::transpositionChanged(Part* part, Interval oldV, Fraction tickStart, 
                     int rootTpc = transposeTpc(h->rootTpc(), diffV, false);
                     int baseTpc = transposeTpc(h->baseTpc(), diffV, false);
                     for (EngravingObject* scoreElement : h->linkList()) {
-                        if (!scoreElement->style()->styleB(Sid::concertPitch)) {
+                        if (!scoreElement->style()->styleD(Sid::concertPitch)) {
                             undoTransposeHarmony(toHarmony(scoreElement), rootTpc, baseTpc);
                         }
                     }

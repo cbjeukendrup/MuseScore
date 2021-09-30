@@ -99,7 +99,7 @@ bool FontMetrics::inFont(QChar ch) const
     return fontProvider()->inFont(m_font, ch);
 }
 
-bool FontMetrics::inFontUcs4(uint ucs4) const
+bool FontMetrics::inFontUcs4(char32_t ucs4) const
 {
     return fontProvider()->inFontUcs4(m_font, ucs4);
 }

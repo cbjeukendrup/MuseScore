@@ -166,53 +166,53 @@ QString MusicXMLInstrument::toString() const
            .arg(int(stemDirection));
 }
 
-void ValidatorMessageHandler::handleMessage(QtMsgType type, const QString& description,
-                                            const QUrl& /* identifier */, const QSourceLocation& sourceLocation)
-{
-    // convert description from html to text
-    QDomDocument desc;
-    QString contentError;
-    int contentLine;
-    int contentColumn;
-    if (!desc.setContent(description, false, &contentError, &contentLine,
-                         &contentColumn)) {
-        qDebug("ValidatorMessageHandler: could not parse validation error line %d column %d: %s",
-               contentLine, contentColumn, qPrintable(contentError));
-        return;
-    }
-    QDomElement e = desc.documentElement();
-    if (e.tagName() != "html") {
-        qDebug("ValidatorMessageHandler: description is not html");
-        return;
-    }
-    QString descText = e.text();
-
-    QString strType;
-    switch (type) {
-    case 0:  strType = tr("Debug");
-        break;
-    case 1:  strType = tr("Warning");
-        break;
-    case 2:  strType = tr("Critical");
-        break;
-    case 3:  strType = tr("Fatal");
-        break;
-    default: strType = tr("Unknown");
-        break;
-    }
-
-    QString errorStr = QString(tr("%1 error: line %2 column %3 %4"))
-                       .arg(strType)
-                       .arg(sourceLocation.line())
-                       .arg(sourceLocation.column())
-                       .arg(descText);
-
-    // append error, separated by newline if necessary
-    if (errors != "") {
-        errors += "\n";
-    }
-    errors += errorStr;
-}
+//void ValidatorMessageHandler::handleMessage(QtMsgType type, const QString& description,
+//                                            const QUrl& /* identifier */, const QSourceLocation& sourceLocation)
+//{
+//    // convert description from html to text
+//    QDomDocument desc;
+//    QString contentError;
+//    int contentLine;
+//    int contentColumn;
+//    if (!desc.setContent(description, false, &contentError, &contentLine,
+//                         &contentColumn)) {
+//        qDebug("ValidatorMessageHandler: could not parse validation error line %d column %d: %s",
+//               contentLine, contentColumn, qPrintable(contentError));
+//        return;
+//    }
+//    QDomElement e = desc.documentElement();
+//    if (e.tagName() != "html") {
+//        qDebug("ValidatorMessageHandler: description is not html");
+//        return;
+//    }
+//    QString descText = e.text();
+//
+//    QString strType;
+//    switch (type) {
+//    case 0:  strType = tr("Debug");
+//        break;
+//    case 1:  strType = tr("Warning");
+//        break;
+//    case 2:  strType = tr("Critical");
+//        break;
+//    case 3:  strType = tr("Fatal");
+//        break;
+//    default: strType = tr("Unknown");
+//        break;
+//    }
+//
+//    QString errorStr = QString(tr("%1 error: line %2 column %3 %4"))
+//                       .arg(strType)
+//                       .arg(sourceLocation.line())
+//                       .arg(sourceLocation.column())
+//                       .arg(descText);
+//
+//    // append error, separated by newline if necessary
+//    if (errors != "") {
+//        errors += "\n";
+//    }
+//    errors += errorStr;
+//}
 
 //---------------------------------------------------------
 //   printDomElementPath

@@ -362,8 +362,7 @@ ThemeList UiConfiguration::themes() const
 
 QStringList UiConfiguration::possibleFontFamilies() const
 {
-    QFontDatabase db;
-    return db.families();
+    return QFontDatabase::families();
 }
 
 QStringList UiConfiguration::possibleAccentColors() const

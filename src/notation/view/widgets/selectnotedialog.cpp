@@ -91,11 +91,6 @@ SelectNoteDialog::SelectNoteDialog(const SelectNoteDialog& other)
 {
 }
 
-int SelectNoteDialog::metaTypeId()
-{
-    return QMetaType::type("SelectNoteDialog");
-}
-
 FilterNotesOptions SelectNoteDialog::noteOptions() const
 {
     FilterNotesOptions options;

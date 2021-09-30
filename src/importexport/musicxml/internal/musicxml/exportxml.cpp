@@ -7213,7 +7213,7 @@ void ExportMusicXml::write(QIODevice* dev)
     _jumpElements = findJumpElements(_score);
 
     _xml.setDevice(dev);
-    _xml.setCodec("UTF-8");
+    _xml.setEncoding(QStringConverter::Utf8);
     _xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     _xml
         <<
@@ -7296,7 +7296,7 @@ static void writeMxlArchive(Score* score, MQZipWriter& zipwriter, const QString&
 
     XmlWriter xml(score);
     xml.setDevice(&cbuf);
-    xml.setCodec("UTF-8");
+    xml.setEncoding(QStringConverter::Utf8);
     xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     xml.startObject("container");
     xml.startObject("rootfiles");
@@ -7404,7 +7404,7 @@ void ExportMusicXml::harmony(Harmony const* const h, FretDiagram const* const fd
                         && !kindText.isEmpty() && kindText[0].isDigit()) {
                         // hack to correct text for suspended chords whose kind text has degree information baked in
                         // (required by some other applications)
-                        int tagDegree = tag.midRef(3).toInt();
+                        int tagDegree = tag.mid(3).toInt();
                         QString kindTextExtension;
                         for (int i = 0; i < kindText.length() && kindText[i].isDigit(); ++i) {
                             kindTextExtension[i] = kindText[i];
@@ -7437,7 +7437,7 @@ void ExportMusicXml::harmony(Harmony const* const h, FretDiagram const* const fd
                 }
             }
         } else {
-            if (h->extensionName() == 0) {
+            if (h->extensionName().isEmpty()) {
                 _xml.tag("kind", "");
             } else {
                 _xml.tag(QString("kind text=\"%1\"").arg(h->extensionName()), "");

@@ -414,7 +414,7 @@ public:
     bool setProperty(Pid propertyId, const mu::engraving::PropertyValue& v) override;
     mu::engraving::PropertyValue propertyDefault(Pid id) const override;
     void undoChangeProperty(Pid id, const mu::engraving::PropertyValue& v, PropertyFlags ps) override;
-    Pid propertyId(const QStringRef& xmlName) const override;
+    Pid propertyId(const QString& xmlName) const override;
     Sid getPropertyStyle(Pid) const override;
     void styleChanged() override;
     void editInsertText(TextCursor*, const QString&);

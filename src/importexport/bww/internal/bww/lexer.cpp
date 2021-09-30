@@ -41,7 +41,7 @@ namespace Bww {
 Lexer::Lexer(QIODevice* inDevice)
     : in(inDevice),
     lineNumber(-1),
-    value(NONE)
+    value(QChar(NONE))
 {
     qDebug() << "Lexer::Lexer() begin";
 

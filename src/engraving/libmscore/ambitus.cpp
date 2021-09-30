@@ -284,7 +284,7 @@ void Ambitus::read(XmlReader& e)
 
 bool Ambitus::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "head") {
         readProperty(e, Pid::HEAD_GROUP);
     } else if (tag == "headType") {
@@ -305,7 +305,7 @@ bool Ambitus::readProperties(XmlReader& e)
         _bottomTpc = e.readInt();
     } else if (tag == "topAccidental") {
         while (e.readNextStartElement()) {
-            if (e.name() == "Accidental") {
+            if (e.name().toString() == "Accidental") {
                 if (score()->mscVersion() < 301) {
                     compat::Read206::readAccidental206(_topAccid, e);
                 } else {
@@ -317,7 +317,7 @@ bool Ambitus::readProperties(XmlReader& e)
         }
     } else if (tag == "bottomAccidental") {
         while (e.readNextStartElement()) {
-            if (e.name() == "Accidental") {
+            if (e.name().toString() == "Accidental") {
                 if (score()->mscVersion() < 301) {
                     compat::Read206::readAccidental206(_bottomAccid, e);
                 } else {

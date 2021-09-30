@@ -253,7 +253,7 @@ Accidental::Accidental(EngravingItem* parent)
 void Accidental::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "bracket") {
             int i = e.readInt();
             if (i == 0 || i == 1 || i == 2) {
@@ -650,7 +650,7 @@ bool Accidental::setProperty(Pid propertyId, const PropertyValue& v)
 //   propertyId
 //---------------------------------------------------------
 
-Pid Accidental::propertyId(const QStringRef& xmlName) const
+Pid Accidental::propertyId(const QString& xmlName) const
 {
     if (xmlName == propertyName(Pid::ACCIDENTAL_TYPE)) {
         return Pid::ACCIDENTAL_TYPE;

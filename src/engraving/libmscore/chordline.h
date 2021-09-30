@@ -83,8 +83,8 @@ public:
 
     mu::engraving::PropertyValue getProperty(Pid propertyId) const override;
     bool setProperty(Pid propertyId, const mu::engraving::PropertyValue&) override;
-    mu::engraving::PropertyValue propertyDefault(Pid) const override;
-    Pid propertyId(const QStringRef& xmlName) const override;
+    mu::engraving::PropertyValue propertyDefault(Pid propertyId) const override;
+    Pid propertyId(const QString& xmlName) const override;
 
     EngravingItem::EditBehavior normalModeEditBehavior() const override { return EngravingItem::EditBehavior::Edit; }
     int gripsCount() const override { return _straight ? 1 : static_cast<int>(path.elementCount()); }

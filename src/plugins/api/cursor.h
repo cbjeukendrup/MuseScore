@@ -25,6 +25,9 @@
 
 #include "fraction.h"
 
+Q_MOC_INCLUDE("plugins/api/elements.h")
+Q_MOC_INCLUDE("plugins/api/score.h")
+
 namespace Ms {
 class EngravingItem;
 class InputState;

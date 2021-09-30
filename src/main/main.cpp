@@ -20,8 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <QTextCodec>
-
 #include "config.h"
 #include "runtime.h"
 #include "log.h"
@@ -168,7 +166,7 @@ int main(int argc, char** argv)
 {
     // Force the 8-bit text encoding to UTF-8. This is the default encoding on all supported platforms except for MSVC under Windows, which
     // would otherwise default to the local ANSI code page and cause corruption of any non-ANSI Unicode characters in command-line arguments.
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     mu::appshell::AppShell app;
 

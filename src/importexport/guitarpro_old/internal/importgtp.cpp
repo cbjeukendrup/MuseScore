@@ -23,7 +23,7 @@
 #include "importgtp.h"
 
 #include <cmath>
-#include <QTextCodec>
+//#include <QTextCodec>
 #include <QDebug>
 #include <QRegularExpression>
 
@@ -121,7 +121,7 @@ GuitarPro::GuitarPro(MasterScore* s, int v)
     score   = s;
     version = v;
     std::string charset = configuration() ? configuration()->importGuitarProCharset() : "UTF-8";
-    _codec = QTextCodec::codecForName(QString::fromStdString(charset).toLatin1());
+//    _codec = QTextCodec::codecForName(QString::fromStdString(charset).toLatin1());
     voltaSequence = 1;
     tempo = -1;
 }
@@ -216,11 +216,11 @@ QString GuitarPro::readPascalString(int n)
     if (n - l > 0) {
         skip(n - l);
     }
-    if (_codec) {
-        return _codec->toUnicode(&s[0]);
-    } else {
-        return QString(&s[0]);
-    }
+//    if (_codec) {
+//        return _codec->toUnicode(&s[0]);
+//    } else {
+    return QString(&s[0]);
+//    }
 }
 
 //---------------------------------------------------------
@@ -234,11 +234,11 @@ QString GuitarPro::readWordPascalString()
     //char c[l+1];
     read(&c[0], l);
     c[l] = 0;
-    if (_codec) {
-        return _codec->toUnicode(&c[0]);
-    } else {
-        return QString::fromLocal8Bit(&c[0]);
-    }
+//    if (_codec) {
+//        return _codec->toUnicode(&c[0]);
+//    } else {
+    return QString::fromLocal8Bit(&c[0]);
+//    }
 }
 
 //---------------------------------------------------------
@@ -252,11 +252,11 @@ QString GuitarPro::readBytePascalString()
     //char c[l+1];
     read(&c[0], l);
     c[l] = 0;
-    if (_codec) {
-        return _codec->toUnicode(&c[0]);
-    } else {
-        return QString::fromLocal8Bit(&c[0]);
-    }
+//    if (_codec) {
+//        return _codec->toUnicode(&c[0]);
+//    } else {
+    return QString::fromLocal8Bit(&c[0]);
+//    }
 }
 
 //---------------------------------------------------------
@@ -279,11 +279,11 @@ QString GuitarPro::readDelphiString()
     if (g.find("2nd ") == 0) {
         //?? int k = 1;
     }
-    if (_codec) {
-        return _codec->toUnicode(&c[0]);
-    } else {
-        return QString::fromLatin1(&c[0]);
-    }
+//    if (_codec) {
+//        return _codec->toUnicode(&c[0]);
+//    } else {
+    return QString::fromLatin1(&c[0]);
+//    }
 }
 
 //---------------------------------------------------------
@@ -1004,7 +1004,7 @@ void GuitarPro::createMeasures()
 {
     Fraction tick = Fraction(0, 1);
     Fraction ts;
-    qDebug("measures %d bars.size %d", measures, bars.size());
+    qDebug("measures %d bars.size %lld", measures, bars.size());
 
     //      for (int i = 0; i < measures; ++i) {
     for (int i = 0; i < bars.size(); ++i) {     // ?? (ws)

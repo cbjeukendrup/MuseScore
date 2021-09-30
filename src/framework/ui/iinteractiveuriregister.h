@@ -22,6 +22,8 @@
 #ifndef MU_UI_IINTERACTIVEURIREGISTER_H
 #define MU_UI_IINTERACTIVEURIREGISTER_H
 
+#include <type_traits>
+
 #include "modularity/imoduleexport.h"
 #include "global/uri.h"
 #include "uitypes.h"
@@ -37,15 +39,17 @@ public:
     virtual void registerUri(const Uri& uri, const ContainerMeta& meta) = 0;
     virtual ContainerMeta meta(const Uri& uri) const = 0;
 
-    // userfull
+    // usefull
     void registerQmlUri(const Uri& uri, const QString& qmlPath)
     {
         registerUri(uri, ContainerMeta(ContainerType::Type::QmlDialog, qmlPath));
     }
 
-    void registerWidgetUri(const Uri& uri, int widgetMetaTypeId)
+    template<typename T>
+    void registerWidgetUri(const Uri& uri)
     {
-        registerUri(uri, ContainerMeta(ContainerType::Type::QWidgetDialog, widgetMetaTypeId));
+        static_assert(std::is_base_of<QWidget, T>::value, "T must derive from QWidget");
+        registerUri(uri, ContainerMeta(ContainerType::Type::QWidgetDialog, qRegisterMetaType<T>()));
     }
 };
 }

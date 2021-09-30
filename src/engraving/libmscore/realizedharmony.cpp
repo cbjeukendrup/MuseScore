@@ -334,7 +334,7 @@ RealizedHarmony::PitchMap RealizedHarmony::getIntervals(int rootTpc, bool litera
             if (s[c].isDigit()) {
                 int alter = 0;
                 int cutoff = c;
-                int deg = s.rightRef(s.length() - c).toInt();
+                int deg = s.right(s.length() - c).toInt();
                 //account for if the flat/sharp is stuck to the end of add
                 if (c) {
                     if (s[c - 1] == '#') {
@@ -513,7 +513,7 @@ RealizedHarmony::PitchMap RealizedHarmony::getIntervals(int rootTpc, bool litera
         //int keyTpc = int(next->staff()->key(next->tick())) + 14; //tpc of key (ex. F# major would be Tpc::F_S)
         //int keyTpcMinor = keyTpc + 3;
         int pitchBetween = (tpc2pitch(next->rootTpc()) + PITCH_DELTA_OCTAVE - tpc2pitch(rootTpc)) % PITCH_DELTA_OCTAVE;
-        bool maj7 = qNext == "major" && next->parsedForm()->extension() >= 7;     //whether or not the next chord has major 7
+        bool maj7 = qNext == "major" && next->parsedForm()->extension() >= "7";     //whether or not the next chord has major 7
 
         //commented code: dont add 9 for diminished chords
         if (!(omit & (1 << 9))) {    // && !(alt5 && (quality == "minor" || quality == "diminished" || quality == "half-diminished"))) {

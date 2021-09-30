@@ -2028,7 +2028,7 @@ void Score::removeAudio()
 bool Score::appendScore(Score* score, bool addPageBreak, bool addSectionBreak)
 {
     if (parts().size() < score->parts().size() || staves().size() < score->staves().size()) {
-        qDebug("Score to append has %d parts and %d staves, but this score only has %d parts and %d staves.",
+        qDebug("Score to append has %lld parts and %lld staves, but this score only has %lld parts and %lld staves.",
                score->parts().size(), score->staves().size(), parts().size(), staves().size());
         return false;
     }
@@ -2777,7 +2777,7 @@ void Score::mapExcerptTracks(QList<int>& dst)
     for (Excerpt* e : masterScore()->excerpts()) {
         QMultiMap<int, int> tr = e->tracks();
         QMultiMap<int, int> tracks;
-        for (QMap<int, int>::iterator it = tr.begin(); it != tr.end(); ++it) {
+        for (auto it = tr.begin(); it != tr.end(); ++it) {
             int prvStaffIdx = it.key() / VOICES;
             int curStaffIdx = dst.indexOf(prvStaffIdx);
             int offset = (curStaffIdx - prvStaffIdx) * VOICES;
@@ -4712,12 +4712,12 @@ QString Score::createRehearsalMarkText(RehearsalMark* current) const
         // next in sequence already present
         if (s1[0].isLetter()) {
             if (s1.size() == 2) {
-                s = s1[0] + QChar::fromLatin1(s1[1].toLatin1() + 1);          // BB, BC, CC
+                s = QString(s1[0]) + QChar::fromLatin1(s1[1].toLatin1() + 1); // BB, BC, CC
             } else {
-                s = s1 + QChar::fromLatin1('1');                              // B, B1, C
+                s = QString(s1) + QChar::fromLatin1('1'); // B, B1, C
             }
         } else {
-            s = s1 + QChar::fromLatin1('A');                                  // 2, 2A, 3
+            s = s1 + QChar::fromLatin1('A'); // 2, 2A, 3
         }
     }
     return s;

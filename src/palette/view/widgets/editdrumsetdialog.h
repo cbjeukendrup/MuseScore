@@ -48,8 +48,6 @@ public:
     EditDrumsetDialog(QWidget* parent = nullptr);
     EditDrumsetDialog(const EditDrumsetDialog& other);
 
-    static int static_metaTypeId();
-
 private slots:
     void bboxClicked(QAbstractButton* button);
     void itemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous);
@@ -78,7 +76,5 @@ private:
     Drumset m_editedDrumset;
 };
 } // namespace Ms
-
-Q_DECLARE_METATYPE(Ms::EditDrumsetDialog)
 
 #endif // MU_PALETTE_EDITDRUMSETDIALOG_H

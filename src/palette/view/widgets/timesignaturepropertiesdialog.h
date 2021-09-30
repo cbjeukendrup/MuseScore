@@ -48,8 +48,6 @@ public:
     TimeSignaturePropertiesDialog(const TimeSignaturePropertiesDialog& other);
     ~TimeSignaturePropertiesDialog() override;
 
-    static int static_metaTypeId();
-
 private slots:
     void accept() override;
 

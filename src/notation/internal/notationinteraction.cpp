@@ -2828,7 +2828,7 @@ void NotationInteraction::swapSelection()
         Fraction tickLen = Fraction(0, 1);
         int stavesCount = 0;
 
-        if (reader.name() == "StaffList") {
+        if (reader.name().toString() == "StaffList") {
             tickLen = Ms::Fraction::fromTicks(reader.intAttribute("len", 0));
             stavesCount = reader.intAttribute("staves", 0);
         }

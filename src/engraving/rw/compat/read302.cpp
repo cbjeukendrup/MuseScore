@@ -67,7 +67,7 @@ bool Read302::readScore302(Ms::Score* score, XmlReader& e, ReadContext& ctx)
 
     while (e.readNextStartElement()) {
         e.setTrack(-1);
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Staff") {
             StaffRW::readStaff(score, e, ctx);
         } else if (tag == "Omr") {
@@ -172,7 +172,7 @@ bool Read302::readScore302(Ms::Score* score, XmlReader& e, ReadContext& ctx)
                     e.skipCurrentElement();
                 }
             }
-        } else if (e.name() == "Tracklist") {
+        } else if (tag == "Tracklist") {
             int strack = e.intAttribute("sTrack",   -1);
             int dtrack = e.intAttribute("dstTrack", -1);
             if (strack != -1 && dtrack != -1) {
@@ -265,7 +265,7 @@ bool Read302::readScore302(Ms::Score* score, XmlReader& e, ReadContext& ctx)
 Score::FileError Read302::read302(Ms::MasterScore* masterScore, XmlReader& e, ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "programVersion") {
             masterScore->setMscoreVersion(e.readElementText());
         } else if (tag == "programRevision") {

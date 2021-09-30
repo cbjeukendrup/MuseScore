@@ -333,7 +333,7 @@ void StaffType::read(XmlReader& e)
     }
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "name") {
             setXmlName(e.readElementText());
         } else if (tag == "lines") {
@@ -1044,7 +1044,7 @@ bool TablatureFretFont::read(XmlReader& e)
     defPitch    = 9.0;
     defYOffset  = 0.0;
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         int val = e.intAttribute("value");
 
@@ -1100,7 +1100,7 @@ bool TablatureFretFont::read(XmlReader& e)
 bool TablatureDurationFont::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "family") {
             family = e.readElementText();
@@ -1201,7 +1201,7 @@ bool StaffType::readConfigFile(const QString& fileName)
 {
     QString path;
 
-    if (fileName == 0 || fileName.isEmpty()) {         // defaults to built-in xml
+    if (fileName.isEmpty()) {         // defaults to built-in xml
 #ifdef Q_OS_IOS
         {
             extern QString resourcePath();
@@ -1228,9 +1228,9 @@ bool StaffType::readConfigFile(const QString& fileName)
 
     XmlReader e(&f);
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             while (e.readNextStartElement()) {
-                const QStringRef& tag(e.name());
+                const QString& tag = e.name().toString();
                 if (tag == "fretFont") {
                     TablatureFretFont ff;
                     if (ff.read(e)) {

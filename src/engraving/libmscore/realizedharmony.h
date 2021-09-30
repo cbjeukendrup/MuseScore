@@ -60,7 +60,7 @@ class RealizedHarmony
 {
 public:
     using PitchMap = QMultiMap<int, int>;   //map from pitch to tpc
-    using PitchMapIterator = QMapIterator<int, int>;
+    using PitchMapIterator = QMultiMapIterator<int, int>;
 
 private:
     Harmony* _harmony;

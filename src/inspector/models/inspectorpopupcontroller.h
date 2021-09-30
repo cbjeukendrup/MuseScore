@@ -25,11 +25,14 @@
 
 #include <QObject>
 
+Q_MOC_INCLUDE(< QQuickItem >)
+Q_MOC_INCLUDE("uicomponents/view/popupview.h")
+
+class QQuickItem;
+
 namespace mu::uicomponents {
 class PopupView;
 }
-
-class QQuickItem;
 
 namespace mu::inspector {
 class InspectorPopupController : public QObject
@@ -63,7 +66,7 @@ private slots:
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
-    void closePopupIfNeed(const QPoint& mouseGlobalPos);
+    void closePopupIfNeed(const QPointF& mouseGlobalPos);
 
     QQuickItem* m_visualControl = nullptr;
     uicomponents::PopupView* m_popup = nullptr;

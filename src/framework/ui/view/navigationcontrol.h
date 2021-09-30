@@ -28,6 +28,8 @@
 #include "abstractnavigation.h"
 #include "async/asyncable.h"
 
+Q_MOC_INCLUDE("framework/ui/view/navigationpanel.h")
+
 namespace mu::ui {
 class NavigationPanel;
 class NavigationControl : public AbstractNavigation, public INavigationControl, public async::Asyncable

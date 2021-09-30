@@ -101,7 +101,7 @@ void LayoutBreak::write(XmlWriter& xml) const
 void LayoutBreak::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             readProperty(e, Pid::LAYOUT_BREAK);
         } else if (tag == "pause") {
@@ -342,7 +342,7 @@ PropertyValue LayoutBreak::propertyDefault(Pid id) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid LayoutBreak::propertyId(const QStringRef& name) const
+Pid LayoutBreak::propertyId(const QString& name) const
 {
     if (name == propertyName(Pid::LAYOUT_BREAK)) {
         return Pid::LAYOUT_BREAK;

@@ -1243,10 +1243,9 @@ Score::FileError importMidi(MasterScore* score, const QString& name)
         }
         catch (QString errorText) {
             if (!MScore::noGui) {
-                QMessageBox::warning(0,
+                QMessageBox::warning(nullptr,
                                      QWidget::tr("Load MIDI"),
-                                     QWidget::tr("Load failed: %1").arg(errorText),
-                                     QString(), QWidget::tr("Quit"), QString(), 0, 1);
+                                     QWidget::tr("Load failed: %1").arg(errorText));
             }
             fp.close();
             qDebug("importMidi: bad file format");

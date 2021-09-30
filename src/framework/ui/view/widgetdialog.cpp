@@ -19,32 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_DRAW_FONTENGINEFT_H
-#define MU_DRAW_FONTENGINEFT_H
+#include "widgetdialog.h"
 
-#include <QString>
-#include <QByteArray>
+using namespace mu::ui;
 
-namespace mu::draw {
-struct FTData;
-struct FTGlyphMetrics;
-class FontEngineFT
+WidgetDialog::WidgetDialog(QWidget* parent)
+    : QDialog(parent)
 {
-public:
-    FontEngineFT();
-    ~FontEngineFT();
-
-    bool load(const QString& path);
-
-    QRectF bbox(char32_t ucs4, qreal DPI_F) const;
-    qreal advance(char32_t ucs4, qreal DPI_F) const;
-
-private:
-
-    FTGlyphMetrics* glyphMetrics(char32_t ucs4) const;
-
-    FTData* m_data = nullptr;
-};
 }
 
-#endif // MU_DRAW_FONTENGINEFT_H
+WidgetDialog::WidgetDialog(const WidgetDialog& other)
+    : QDialog(other.parentWidget())
+{
+}

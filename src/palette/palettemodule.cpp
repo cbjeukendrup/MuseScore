@@ -87,29 +87,15 @@ void PaletteModule::resolveImports()
 
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerUri(Uri("musescore://palette/masterpalette"),
-                        ContainerMeta(ContainerType::QWidgetDialog, Ms::MasterPalette::static_metaTypeId()));
+        ir->registerWidgetUri<Ms::MasterPalette>(Uri("musescore://palette/masterpalette"));
+        ir->registerWidgetUri<Ms::SpecialCharactersDialog>(Uri("musescore://palette/specialcharacters"));
+        ir->registerWidgetUri<Ms::TimeSignaturePropertiesDialog>(Uri("musescore://palette/timesignatureproperties"));
+        ir->registerWidgetUri<Ms::EditDrumsetDialog>(Uri("musescore://palette/editdrumset"));
+        ir->registerWidgetUri<Ms::KeyEditor>(Uri("musescore://notation/keysignatures"));
+        ir->registerWidgetUri<Ms::TimeDialog>(Uri("musescore://notation/timesignatures"));
 
-        ir->registerUri(Uri("musescore://palette/specialcharacters"),
-                        ContainerMeta(ContainerType::QWidgetDialog, Ms::SpecialCharactersDialog::static_metaTypeId()));
-
-        ir->registerUri(Uri("musescore://palette/timesignatureproperties"),
-                        ContainerMeta(ContainerType::QWidgetDialog, Ms::TimeSignaturePropertiesDialog::static_metaTypeId()));
-
-        ir->registerUri(Uri("musescore://palette/editdrumset"),
-                        ContainerMeta(ContainerType::QWidgetDialog, Ms::EditDrumsetDialog::static_metaTypeId()));
-
-        ir->registerUri(Uri("musescore://palette/properties"),
-                        ContainerMeta(ContainerType::QmlDialog, "MuseScore/Palette/PalettePropertiesDialog.qml"));
-
-        ir->registerUri(Uri("musescore://palette/cellproperties"),
-                        ContainerMeta(ContainerType::QmlDialog, "MuseScore/Palette/PaletteCellPropertiesDialog.qml"));
-
-        ir->registerUri(Uri("musescore://notation/keysignatures"),
-                        ContainerMeta(ContainerType::QWidgetDialog, qRegisterMetaType<Ms::KeyEditor>("KeySignaturesDialog")));
-
-        ir->registerUri(Uri("musescore://notation/timesignatures"),
-                        ContainerMeta(ContainerType::QWidgetDialog, qRegisterMetaType<Ms::TimeDialog>("TimeSignaturesDialog")));
+        ir->registerQmlUri(Uri("musescore://palette/properties"), "MuseScore/Palette/PalettePropertiesDialog.qml");
+        ir->registerQmlUri(Uri("musescore://palette/cellproperties"), "MuseScore/Palette/PaletteCellPropertiesDialog.qml");
     }
 
     auto accr = ioc()->resolve<IQAccessibleInterfaceRegister>(moduleName());
@@ -138,10 +124,6 @@ void PaletteModule::registerUiTypes()
     qmlRegisterType<PalettePropertiesModel>("MuseScore.Palette", 1, 0, "PalettePropertiesModel");
     qmlRegisterType<PaletteCellPropertiesModel>("MuseScore.Palette", 1, 0, "PaletteCellPropertiesModel");
     qmlRegisterType<DrumsetPanelView>("MuseScore.Palette", 1, 0, "DrumsetPanelView");
-
-    qRegisterMetaType<SpecialCharactersDialog>("SpecialCharactersDialog");
-    qRegisterMetaType<TimeSignaturePropertiesDialog>("TimeSignaturePropertiesDialog");
-    qRegisterMetaType<Ms::EditDrumsetDialog>("EditDrumsetDialog");
 
     ioc()->resolve<ui::IUiEngine>(moduleName())->addSourceImportPath(palette_QML_IMPORT);
 }

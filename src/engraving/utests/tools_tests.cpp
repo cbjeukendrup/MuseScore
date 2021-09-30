@@ -240,7 +240,7 @@ void ToolsTests::changeEnharmonic(bool both)
         score->startCmd();
         score->changeEnharmonicSpelling(both);
         score->endCmd();
-        QString prefix = "change-enharmonic-" + mode + "-0" + ('0' + i);
+        QString prefix = "change-enharmonic-" + mode + "-0" + QString::number(i);
         EXPECT_TRUE(ScoreComp::saveCompareScore(score, prefix + "-test.mscx", TOOLS_DATA_DIR + prefix + "-ref.mscx"));
     }
 }

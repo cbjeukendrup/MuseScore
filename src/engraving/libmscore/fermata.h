@@ -80,7 +80,7 @@ public:
     mu::engraving::PropertyValue propertyDefault(Pid) const override;
     void resetProperty(Pid id) override;
 
-    Pid propertyId(const QStringRef& xmlName) const override;
+    Pid propertyId(const QString& xmlName) const override;
 
     ChordRest* chordRest() const;
     Segment* segment() const { return toSegment(explicitParent()); }

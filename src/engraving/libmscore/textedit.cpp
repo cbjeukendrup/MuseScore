@@ -653,7 +653,7 @@ EngravingItem* TextBase::drop(EditData& ed)
     case ElementType::FSYMBOL:
     {
         uint code = toFSymbol(e)->code();
-        QString s = QString::fromUcs4(&code, 1);
+        QString s = QString(code, QChar(1));
         delete e;
 
         deleteSelectedText(ed);
@@ -705,7 +705,7 @@ void TextBase::paste(EditData& ed, const QString& txt)
                         Q_ASSERT(i + 1 < txt.length());
                         i++;
                         QChar lowSurrogate = txt[i];
-                        insertText(ed, QString(QChar::surrogateToUcs4(highSurrogate, lowSurrogate)));
+                        insertText(ed, QString(QChar(QChar::surrogateToUcs4(highSurrogate, lowSurrogate))));
                     } else {
                         insertText(ed, QString(QChar(c.unicode())));
                     }
@@ -778,7 +778,7 @@ void TextBase::endHexState(EditData& ed)
             cursor->setColumn(c1);
             cursor->clearSelection();
             if (ok) {
-                editInsertText(cursor, QString(code));
+                editInsertText(cursor, QString(QChar(code)));
             } else {
                 qDebug("cannot convert hex string <%s>, state %d (%d-%d)",
                        qPrintable(ss.mid(1)), hexState, c1, c2);

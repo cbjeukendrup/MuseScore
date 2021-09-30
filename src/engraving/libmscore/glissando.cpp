@@ -445,7 +445,7 @@ void Glissando::read(XmlReader& e)
 
     _showText = false;
     while (e.readNextStartElement()) {
-        const QStringRef& tag = e.name();
+        const QString& tag = e.name().toString();
         if (tag == "text") {
             _showText = true;
             readProperty(e, Pid::GLISS_TEXT);
@@ -771,7 +771,7 @@ PropertyValue Glissando::propertyDefault(Pid propertyId) const
 //   Glissando::propertyId
 //---------------------------------------------------------
 
-Pid Glissando::propertyId(const QStringRef& name) const
+Pid Glissando::propertyId(const QString& name) const
 {
     if (name == propertyName(Pid::GLISS_TYPE)) {
         return Pid::GLISS_TYPE;

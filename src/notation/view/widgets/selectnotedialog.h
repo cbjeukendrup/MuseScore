@@ -46,8 +46,6 @@ public:
     SelectNoteDialog(QWidget* parent = nullptr);
     SelectNoteDialog(const SelectNoteDialog& other);
 
-    static int metaTypeId();
-
     bool doReplace() const;
     bool doAdd() const;
     bool doSubtract() const;

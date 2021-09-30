@@ -96,7 +96,7 @@ private:
     DockPageView* pageByUri(const QString& uri) const;
 
     void componentComplete() override;
-    void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+    void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
 
     void loadPageContent(const DockPageView* page);
     void loadToolBars(const DockPageView* page);

@@ -338,11 +338,6 @@ void StaffTextPropertiesDialog::hideEvent(QHideEvent* event)
     QDialog::hideEvent(event);
 }
 
-int StaffTextPropertiesDialog::static_metaTypeId()
-{
-    return QMetaType::type(STAFF_TEXT_PROPERTIES_DIALOG_NAME.toStdString().c_str());
-}
-
 //---------------------------------------------------------
 //   setSwingControls
 //---------------------------------------------------------

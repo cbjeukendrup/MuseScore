@@ -110,7 +110,7 @@ void TBox::write(XmlWriter& xml) const
 void TBox::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Text") {
             _text->read(e);
         } else if (Box::readProperties(e)) {

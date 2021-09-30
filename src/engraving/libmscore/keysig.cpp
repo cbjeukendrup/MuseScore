@@ -434,11 +434,11 @@ void KeySig::read(XmlReader& e)
     int subtype = 0;
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "KeySym") {
             KeySym ks;
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "sym") {
                     QString val(e.readElementText());
                     bool valid;

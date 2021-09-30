@@ -635,7 +635,7 @@ void NotationViewInputController::mouseDoubleClickEvent(QMouseEvent* event)
 void NotationViewInputController::hoverMoveEvent(QHoverEvent* event)
 {
     if (m_view->isNoteEnterMode()) {
-        PointF pos = m_view->toLogical(event->pos());
+        PointF pos = m_view->toLogical(event->position().toPoint());
         m_view->showShadowNote(pos);
     }
 }
@@ -701,8 +701,8 @@ void NotationViewInputController::dragMoveEvent(QDragMoveEvent* event)
         }
     }
 
-    PointF pos = m_view->toLogical(event->pos());
-    Qt::KeyboardModifiers modifiers = event->keyboardModifiers();
+    PointF pos = m_view->toLogical(event->position().toPoint());
+    Qt::KeyboardModifiers modifiers = event->modifiers();
 
     bool isAccepted = viewInteraction()->isDropAccepted(pos, modifiers);
     if (isAccepted) {
@@ -719,8 +719,8 @@ void NotationViewInputController::dragLeaveEvent(QDragLeaveEvent*)
 
 void NotationViewInputController::dropEvent(QDropEvent* event)
 {
-    PointF pos = m_view->toLogical(event->pos());
-    Qt::KeyboardModifiers modifiers = event->keyboardModifiers();
+    PointF pos = m_view->toLogical(event->position().toPoint());
+    Qt::KeyboardModifiers modifiers = event->modifiers();
 
     bool isAccepted = viewInteraction()->drop(pos, modifiers);
     if (isAccepted) {

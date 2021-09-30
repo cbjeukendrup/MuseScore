@@ -150,7 +150,7 @@ Part* Part::masterPart()
 
 bool Part::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "Staff") {
         Staff* staff = Factory::createStaff(this);
         score()->appendStaff(staff);

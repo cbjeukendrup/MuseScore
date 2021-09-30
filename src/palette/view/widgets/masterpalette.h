@@ -23,8 +23,6 @@
 #ifndef __MASTERPALETTE_H__
 #define __MASTERPALETTE_H__
 
-#include <QDialog>
-
 #include "ui_masterpalette.h"
 
 #include "palettewidget.h"
@@ -46,9 +44,6 @@ class MasterPalette : public QDialog, Ui::MasterPalette
 
 public:
     explicit MasterPalette(QWidget* parent = nullptr);
-    MasterPalette(const MasterPalette& dialog);
-
-    static int static_metaTypeId();
 
     QString selectedPaletteName() const;
 

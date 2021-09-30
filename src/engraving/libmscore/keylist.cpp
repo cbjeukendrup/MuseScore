@@ -130,7 +130,7 @@ int KeyList::currentKeyTick(int tick) const
 void KeyList::read(XmlReader& e, const engraving::ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        if (e.name() == "key") {
+        if (e.name().toString() == "key") {
             Key k;
             int tick = e.intAttribute("tick", 0);
             if (e.hasAttribute("custom")) {

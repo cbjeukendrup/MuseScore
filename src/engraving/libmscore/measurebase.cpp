@@ -591,7 +591,7 @@ void MeasureBase::writeProperties(XmlWriter& xml) const
 
 bool MeasureBase::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "LayoutBreak") {
         LayoutBreak* lb = Factory::createLayoutBreak(this);
         lb->read(e);

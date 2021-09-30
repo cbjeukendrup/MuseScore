@@ -41,7 +41,7 @@ static int readStyleDefaultsVersion(MasterScore* score, const QByteArray& scoreD
 
     while (!e.atEnd()) {
         e.readNext();
-        if (e.name() == "defaultsVersion") {
+        if (e.name().toString() == "defaultsVersion") {
             return e.readInt();
         }
     }

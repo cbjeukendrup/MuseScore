@@ -48,7 +48,7 @@ std::vector<ScoreFont> ScoreFont::s_scoreFonts {
     ScoreFont("Petaluma",   "Petaluma",    ":/fonts/petaluma/",  "Petaluma.otf"),
 };
 
-std::array<uint, size_t(SymId::lastSym) + 1> ScoreFont::s_symIdCodes { { 0 } };
+std::array<char32_t, size_t(SymId::lastSym) + 1> ScoreFont::s_symIdCodes { { 0 } };
 
 // =============================================
 // ScoreFont
@@ -118,7 +118,7 @@ void ScoreFont::initScoreFonts()
         QString name(SymNames::nameForSymId(static_cast<SymId>(i)));
 
         bool ok;
-        uint code = glyphNamesJson.value(name).toObject().value("codepoint").toString().midRef(2).toUInt(&ok, 16);
+        char32_t code = glyphNamesJson.value(name).toObject().value("codepoint").toString().mid(2).toInt(&ok, 16);
         if (ok) {
             s_symIdCodes[i] = code;
         } else if (MScore::debugMode) {
@@ -513,7 +513,7 @@ void ScoreFont::loadStylisticAlternates(const QJsonObject& glyphsWithAlternatesO
 
             if (alternateIt != alternatesArray.cend()) {
                 Sym& sym = this->sym(glyph.alternateSymId);
-                uint code = alternateIt->toObject().value("codepoint").toString().midRef(2).toUInt(&ok, 16);
+                char32_t code = alternateIt->toObject().value("codepoint").toString().mid(2).toUInt(&ok, 16);
                 if (ok) {
                     computeMetrics(sym, code);
                 }
@@ -571,7 +571,7 @@ void ScoreFont::loadEngravingDefaults(const QJsonObject& engravingDefaultsObject
     m_engravingDefaults.push_back({ Sid::MusicalTextFont, QString("%1 Text").arg(m_family) });
 }
 
-void ScoreFont::computeMetrics(ScoreFont::Sym& sym, uint code)
+void ScoreFont::computeMetrics(ScoreFont::Sym& sym, char32_t code)
 {
     sym.code = code;
     sym.bbox = fontProvider()->symBBox(m_font, code, DPI_F);
@@ -592,7 +592,7 @@ const ScoreFont::Sym& ScoreFont::sym(SymId id) const
     return m_symbols.at(static_cast<size_t>(id));
 }
 
-uint ScoreFont::symCode(SymId id) const
+char32_t ScoreFont::symCode(SymId id) const
 {
     const Sym& s = sym(id);
     if (s.isValid()) {
@@ -603,13 +603,13 @@ uint ScoreFont::symCode(SymId id) const
     return s_symIdCodes.at(static_cast<size_t>(id));
 }
 
-SymId ScoreFont::fromCode(uint code) const
+SymId ScoreFont::fromCode(char32_t code) const
 {
     auto it = std::find_if(m_symbols.begin(), m_symbols.end(), [code](const Sym& s) { return s.code == code; });
     return static_cast<SymId>(it == m_symbols.end() ? 0 : it - m_symbols.begin());
 }
 
-static QString codeToString(uint code)
+static QString codeToString(char32_t code)
 {
     return QString::fromUcs4(&code, 1);
 }

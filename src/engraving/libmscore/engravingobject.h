@@ -242,7 +242,7 @@ public:
 
     virtual void reset();                       // reset all properties & position to default
 
-    virtual Pid propertyId(const QStringRef& xmlName) const;
+    virtual Pid propertyId(const QString& xmlName) const;
 
     virtual void initElementStyle(const ElementStyle*);
     virtual const ElementStyle* styledProperties() const { return _elementStyle; }
@@ -255,9 +255,9 @@ public:
     void setPropertyFlags(Pid, PropertyFlags);
 
     virtual Sid getPropertyStyle(Pid) const;
-    bool readProperty(const QStringRef&, XmlReader&, Pid);
+    bool readProperty(const QString&, XmlReader&, Pid);
     void readProperty(XmlReader&, Pid);
-    bool readStyledProperty(XmlReader& e, const QStringRef& tag);
+    bool readStyledProperty(XmlReader& e, const QString& tag);
 
     virtual void readAddConnector(ConnectorInfoReader* info, bool pasteMode);
 

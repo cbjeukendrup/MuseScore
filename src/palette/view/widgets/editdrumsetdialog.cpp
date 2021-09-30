@@ -275,11 +275,6 @@ EditDrumsetDialog::EditDrumsetDialog(const EditDrumsetDialog& other)
 {
 }
 
-int EditDrumsetDialog::static_metaTypeId()
-{
-    return QMetaType::type(EDIT_DRUMSET_DIALOG_NAME.toStdString().c_str());
-}
-
 //---------------------------------------------------------
 //   customGboxToggled
 //---------------------------------------------------------
@@ -643,7 +638,7 @@ void EditDrumsetDialog::load()
     XmlReader e(&fp);
     m_editedDrumset.clear();
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             if (e.attribute("version") != MSC_VERSION) {
                 auto result = interactive()->warning(
                     mu::trc("palette", "Drumset file too old"),
@@ -657,7 +652,7 @@ void EditDrumsetDialog::load()
                 }
             }
             while (e.readNextStartElement()) {
-                if (e.name() == "Drum") {
+                if (e.name().toString() == "Drum") {
                     m_editedDrumset.load(e);
                 } else {
                     e.unknown();

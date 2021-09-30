@@ -24,10 +24,10 @@
 #define __EXAMPLEVIEW_H__
 
 #include <QTransform>
-#include <QStateMachine>
 #include <QPaintEvent>
 #include <QFrame>
-#include <QEventTransition>
+//#include <QStateMachine>
+//#include <QEventTransition>
 
 #include "libmscore/mscoreview.h"
 
@@ -62,7 +62,7 @@ class ExampleView : public QFrame, public MuseScoreView
     QRectF dropRectangle;                 ///< current drop rectangle during dragMove
     QLineF dropAnchor;                    ///< line to current anchor point during dragMove
 
-    QStateMachine* sm;
+//    QStateMachine* sm;
     QPointF startMove;
 
     double m_defaultScaling = 0;
@@ -107,16 +107,16 @@ public:
 //   DragTransitionExampleView
 //---------------------------------------------------------
 
-class DragTransitionExampleView : public QEventTransition
-{
-    ExampleView* canvas;
-
-protected:
-    virtual void onTransition(QEvent* e);
-
-public:
-    DragTransitionExampleView(ExampleView* c)
-        : QEventTransition(c, QEvent::MouseMove), canvas(c) {}
-};
+//class DragTransitionExampleView : public QEventTransition
+//{
+//    ExampleView* canvas;
+//
+//protected:
+//    virtual void onTransition(QEvent* e);
+//
+//public:
+//    DragTransitionExampleView(ExampleView* c)
+//        : QEventTransition(c, QEvent::MouseMove), canvas(c) {}
+//};
 } // namespace Ms
 #endif

@@ -138,7 +138,7 @@ public:
     void resetProperty(Pid id) override;
     Sid getPropertyStyle(Pid id) const override;
 
-    Pid propertyId(const QStringRef& xmlName) const override;
+    Pid propertyId(const QString& xmlName) const override;
 
     bool up() const { return _up; }
     void setUp(bool val);

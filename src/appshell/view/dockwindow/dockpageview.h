@@ -30,6 +30,8 @@
 #include "internal/dockbase.h"
 #include "docktypes.h"
 
+Q_MOC_INCLUDE("appshell/view/dockwindow/dockstatusbarview.h")
+
 namespace mu::dock {
 class DockToolBarView;
 class DockPanelView;

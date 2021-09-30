@@ -376,7 +376,7 @@ void SlurTieSegment::read(XmlReader& e)
 {
     qreal _spatium = score()->spatium();
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "o1") {
             ups(Grip::START).off = e.readPoint() * _spatium;
         } else if (tag == "o2") {
@@ -470,7 +470,7 @@ void SlurTie::writeProperties(XmlWriter& xml) const
 
 bool SlurTie::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (readProperty(tag, e, Pid::SLUR_DIRECTION)) {
     } else if (tag == "lineType") {

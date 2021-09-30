@@ -64,7 +64,7 @@ void WinFramelessWindowController::init()
     ShowWindow(s_hwnd, SW_SHOW);
 }
 
-bool WinFramelessWindowController::nativeEventFilter(const QByteArray& eventType, void* message, long* result)
+bool WinFramelessWindowController::nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result)
 {
     if (eventType != "windows_generic_MSG") {
         return false;

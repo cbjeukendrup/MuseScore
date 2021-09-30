@@ -208,7 +208,7 @@ void Spacer::write(XmlWriter& xml) const
 void Spacer::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             _spacerType = SpacerType(e.readInt());
         } else if (tag == "space") {

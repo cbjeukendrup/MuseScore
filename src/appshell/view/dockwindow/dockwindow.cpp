@@ -122,10 +122,10 @@ void DockWindow::componentComplete()
     });
 }
 
-void DockWindow::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
+void DockWindow::geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry)
 {
     if (!m_currentPage) {
-        QQuickItem::geometryChanged(newGeometry, oldGeometry);
+        QQuickItem::geometryChange(newGeometry, oldGeometry);
         return;
     }
 
@@ -137,7 +137,7 @@ void DockWindow::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeo
         toolBar->setMinimumWidth(toolBar->contentWidth());
     }
 
-    QQuickItem::geometryChanged(newGeometry, oldGeometry);
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
 
     alignToolBars(m_currentPage);
 }

@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QStack>
+#include <QWindow>
 
 #include "modularity/ioc.h"
 #include "../iinteractiveprovider.h"

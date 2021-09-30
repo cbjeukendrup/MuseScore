@@ -81,7 +81,6 @@ int AppShell::run(int argc, char** argv)
     }
 #endif
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("MuseScore");

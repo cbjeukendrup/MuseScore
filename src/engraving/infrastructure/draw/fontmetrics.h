@@ -53,7 +53,7 @@ public:
     RectF tightBoundingRect(const QString& string) const;
 
     bool inFont(QChar ch) const;
-    bool inFontUcs4(uint ucs4) const;
+    bool inFontUcs4(char32_t ucs4) const;
 
     static qreal width(const Font& f, const QString& string);
     static RectF boundingRect(const Font& f, const QString& string);

@@ -939,7 +939,7 @@ void Rest::write(XmlWriter& xml) const
 void Rest::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Symbol") {
             Symbol* s = new Symbol(this);
             s->setTrack(track());

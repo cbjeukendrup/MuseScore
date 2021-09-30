@@ -45,7 +45,8 @@ QString downloadingStatusTitle()
 void ExtensionsService::refreshExtensions()
 {
     if (configuration()->needCheckForUpdate()) {
-        QtConcurrent::run(this, &ExtensionsService::th_refreshExtensions);
+        QFuture<void> future = QtConcurrent::run(&ExtensionsService::th_refreshExtensions, this);
+        UNUSED(future);
     }
 }
 
@@ -100,7 +101,9 @@ RetCh<ExtensionProgress> ExtensionsService::install(const QString& extensionCode
         closeOperation(extensionCode, extensionProgressStatus);
     }, Asyncable::AsyncMode::AsyncSetRepeat);
 
-    QtConcurrent::run(this, &ExtensionsService::th_install, extensionCode, extensionProgressStatus, extensionFinishChannel);
+    QFuture<void> future = QtConcurrent::run(&ExtensionsService::th_install, this, extensionCode, extensionProgressStatus,
+                                             extensionFinishChannel);
+    UNUSED(future);
 
     return result;
 }
@@ -148,7 +151,9 @@ RetCh<ExtensionProgress> ExtensionsService::update(const QString& extensionCode)
         closeOperation(extensionCode, extensionProgressStatus);
     }, Asyncable::AsyncMode::AsyncSetRepeat);
 
-    QtConcurrent::run(this, &ExtensionsService::th_update, extensionCode, extensionProgressStatus, extensionFinishChannel);
+    QFuture<void> future = QtConcurrent::run(&ExtensionsService::th_update, this, extensionCode, extensionProgressStatus,
+                                             extensionFinishChannel);
+    UNUSED(future);
 
     return result;
 }

@@ -395,7 +395,7 @@ static constexpr PropertyMetaData propertyList[] = {
 //   propertyId
 //---------------------------------------------------------
 
-Pid propertyId(const QStringRef& s)
+Pid propertyId(const QString& s)
 {
     for (const PropertyMetaData& pd : propertyList) {
         if (pd.name == s) {
@@ -403,15 +403,6 @@ Pid propertyId(const QStringRef& s)
         }
     }
     return Pid::END;
-}
-
-//---------------------------------------------------------
-//   propertyId
-//---------------------------------------------------------
-
-Pid propertyId(const QString& s)
-{
-    return propertyId(QStringRef(&s));
 }
 
 //---------------------------------------------------------

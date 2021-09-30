@@ -151,10 +151,10 @@ public:
     void write(XmlWriter&) const override;
     void read(XmlReader&) override;
 
-    mu::engraving::PropertyValue getProperty(Pid id) const override;
+    mu::engraving::PropertyValue getProperty(Pid propertyId) const override;
     bool setProperty(Pid propertyId, const mu::engraving::PropertyValue&) override;
-    mu::engraving::PropertyValue propertyDefault(Pid id) const override;
-    Pid propertyId(const QStringRef& xmlName) const override;
+    mu::engraving::PropertyValue propertyDefault(Pid propertyId) const override;
+    Pid propertyId(const QString& xmlName) const override;
 
     QString accessibleInfo() const override;
     bool isLineType() const

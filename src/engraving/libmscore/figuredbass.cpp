@@ -71,7 +71,7 @@ static QList<FiguredBassFont> g_FBFonts;
 // used for indexed access to parenthesis chars
 // (these is no normAccidToChar[], as accidentals may use mult. chars in normalized display):
 const QChar FiguredBassItem::normParenthToChar[int(FiguredBassItem::Parenthesis::NUMOF)] =
-{ 0, '(', ')', '[', ']' };
+{ QChar(0), '(', ')', '[', ']' };
 
 FiguredBassItem::FiguredBassItem(FiguredBass* parent, int l)
     : EngravingItem(ElementType::INVALID, parent), ord(l)
@@ -463,7 +463,7 @@ void FiguredBassItem::write(XmlWriter& xml) const
 void FiguredBassItem::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "brackets") {
             parenth[0] = (Parenthesis)e.intAttribute("b0");
@@ -1095,7 +1095,7 @@ void FiguredBass::read(XmlReader& e)
     QString normalizedText;
     int idx = 0;
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "ticks") {
             setTicks(e.readFraction());
         } else if (tag == "onNote") {
@@ -1573,7 +1573,7 @@ FiguredBass* FiguredBass::addFiguredBassToSegment(Segment* seg, int track, const
 bool FiguredBassFont::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "family") {
             family = e.readElementText();
@@ -1613,7 +1613,7 @@ bool FiguredBassFont::read(XmlReader& e)
                 return false;
             }
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "simple") {
                     displayDigit[int(FiguredBassItem::Style::MODERN)]  [digit][int(FiguredBassItem::Combination::SIMPLE)]
                         = e.readElementText()[0];
@@ -1663,7 +1663,7 @@ bool FiguredBass::readConfigFile(const QString& fileName)
 {
     QString path;
 
-    if (fileName == 0 || fileName.isEmpty()) {         // defaults to built-in xml
+    if (fileName.isEmpty()) {         // defaults to built-in xml
 #ifdef Q_OS_IOS
         {
             extern QString resourcePath();
@@ -1686,13 +1686,13 @@ bool FiguredBass::readConfigFile(const QString& fileName)
     }
     XmlReader e(&fi);
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             // QString version = e.attribute(QString("version"));
             // QStringList sl = version.split('.');
             // int _mscVersion = sl[0].toInt() * 100 + sl[1].toInt();
 
             while (e.readNextStartElement()) {
-                if (e.name() == "font") {
+                if (e.name().toString() == "font") {
                     FiguredBassFont f;
                     if (f.read(e)) {
                         g_FBFonts.append(f);

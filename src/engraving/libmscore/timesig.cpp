@@ -179,7 +179,7 @@ void TimeSig::read(XmlReader& e)
     bool old = false;
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "den") {
             old = true;
@@ -253,7 +253,7 @@ void TimeSig::read(XmlReader& e)
 //   propertyId
 //---------------------------------------------------------
 
-Pid TimeSig::propertyId(const QStringRef& name) const
+Pid TimeSig::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::TIMESIG_TYPE;

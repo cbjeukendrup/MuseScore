@@ -22,6 +22,8 @@
 #include "val.h"
 #include "log.h"
 
+#include <QMetaType>
+
 using namespace mu;
 
 static const std::string VAL_TRUE("true");
@@ -149,11 +151,11 @@ QVariant Val::toQVariant() const
 
 Val Val::fromQVariant(const QVariant& var)
 {
-    switch (var.type()) {
-    case QVariant::Bool: return Val(var.toBool());
-    case QVariant::Int: return Val(var.toInt());
-    case QVariant::Double: return Val(var.toDouble());
-    case QVariant::String: return Val(var.toString().toStdString());
+    switch (var.typeId()) {
+    case QMetaType::Bool: return Val(var.toBool());
+    case QMetaType::Int: return Val(var.toInt());
+    case QMetaType::Double: return Val(var.toDouble());
+    case QMetaType::QString: return Val(var.toString().toStdString());
     default: return Val(var);
     }
 }

@@ -149,9 +149,9 @@ mu::Ret SvgWriter::write(INotationPtr notation, Device& destinationDevice, const
                 Ms::StaffLines* firstSL = system->firstMeasure()->staffLines(staffIndex)->clone();
                 Ms::StaffLines* lastSL =  system->lastMeasure()->staffLines(staffIndex);
 
-                qreal lastX =  lastSL->bbox().right()
-                              + lastSL->pagePos().x()
-                              - firstSL->pagePos().x();
+                double lastX =  lastSL->bbox().right()
+                               + lastSL->pagePos().x()
+                               - firstSL->pagePos().x();
                 std::vector<mu::LineF>& lines = firstSL->getLines();
                 for (size_t l = 0, c = lines.size(); l < c; l++) {
                     lines[l].setP2(mu::PointF(lastX, lines[l].p2().y()));

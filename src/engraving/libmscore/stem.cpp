@@ -236,7 +236,7 @@ void Stem::read(XmlReader& e)
 
 bool Stem::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (readProperty(tag, e, Pid::USER_LEN)) {
     } else if (readStyledProperty(e, tag)) {

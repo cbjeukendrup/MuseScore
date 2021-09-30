@@ -46,7 +46,7 @@ public:
     virtual qreal descent(const Font& f) const = 0;
 
     virtual bool inFont(const Font& f, QChar ch) const = 0;
-    virtual bool inFontUcs4(const Font& f, uint ucs4) const = 0;
+    virtual bool inFontUcs4(const Font& f, char32_t ucs4) const = 0;
 
     // Text
     virtual qreal horizontalAdvance(const Font& f, const QString& string) const = 0;
@@ -58,8 +58,8 @@ public:
     virtual RectF tightBoundingRect(const Font& f, const QString& string) const = 0;
 
     // Score symbols
-    virtual RectF symBBox(const Font& f, uint ucs4, qreal DPI_F) const = 0;
-    virtual qreal symAdvance(const Font& f, uint ucs4, qreal DPI_F) const = 0;
+    virtual RectF symBBox(const Font& f, char32_t ucs4, qreal DPI_F) const = 0;
+    virtual qreal symAdvance(const Font& f, char32_t ucs4, qreal DPI_F) const = 0;
 };
 }
 

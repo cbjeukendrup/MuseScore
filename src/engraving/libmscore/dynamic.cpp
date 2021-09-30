@@ -301,7 +301,7 @@ void Dynamic::write(XmlWriter& xml) const
 void Dynamic::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag = e.name();
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             setDynamicType(e.readElementText());
         } else if (tag == "velocity") {
@@ -641,7 +641,7 @@ PropertyValue Dynamic::propertyDefault(Pid id) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid Dynamic::propertyId(const QStringRef& name) const
+Pid Dynamic::propertyId(const QString& name) const
 {
     if (name == propertyName(Pid::DYNAMIC_TYPE)) {
         return Pid::DYNAMIC_TYPE;

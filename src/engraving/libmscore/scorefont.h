@@ -57,8 +57,8 @@ public:
     static ScoreFont* fallbackFont();
     static const char* fallbackTextFont();
 
-    uint symCode(SymId id) const;
-    SymId fromCode(uint code) const;
+    char32_t symCode(SymId id) const;
+    SymId fromCode(char32_t code) const;
     QString toString(SymId id) const;
 
     bool isValid(SymId id) const;
@@ -84,7 +84,7 @@ public:
 
 private:
     struct Sym {
-        uint code = 0;
+        char32_t code = 0;
         mu::RectF bbox;
         qreal advance = 0.0;
 
@@ -109,7 +109,7 @@ private:
     void loadComposedGlyphs();
     void loadStylisticAlternates(const QJsonObject& glyphsWithAlternatesObject);
     void loadEngravingDefaults(const QJsonObject& engravingDefaultsObject);
-    void computeMetrics(Sym& sym, uint code);
+    void computeMetrics(Sym& sym, char32_t code);
 
     Sym& sym(SymId id);
     const Sym& sym(SymId id) const;
@@ -127,7 +127,7 @@ private:
     double m_textEnclosureThickness = 0;
 
     static std::vector<ScoreFont> s_scoreFonts;
-    static std::array<uint, size_t(SymId::lastSym) + 1> s_symIdCodes;
+    static std::array<char32_t, size_t(SymId::lastSym) + 1> s_symIdCodes;
 };
 }
 

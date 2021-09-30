@@ -26,8 +26,6 @@
 
 #include "log.h"
 
-#include <QWindow>
-
 using namespace mu::ui;
 using namespace mu::modularity;
 

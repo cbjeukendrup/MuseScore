@@ -21,14 +21,15 @@
  */
 #include "languagesservice.h"
 
-#include <QDir>
-#include <QTranslator>
 #include <QApplication>
-#include <QJsonParseError>
-#include <QJsonDocument>
 #include <QBuffer>
 #include <QCryptographicHash>
+#include <QDir>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QTranslator>
 #include <QtConcurrent>
+
 #include "log.h"
 #include "languageserrors.h"
 
@@ -63,7 +64,7 @@ void LanguagesService::init()
 
 void LanguagesService::refreshLanguages()
 {
-    QtConcurrent::run(this, &LanguagesService::th_refreshLanguages);
+    UNUSED(QtConcurrent::run(&LanguagesService::th_refreshLanguages, this));
 }
 
 ValCh<LanguagesHash> LanguagesService::languages() const
@@ -115,7 +116,8 @@ RetCh<LanguageProgress> LanguagesService::install(const QString& languageCode)
         m_languageChanged.send(languageHash[languageCode]);
         closeOperation(languageCode, languageProgressStatus);
     }, Asyncable::AsyncMode::AsyncSetRepeat);
-    QtConcurrent::run(this, &LanguagesService::th_install, languageCode, languageProgressStatus, languageFinishChannel);
+
+    UNUSED(QtConcurrent::run(&LanguagesService::th_install, this, languageCode, languageProgressStatus, languageFinishChannel));
 
     return result;
 }
@@ -162,7 +164,7 @@ RetCh<LanguageProgress> LanguagesService::update(const QString& languageCode)
         closeOperation(languageCode, languageProgressStatus);
     }, Asyncable::AsyncMode::AsyncSetRepeat);
 
-    QtConcurrent::run(this, &LanguagesService::th_update, languageCode, languageProgressStatus, languageFinishChannel);
+    UNUSED(QtConcurrent::run(&LanguagesService::th_update, this, languageCode, languageProgressStatus, languageFinishChannel));
 
     return result;
 }

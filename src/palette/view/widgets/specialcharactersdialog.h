@@ -47,8 +47,6 @@ public:
     SpecialCharactersDialog(QWidget* parent = nullptr);
     SpecialCharactersDialog(const SpecialCharactersDialog& other);
 
-    static int static_metaTypeId();
-
 private slots:
     void populateSmufl();
     void populateUnicode();

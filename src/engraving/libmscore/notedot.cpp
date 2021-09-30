@@ -93,9 +93,10 @@ EngravingItem* NoteDot::elementBase() const
 void NoteDot::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        if (e.name() == "name") {      // obsolete
+        const QString& tag = e.name().toString();
+        if (tag == "name") {      // obsolete
             e.readElementText();
-        } else if (e.name() == "subtype") {     // obsolete
+        } else if (tag == "subtype") {     // obsolete
             e.readElementText();
         } else if (!EngravingItem::readProperties(e)) {
             e.unknown();

@@ -819,7 +819,7 @@ void BarLine::read(XmlReader& e)
     resetProperty(Pid::BARLINE_SPAN_TO);
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             setBarLineType(XmlValue::fromXml(e.readElementText(), BarLineType::NORMAL));
         } else if (tag == "span") {
@@ -1552,7 +1552,7 @@ PropertyValue BarLine::propertyDefault(Pid propertyId) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid BarLine::propertyId(const QStringRef& name) const
+Pid BarLine::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::BARLINE_TYPE;

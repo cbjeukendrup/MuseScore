@@ -501,11 +501,6 @@ void SpecialCharactersDialog::hideEvent(QHideEvent* event)
     QDialog::hideEvent(event);
 }
 
-int SpecialCharactersDialog::static_metaTypeId()
-{
-    return QMetaType::type(SPECIAL_CHARACTERS_DIALOG_NAME.toStdString().c_str());
-}
-
 //---------------------------------------------------------
 //   populateCommon
 //---------------------------------------------------------
@@ -666,7 +661,7 @@ void SpecialCharactersDialog::populateCommon()
         std::shared_ptr<FSymbol> fs = std::make_shared<FSymbol>(gpaletteScore->dummy());
         fs->setCode(id);
         fs->setFont(m_font);
-        m_pCommon->appendElement(fs, QString(id));
+        m_pCommon->appendElement(fs, QString(QChar(id)));
     }
 
     for (auto id : commonScoreSymbols) {
@@ -679,7 +674,7 @@ void SpecialCharactersDialog::populateCommon()
         std::shared_ptr<FSymbol> fs = std::make_shared<FSymbol>(gpaletteScore->dummy());
         fs->setCode(id);
         fs->setFont(m_font);
-        m_pCommon->appendElement(fs, QString(id));
+        m_pCommon->appendElement(fs, QString(QChar(id)));
     }
 }
 

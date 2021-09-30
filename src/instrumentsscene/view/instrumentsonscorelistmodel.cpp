@@ -134,7 +134,7 @@ void InstrumentsOnScoreListModel::load()
 
     for (const Part* part : parts) {
         InstrumentItem* instrument = new InstrumentItem(this);
-        instrument->id = part->id();
+        instrument->id = QString::number(part->id());
         instrument->partId = part->id();
         instrument->isExistingPart = true;
         instrument->name = part->partName();

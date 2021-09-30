@@ -856,7 +856,7 @@ void Staff::read(XmlReader& e)
 
 bool Staff::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "StaffType") {
         StaffType st;
         st.read(e);

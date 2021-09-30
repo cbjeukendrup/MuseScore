@@ -24,8 +24,7 @@
 #define __MUSICXMLSUPPORT_H__
 
 #include <QDomElement>
-#include <QAbstractMessageHandler>
-#include <QSourceLocation>
+#include <QtMessageHandler>
 
 #include "engraving/types/fraction.h"
 #include "libmscore/mscore.h"
@@ -219,19 +218,19 @@ public:
  Message handler for the MusicXML schema validator QXmlSchemaValidator.
  */
 
-class ValidatorMessageHandler : public QAbstractMessageHandler
-{
-    Q_OBJECT
-
-public:
-    ValidatorMessageHandler()
-        : QAbstractMessageHandler(0) {}
-    QString getErrors() const { return errors; }
-protected:
-    virtual void handleMessage(QtMsgType type, const QString& description, const QUrl& identifier, const QSourceLocation& sourceLocation);
-private:
-    QString errors;
-};
+//class ValidatorMessageHandler : public QAbstractMessageHandler
+//{
+//    Q_OBJECT
+//
+//public:
+//    ValidatorMessageHandler()
+//        : QtMessageHandler(0) {}
+//    QString getErrors() const { return errors; }
+//protected:
+//    virtual void handleMessage(QtMsgType type, const QString& description, const QUrl& identifier, const QSourceLocation& sourceLocation);
+//private:
+//    QString errors;
+//};
 
 extern void domError(const QDomElement&);
 extern void domNotImplemented(const QDomElement&);

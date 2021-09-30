@@ -1789,7 +1789,7 @@ void TextBase::insert(TextCursor* cursor, uint code)
     if (QChar::requiresSurrogates(code)) {
         s = QString(QChar(QChar::highSurrogate(code))).append(QChar(QChar::lowSurrogate(code)));
     } else {
-        s = QString(code);
+        s = QChar(code);
     }
 
     if (cursor->row() < rows()) {
@@ -1902,7 +1902,7 @@ void TextBase::createLayout()
                         CharFormat fmt = *cursor.format(); // save format
 
                         //uint code = score()->scoreFont()->symCode(id);
-                        uint code = id == SymId::space ? static_cast<uint>(' ') : ScoreFont::fallbackFont()->symCode(id);
+                        char32_t code = id == SymId::space ? static_cast<char32_t>(' ') : ScoreFont::fallbackFont()->symCode(id);
                         cursor.format()->setFontFamily("ScoreText");
                         insert(&cursor, code);
                         cursor.setFormat(fmt); // restore format
@@ -2483,7 +2483,7 @@ static constexpr std::array<Pid, 18> TextBasePropertyId { {
 
 bool TextBase::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     for (Pid i : TextBasePropertyId) {
         if (readProperty(tag, e, i)) {
             return true;
@@ -2541,7 +2541,7 @@ bool TextBase::readProperties(XmlReader& e)
 //   propertyId
 //---------------------------------------------------------
 
-Pid TextBase::propertyId(const QStringRef& name) const
+Pid TextBase::propertyId(const QString& name) const
 {
     if (name == "text") {
         return Pid::TEXT;

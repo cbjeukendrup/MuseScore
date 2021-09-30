@@ -116,7 +116,7 @@ void Arpeggio::write(XmlWriter& xml) const
 void Arpeggio::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             _arpeggioType = ArpeggioType(e.readInt());
         } else if (tag == "userLen1") {
@@ -776,7 +776,7 @@ engraving::PropertyValue Arpeggio::propertyDefault(Pid propertyId) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid Arpeggio::propertyId(const QStringRef& name) const
+Pid Arpeggio::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::ARPEGGIO_TYPE;

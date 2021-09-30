@@ -45,7 +45,7 @@ std::shared_ptr<T> fromMimeData(const QByteArray& data, const QString& tagName)
     XmlReader e(data);
     e.setPasteMode(true);
     while (e.readNextStartElement()) {
-        const QStringRef tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == tagName) {
             std::shared_ptr<T> t(new T);
             if (!t->read(e)) {

@@ -564,7 +564,7 @@ void Tremolo::write(XmlWriter& xml) const
 void Tremolo::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             setTremoloType(e.readElementText());
         }
@@ -756,7 +756,7 @@ PropertyValue Tremolo::propertyDefault(Pid propertyId) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid Tremolo::propertyId(const QStringRef& name) const
+Pid Tremolo::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::TREMOLO_TYPE;

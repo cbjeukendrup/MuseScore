@@ -349,7 +349,7 @@ noteList BagpipeEmbellishment::getNoteList() const
     if (_embelType >= 0 && _embelType < nEmbellishments()) {
         QStringList notes = BagpipeEmbellishmentList[_embelType].notes.split(' ');
         int noteInfoSize = sizeof(BagpipeNoteInfoList) / sizeof(*BagpipeNoteInfoList);
-        foreach (const QString note, notes) {
+        for (const QString& note : notes) {
             // search for note in BagpipeNoteInfoList
             for (int i = 0; i < noteInfoSize; ++i) {
                 if (BagpipeNoteInfoList[i].name == note) {
@@ -381,7 +381,7 @@ void BagpipeEmbellishment::write(XmlWriter& xml) const
 void BagpipeEmbellishment::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             _embelType = e.readInt();
         } else {
@@ -514,7 +514,7 @@ void BagpipeEmbellishment::layout()
 
     // draw the notes including stem, (optional) flag and (optional) ledger line
     qreal x = dx.xl;
-    foreach (int note, nl) {
+    for (int note : nl) {
         int line = BagpipeNoteInfoList[note].line;
         BEDrawingDataY dy(line, score()->spatium());
 
@@ -622,7 +622,7 @@ void BagpipeEmbellishment::draw(mu::draw::Painter* painter) const
 
     // draw the notes including stem, (optional) flag and (optional) ledger line
     qreal x = dx.xl;
-    foreach (int note, nl) {
+    for (int note : nl) {
         int line = BagpipeNoteInfoList[note].line;
         BEDrawingDataY dy(line, score()->spatium());
         drawGraceNote(painter, dx, dy, flagsym, x, drawFlag);

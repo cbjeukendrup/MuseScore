@@ -43,7 +43,7 @@ void StaffRW::readStaff(Ms::Score* score, Ms::XmlReader& e, ReadContext& ctx)
 
     if (staff == 0) {
         while (e.readNextStartElement()) {
-            const QStringRef& tag(e.name());
+            const QString tag = e.name().toString();
 
             if (tag == "Measure") {
                 Measure* measure = Factory::createMeasure(ctx.dummy()->system());
@@ -87,7 +87,7 @@ void StaffRW::readStaff(Ms::Score* score, Ms::XmlReader& e, ReadContext& ctx)
     } else {
         Measure* measure = score->firstMeasure();
         while (e.readNextStartElement()) {
-            const QStringRef& tag(e.name());
+            const QString tag = e.name().toString();
 
             if (tag == "Measure") {
                 if (measure == 0) {

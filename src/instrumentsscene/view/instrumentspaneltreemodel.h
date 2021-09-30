@@ -33,6 +33,8 @@
 #include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
 
+Q_MOC_INCLUDE("uicomponents/view/itemmultiselectionmodel.h")
+
 namespace mu::uicomponents {
 class ItemMultiSelectionModel;
 }

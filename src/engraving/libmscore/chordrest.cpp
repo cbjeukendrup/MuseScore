@@ -205,7 +205,7 @@ void ChordRest::writeProperties(XmlWriter& xml) const
 
 bool ChordRest::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "durationType") {
         setDurationType(e.readElementText());

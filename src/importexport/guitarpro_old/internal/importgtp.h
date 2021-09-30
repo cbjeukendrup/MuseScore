@@ -210,7 +210,7 @@ protected:
     GPLyrics gpLyrics;
     int slide;
     int voltaSequence;
-    QTextCodec* _codec { 0 };
+//    QTextCodec* _codec { 0 };
     Slur** slurs       { nullptr };
 
     void skip(qint64 len);

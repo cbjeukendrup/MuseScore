@@ -505,7 +505,7 @@ void EngravingObject::readProperty(XmlReader& e, Pid id)
     }
 }
 
-bool EngravingObject::readProperty(const QStringRef& s, XmlReader& e, Pid id)
+bool EngravingObject::readProperty(const QString& s, XmlReader& e, Pid id)
 {
     if (s == propertyName(id)) {
         readProperty(e, id);
@@ -580,7 +580,7 @@ void EngravingObject::writeProperty(XmlWriter& xml, Pid pid) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid EngravingObject::propertyId(const QStringRef& xmlName) const
+Pid EngravingObject::propertyId(const QString& xmlName) const
 {
     return Ms::propertyId(xmlName);
 }
@@ -589,7 +589,7 @@ Pid EngravingObject::propertyId(const QStringRef& xmlName) const
 //   readStyledProperty
 //---------------------------------------------------------
 
-bool EngravingObject::readStyledProperty(XmlReader& e, const QStringRef& tag)
+bool EngravingObject::readStyledProperty(XmlReader& e, const QString& tag)
 {
     for (const StyledProperty& spp : *styledProperties()) {
         if (readProperty(tag, e, spp.pid)) {

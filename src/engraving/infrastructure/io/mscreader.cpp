@@ -406,18 +406,18 @@ QStringList MscReader::XmlFileReader::fileList() const
     m_device->seek(0);
     QXmlStreamReader xml(m_device);
     while (xml.readNextStartElement()) {
-        if ("files" != xml.name()) {
+        if ("files" != xml.name().toString()) {
             xml.skipCurrentElement();
             continue;
         }
 
         while (xml.readNextStartElement()) {
-            if ("file" != xml.name()) {
+            if ("file" != xml.name().toString()) {
                 xml.skipCurrentElement();
                 continue;
             }
 
-            QStringRef fileName = xml.attributes().value("name");
+            QStringView fileName = xml.attributes().value("name");
             files << fileName.toString();
             xml.skipCurrentElement();
         }
@@ -435,18 +435,18 @@ QByteArray MscReader::XmlFileReader::fileData(const QString& fileName) const
     m_device->seek(0);
     QXmlStreamReader xml(m_device);
     while (xml.readNextStartElement()) {
-        if ("files" != xml.name()) {
+        if ("files" != xml.name().toString()) {
             xml.skipCurrentElement();
             continue;
         }
 
         while (xml.readNextStartElement()) {
-            if ("file" != xml.name()) {
+            if ("file" != xml.name().toString()) {
                 xml.skipCurrentElement();
                 continue;
             }
 
-            QStringRef file = xml.attributes().value("name");
+            QStringView file = xml.attributes().value("name");
             if (file != fileName) {
                 continue;
             }

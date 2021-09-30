@@ -24,7 +24,7 @@
 #define MU_ENGRAVING_FACTORY_H
 
 #include <memory>
-#include <QStringRef>
+#include <QStringView>
 #include <QString>
 
 #include "engravingitem.h"
@@ -37,13 +37,13 @@ class Factory
 {
 public:
 
-    static Ms::ElementType name2type(const QStringRef& name, bool silent = false);
-    static Ms::ElementType name2type(const QString& name) { return name2type(QStringRef(&name)); }
+    static Ms::ElementType name2type(QStringView name, bool silent = false);
+    static Ms::ElementType name2type(const QString& name) { return name2type(QStringView(name)); }
     static const char* name(Ms::ElementType type);
     static const char* userName(Ms::ElementType type);
 
     static Ms::EngravingItem* createItem(Ms::ElementType type, Ms::EngravingItem* parent, bool setupAccessible = true);
-    static Ms::EngravingItem* createItemByName(const QStringRef& name, Ms::EngravingItem* parent, bool setupAccessible = true);
+    static Ms::EngravingItem* createItemByName(QStringView name, Ms::EngravingItem* parent, bool setupAccessible = true);
 
     static Ms::Accidental* createAccidental(Ms::EngravingItem* parent, bool setupAccessible = true);
     static std::shared_ptr<Ms::Accidental> makeAccidental(Ms::EngravingItem* parent);

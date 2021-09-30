@@ -81,7 +81,7 @@ void ScoreOrder::readInstrument(Ms::XmlReader& reader)
         return;
     }
     while (reader.readNextStartElement()) {
-        if (reader.name() == "family") {
+        if (reader.name().toString() == "family") {
             InstrumentOverwrite io;
             io.id = reader.attribute("id");
             io.name = qtrc("OrderXML", reader.readElementText().toUtf8().data());
@@ -119,7 +119,8 @@ void ScoreOrder::readSection(Ms::XmlReader& reader)
     bool barLineSpan = readBoolAttribute(reader, "barLineSpan", true);
     bool thinBrackets = readBoolAttribute(reader, "thinBrackets", true);
     while (reader.readNextStartElement()) {
-        if (reader.name() == "family") {
+        const QString& tag = reader.name().toString();
+        if (tag == "family") {
             ScoreGroup sg;
             sg.family = reader.readElementText().toUtf8().data();
             sg.section = sectionId;
@@ -128,7 +129,7 @@ void ScoreOrder::readSection(Ms::XmlReader& reader)
             sg.barLineSpan = barLineSpan;
             sg.thinBracket = thinBrackets;
             groups << sg;
-        } else if (reader.name() == "unsorted") {
+        } else if (tag == "unsorted") {
             QString group { reader.attribute("group", QString("")) };
 
             if (hasGroup(UNSORTED_ID, group)) {
@@ -333,13 +334,14 @@ void ScoreOrder::read(Ms::XmlReader& reader)
     id = reader.attribute("id");
     const QString sectionId { "" };
     while (reader.readNextStartElement()) {
-        if (reader.name() == "name") {
+        const QString& tag = reader.name().toString();
+        if (tag == "name") {
             name = qtrc("OrderXML", reader.readElementText().toUtf8().data());
-        } else if (reader.name() == "section") {
+        } else if (tag == "section") {
             readSection(reader);
-        } else if (reader.name() == "instrument") {
+        } else if (tag == "instrument") {
             readInstrument(reader);
-        } else if (reader.name() == "family") {
+        } else if (tag == "family") {
             ScoreGroup sg;
             sg.family = reader.readElementText().toUtf8().data();
             sg.section = sectionId;
@@ -348,9 +350,9 @@ void ScoreOrder::read(Ms::XmlReader& reader)
             sg.barLineSpan = false;
             sg.thinBracket = false;
             groups << sg;
-        } else if (reader.name() == "soloists") {
+        } else if (tag == "soloists") {
             readSoloists(reader, sectionId);
-        } else if (reader.name() == "unsorted") {
+        } else if (tag == "unsorted") {
             QString group { reader.attribute("group", QString("")) };
 
             if (hasGroup(UNSORTED_ID, group)) {

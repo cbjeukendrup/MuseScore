@@ -32,7 +32,7 @@ class FramelessWindowController : public QAbstractNativeEventFilter
 public:
     virtual void init();
 
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
 
     QRect windowTitleBarMoveArea() const;
     void setWindowTitleBarMoveArea(const QRect& area);

@@ -120,7 +120,7 @@ public:
 
     mu::engraving::PropertyValue getProperty(Pid id) const override;
     bool setProperty(Pid propertyId, const mu::engraving::PropertyValue&) override;
-    Pid propertyId(const QStringRef& xmlName) const override;
+    Pid propertyId(const QString& xmlName) const override;
 };
 }     // namespace Ms
 Q_DECLARE_METATYPE(Ms::HookType);

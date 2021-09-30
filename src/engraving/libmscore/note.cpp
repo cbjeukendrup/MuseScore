@@ -1442,7 +1442,7 @@ void Note::read(XmlReader& e)
 
 bool Note::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "pitch") {
         _pitch = e.readInt();
@@ -1523,7 +1523,7 @@ bool Note::readProperties(XmlReader& e)
     } else if (tag == "Events") {
         _playEvents.clear();        // remove default event
         while (e.readNextStartElement()) {
-            const QStringRef& t(e.name());
+            const QString& t(e.name().toString());
             if (t == "Event") {
                 NoteEvent ne;
                 ne.read(e);

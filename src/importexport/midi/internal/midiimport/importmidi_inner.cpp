@@ -21,8 +21,6 @@
  */
 #include "importmidi_inner.h"
 
-#include <QTextCodec>
-
 #include "importmidi_operations.h"
 #include "importmidi_chord.h"
 #include "libmscore/durationtype.h"
@@ -259,12 +257,12 @@ QString convertToCharset(const std::string& text)
 {
     // charset for the current MIDI file
     QString charset = midiImportOperations.data()->charset;
-    auto* codec = QTextCodec::codecForName(charset.toLatin1());
-    if (codec) {
-        return codec->toUnicode(text.c_str());
-    } else {
-        return QString::fromUtf8(text.data(), int(text.size()));
+    QStringDecoder decoder(charset.toLatin1());
+    if (decoder.isValid()) {
+        return decoder.decode(text.c_str());
     }
+
+    return QString::fromUtf8(text.data(), int(text.size()));
 }
 
 QString defaultCharset()

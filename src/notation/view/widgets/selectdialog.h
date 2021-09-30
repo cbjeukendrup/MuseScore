@@ -45,8 +45,6 @@ public:
     SelectDialog(QWidget* parent = nullptr);
     SelectDialog(const SelectDialog& other);
 
-    static int metaTypeId();
-
     bool doReplace() const;
     bool doAdd() const;
     bool doSubtract() const;

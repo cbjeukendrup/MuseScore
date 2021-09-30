@@ -22,7 +22,6 @@
 
 #include "ove.h"
 
-#include <QTextCodec>
 #include <QMap>
 
 namespace ovebase {
@@ -374,7 +373,6 @@ MidiType MidiData::getMidiType() const
 }
 
 OveSong::OveSong()
-    : m_codec(0)
 {
     clear();
 }
@@ -730,16 +728,16 @@ int OveSong::partStaffToTrack(int part, int staff) const
 
 void OveSong::setTextCodecName(const QString& codecName)
 {
-    m_codec = QTextCodec::codecForName(codecName.toLatin1());
+    m_stringDecoder = QStringDecoder(codecName.toLatin1());
 }
 
 QString OveSong::getCodecString(const QByteArray& text)
 {
     QString s;
-    if (m_codec == NULL) {
-        s = QString(text);
+    if (m_stringDecoder.isValid()) {
+        s = m_stringDecoder.decode(text);
     } else {
-        s = m_codec->toUnicode(text);
+        s = QString(text);
     }
 
     s = s.trimmed();
@@ -4185,7 +4183,7 @@ bool NameBlock::isEqual(const QString& name) const
     }
 
     for (int i = 0; i < size() && nsize; ++i) {
-        if (data()[i] != name[i]) {
+        if (QChar(data()[i]) != name[i]) {
             return false;
         }
     }

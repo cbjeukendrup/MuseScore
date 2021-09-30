@@ -103,7 +103,7 @@ void UiModule::resolveImports()
 
     auto ir = modularity::ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerWidgetUri(Uri("musescore://devtools/interactive/testdialog"), TestDialog::static_metaTypeId());
+        ir->registerWidgetUri<TestDialog>(Uri("musescore://devtools/interactive/testdialog"));
         ir->registerQmlUri(Uri("musescore://devtools/interactive/sample"), "DevTools/Interactive/SampleDialog.qml");
     }
 }
@@ -141,7 +141,6 @@ void UiModule::registerUiTypes()
 #endif
 
     qmlRegisterType<InteractiveTestsModel>("MuseScore.Ui", 1, 0, "InteractiveTestsModel");
-    qRegisterMetaType<TestDialog>("TestDialog");
 
     modularity::ioc()->resolve<ui::IUiEngine>(moduleName())->addSourceImportPath(ui_QML_IMPORT);
 }

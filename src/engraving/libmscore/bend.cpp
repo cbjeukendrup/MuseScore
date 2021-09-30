@@ -377,7 +377,7 @@ void Bend::write(XmlWriter& xml) const
 void Bend::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (readStyledProperty(e, tag)) {
         } else if (tag == "point") {

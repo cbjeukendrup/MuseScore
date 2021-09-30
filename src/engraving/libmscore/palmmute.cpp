@@ -118,7 +118,7 @@ void PalmMute::read(XmlReader& e)
         e.addSpanner(e.intAttribute("id", -1), this);
     }
     while (e.readNextStartElement()) {
-        if (readProperty(e.name(), e, Pid::LINE_WIDTH)) {
+        if (readProperty(e.name().toString(), e, Pid::LINE_WIDTH)) {
             setPropertyFlags(Pid::LINE_WIDTH, PropertyFlags::UNSTYLED);
         } else if (!TextLineBase::readProperties(e)) {
             e.unknown();

@@ -420,10 +420,10 @@ RetVal<InteractiveProvider::OpenData> InteractiveProvider::openWidgetDialog(cons
     ContainerMeta meta = uriRegister()->meta(q.uri());
     int widgetMetaTypeId = meta.widgetMetaTypeId;
 
-    static int count(0);
-    QString objectId = QString("%1_%2").arg(widgetMetaTypeId).arg(++count);
+    QString objectId = QString::number(widgetMetaTypeId);
+    QMetaType metaType = QMetaType(widgetMetaTypeId);
 
-    void* widgetClassPtr = QMetaType::create(widgetMetaTypeId);
+    void* widgetClassPtr = metaType.create();
     QDialog* dialog = static_cast<QDialog*>(widgetClassPtr);
 
     if (!dialog) {

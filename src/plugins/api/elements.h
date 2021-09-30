@@ -47,6 +47,9 @@
 #include "playevent.h"
 #include "libmscore/types.h"
 
+Q_MOC_INCLUDE("plugins/api/part.h")
+Q_MOC_INCLUDE("plugins/api/tie.h")
+
 namespace Ms {
 namespace PluginAPI {
 class FractionWrapper;

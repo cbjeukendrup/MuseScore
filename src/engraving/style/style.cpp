@@ -92,7 +92,7 @@ int MStyle::defaultStyleVersion() const
 
 bool MStyle::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     for (const StyleDef::StyleValue& t : StyleDef::styleValues) {
         Sid idx = t.styleIdx();
@@ -182,7 +182,7 @@ bool MStyle::readProperties(XmlReader& e)
 
 bool MStyle::readStyleValCompat(XmlReader& e)
 {
-    const QStringRef tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "tempoOffset") {   // pre-3.0-beta
         const qreal x = e.doubleAttribute("x", 0.0);
         const qreal y = e.doubleAttribute("y", 0.0);
@@ -214,9 +214,9 @@ bool MStyle::readTextStyleValCompat(XmlReader& e)
         { "FontStrike",    FontStyle::Strike }
     } };
 
-    const QStringRef tag(e.name());
+    const QString& tag = e.name().toString();
     FontStyle readFontStyle = FontStyle::Normal;
-    QStringRef typeName;
+    QString typeName;
     for (auto& fontStyle : styleNamesEndings) {
         if (tag.endsWith(fontStyle.first)) {
             readFontStyle = fontStyle.second;
@@ -228,7 +228,7 @@ bool MStyle::readTextStyleValCompat(XmlReader& e)
         return false;
     }
 
-    const QString newFontStyleName = typeName.toString() + "FontStyle";
+    const QString newFontStyleName = typeName + "FontStyle";
     const Sid sid = MStyle::styleIdx(newFontStyleName);
     if (sid == Sid::NOSTYLE) {
         qWarning() << "readFontStyleValCompat: couldn't read text readFontStyle value:" << tag;
@@ -252,15 +252,15 @@ bool MStyle::read(QIODevice* device, bool ign)
 {
     XmlReader e(device);
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             QString version = e.attribute("version");
-            QStringList sl  = version.split('.');
-            int mscVersion  = sl[0].toInt() * 100 + sl[1].toInt();
+            QStringList sl = version.split('.');
+            int mscVersion = sl[0].toInt() * 100 + sl[1].toInt();
             if (mscVersion != MSCVERSION && !ign) {
                 return false;
             }
             while (e.readNextStartElement()) {
-                if (e.name() == "Style") {
+                if (e.name().toString() == "Style") {
                     read(e, nullptr);
                 } else {
                     e.unknown();
@@ -275,9 +275,9 @@ bool MStyle::isValid(QIODevice* device)
 {
     XmlReader e(device);
     while (e.error() == XmlReader::Error::NoError && e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             while (e.readNextStartElement()) {
-                if (e.name() == "Style") {
+                if (e.name().toString() == "Style") {
                     return true;
                 }
             }
@@ -291,7 +291,7 @@ void MStyle::read(XmlReader& e, compat::ReadChordListHook* readChordListHook)
     TRACEFUNC;
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "TextStyle") {
             //readTextStyle206(this, e);        // obsolete
@@ -403,7 +403,7 @@ const char* MStyle::valueName(const Sid i)
 
 Sid MStyle::styleIdx(const QString& name)
 {
-    for (StyleDef::StyleValue st : StyleDef::styleValues) {
+    for (const StyleDef::StyleValue& st : StyleDef::styleValues) {
         if (st.name() == name) {
             return st.styleIdx();
         }

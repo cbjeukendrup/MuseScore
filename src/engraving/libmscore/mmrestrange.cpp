@@ -95,7 +95,7 @@ PropertyValue MMRestRange::propertyDefault(Pid id) const
 
 bool MMRestRange::readProperties(XmlReader& xml)
 {
-    if (readProperty(xml.name(), xml, Pid::MMREST_RANGE_BRACKET_TYPE)) {
+    if (readProperty(xml.name().toString(), xml, Pid::MMREST_RANGE_BRACKET_TYPE)) {
         return true;
     } else {
         return MeasureNumberBase::readProperties(xml);

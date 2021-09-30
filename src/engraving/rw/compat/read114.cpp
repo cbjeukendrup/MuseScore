@@ -294,7 +294,7 @@ static QString convertFromHtml(const QString& in_html)
 
 static bool readTextProperties(XmlReader& e, TextBase* t, EngravingItem*)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "style") {
         int i = e.readInt();
         Tid ss = Tid::DEFAULT;
@@ -454,7 +454,7 @@ static void readText114(XmlReader& e, TextBase* t, EngravingItem* be)
 static void readAccidental(Accidental* a, XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "bracket") {
             int i = e.readInt();
             if (i == 0 || i == 1) {
@@ -615,7 +615,7 @@ static void readFingering114(XmlReader& e, Fingering* fing)
 {
     bool isStringNumber = false;
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "html-data") {
             auto htmlDdata = mu::engraving::HtmlParser::parse(e.readXml());
@@ -671,7 +671,7 @@ static void readNote(Note* note, XmlReader& e, ReadContext& ctx)
     }
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Accidental") {
             // on older scores, a note could have both a <userAccidental> tag and an <Accidental> tag
             // if a userAccidental has some other property set (like for instance offset)
@@ -963,7 +963,7 @@ static ClefType readClefType(const QString& s)
 static void readClef(Clef* clef, XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             clef->setClefType(readClefType(e.readElementText()));
         } else if (!clef->readProperties(e)) {
@@ -985,7 +985,7 @@ static void readTuplet(Tuplet* tuplet, XmlReader& e, const ReadContext& ctx)
     tuplet->setId(e.intAttribute("id", 0));
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {      // obsolete
             e.skipCurrentElement();
         } else if (tag == "hasNumber") {  // obsolete even in 1.3
@@ -1030,7 +1030,7 @@ static void readTremolo(Tremolo* tremolo, XmlReader& e)
         OLD_C32
     };
     while (e.readNextStartElement()) {
-        if (e.name() == "subtype") {
+        if (e.name().toString() == "subtype") {
             OldTremoloType sti = OldTremoloType(e.readElementText().toInt());
             TremoloType st;
             switch (sti) {
@@ -1062,7 +1062,7 @@ static void readTremolo(Tremolo* tremolo, XmlReader& e)
 static void readChord(Measure* m, Chord* chord, XmlReader& e, ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Note") {
             Note* note = Factory::createNote(chord);
             // the note needs to know the properties of the track it belongs to
@@ -1101,7 +1101,7 @@ static void readChord(Measure* m, Chord* chord, XmlReader& e, ReadContext& ctx)
 static void readRest(Measure* m, Rest* rest, XmlReader& e, ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Attribute" || tag == "Articulation") {
             EngravingItem* el = Read206::readArticulation(rest, e, ctx);
             if (el->isFermata()) {
@@ -1126,7 +1126,7 @@ static void readRest(Measure* m, Rest* rest, XmlReader& e, ReadContext& ctx)
 void readTempoText(TempoText* t, XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "tempo") {
             t->setTempo(e.readDouble());
         } else if (!readTextProperties(e, t, t)) {
@@ -1155,7 +1155,7 @@ void readStaffText(StaffText* t, XmlReader& e)
 static void readLineSegment114(XmlReader& e, LineSegment* ls)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "off1") {
             ls->setOffset(e.readPoint() * ls->spatium());
         } else {
@@ -1170,7 +1170,7 @@ static void readLineSegment114(XmlReader& e, LineSegment* ls)
 
 static bool readTextLineProperties114(XmlReader& e, const ReadContext& ctx, TextLineBase* tl)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "beginText") {
         Text* text = Factory::createText(tl, Tid::DEFAULT, false);
@@ -1223,7 +1223,7 @@ static bool readTextLineProperties114(XmlReader& e, const ReadContext& ctx, Text
 static void readVolta114(XmlReader& e, const ReadContext& ctx, Volta* volta)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "endings") {
             QString s = e.readElementText();
             QStringList sl = s.split(",", Qt::SkipEmptyParts);
@@ -1252,7 +1252,7 @@ static void readVolta114(XmlReader& e, const ReadContext& ctx, Volta* volta)
 static void readOttava114(XmlReader& e, const ReadContext& ctx, Ottava* ottava)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             QString s = e.readElementText();
             bool ok;
@@ -1319,7 +1319,7 @@ static QString resolveSymCompatibility(SymId i, QString programVersion)
 static void readTextLine114(XmlReader& e, const ReadContext& ctx, TextLine* textLine)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "lineVisible") {
             textLine->setLineVisible(e.readBool());
@@ -1373,7 +1373,7 @@ static void readTextLine114(XmlReader& e, const ReadContext& ctx, TextLine* text
 static void readPedal114(XmlReader& e, const ReadContext& ctx, Pedal* pedal)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "beginSymbol"
             || tag == "beginSymbolOffset"
             || tag == "endSymbol"
@@ -1409,7 +1409,7 @@ static void readHarmony114(XmlReader& e, const ReadContext& ctx, Harmony* h)
     };
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "base") {
             if (ctx.mscVersion() >= 106) {
                 h->setBaseTpc(e.readInt());
@@ -1435,7 +1435,7 @@ static void readHarmony114(XmlReader& e, const ReadContext& ctx, Harmony* h)
             int degreeAlter = 0;
             QString degreeType = "";
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "degree-value") {
                     degreeValue = e.readInt();
                 } else if (t == "degree-alter") {
@@ -1552,7 +1552,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
     Fraction lastTick = e.tick();
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "move") {
             e.setTick(e.readFraction() + m->tick());
@@ -1567,7 +1567,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
             barLine->resetProperty(Pid::BARLINE_SPAN_TO);
 
             while (e.readNextStartElement()) {
-                const QStringRef& tg(e.name());
+                const QString& tg(e.name().toString());
                 if (tg == "subtype") {
                     BarLineType t = BarLineType::NORMAL;
                     switch (e.readInt()) {
@@ -1899,7 +1899,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
             Text* _verseNumber = 0;
 
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "no") {
                     l->setNo(e.readInt());
                 } else if (t == "syllabic") {
@@ -2008,7 +2008,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
             Jump* j = new Jump(m);
             j->setTrack(e.track());
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "jumpTo") {
                     j->setJumpTo(e.readElementText());
                 } else if (t == "playUntil") {
@@ -2030,7 +2030,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
 
             Marker::Type mt = Marker::Type::SEGNO;
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "subtype") {
                     QString s(e.readElementText());
                     a->setLabel(s);
@@ -2123,7 +2123,7 @@ static void readMeasure(Measure* m, int staffIdx, XmlReader& e, ReadContext& ctx
                 segment->read(e);
             }
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 if (t == "off1") {
                     qreal o = e.readDouble();
                     qDebug("TODO: off1 %f", o);
@@ -2188,7 +2188,7 @@ static void readBox(XmlReader& e, Box* b);
 
 static bool readBoxProperties(XmlReader& e, Box* b)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "height") {
         b->setBoxHeight(Spatium(e.readDouble()));
     } else if (tag == "width") {
@@ -2268,7 +2268,7 @@ static void readBox(XmlReader& e, Box* b)
     b->setAutoSizeEnabled(false);
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "HBox") {
             HBox* hb = new HBox(b->system());
             readBox(e, hb);
@@ -2295,7 +2295,7 @@ static void readStaffContent(Score* score, XmlReader& e, ReadContext& ctx)
 
     Measure* measure = score->firstMeasure();
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "Measure") {
             if (staff == 0) {
@@ -2365,7 +2365,7 @@ static void readStaffContent(Score* score, XmlReader& e, ReadContext& ctx)
 static void readStaff(Staff* staff, XmlReader& e, const ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "lines") {
             int lines = e.readInt();
             staff->setLines(Fraction(0, 1), lines);
@@ -2383,7 +2383,7 @@ static void readStaff(Staff* staff, XmlReader& e, const ReadContext& ctx)
             // QList<std::pair<int, ClefType>>& cl = e.clefs(idx());
             staff->clefList().clear();
             while (e.readNextStartElement()) {
-                if (e.name() == "clef") {
+                if (e.name().toString() == "clef") {
                     int tick    = e.intAttribute("tick", 0);
                     ClefType ct = readClefType(e.attribute("idx", "0"));
                     staff->clefList().insert(std::pair<int, ClefType>(ctx.fileDivision(tick), ct));
@@ -2422,7 +2422,7 @@ static void readDrumset(Drumset* ds, XmlReader& e)
         return;
     }
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "head") {
             ds->drum(pitch).notehead = Read206::convertHeadGroup(e.readInt());
         } else if (ds->readProperties(e, pitch)) {
@@ -2447,7 +2447,7 @@ static void readInstrument(Instrument* i, Part* p, XmlReader& e)
     bool customDrumset = false;
     i->clearChannels();         // remove default channel
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "chorus") {
             chorus = e.readInt();
         } else if (tag == "reverb") {
@@ -2522,7 +2522,7 @@ static void readInstrument(Instrument* i, Part* p, XmlReader& e)
 static void readPart(Part* part, XmlReader& e, ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Staff") {
             Staff* staff = Factory::createStaff(part);
             staff->setStaffType(Fraction(0, 1), StaffType());       // will reset later if needed
@@ -2620,14 +2620,14 @@ static void readPageFormat(PageFormat* pf, XmlReader& e)
     QString type;
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "landscape") {
             landscape = e.readInt();
         } else if (tag == "page-margins") {
             type = e.attribute("type", "both");
             qreal lm = 0.0, rm = 0.0, tm = 0.0, bm = 0.0;
             while (e.readNextStartElement()) {
-                const QStringRef& t(e.name());
+                const QString& t(e.name().toString());
                 qreal val = e.readDouble() * 0.5 / PPI;
                 if (t == "left-margin") {
                     lm = val;
@@ -2747,7 +2747,7 @@ Score::FileError Read114::read114(MasterScore* masterScore, XmlReader& e, ReadCo
     TempoMap tm;
     while (e.readNextStartElement()) {
         e.setTrack(-1);
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Staff") {
             readStaffContent(masterScore, e, ctx);
         } else if (tag == "KeySig") {                 // not supported
@@ -2772,7 +2772,8 @@ Score::FileError Read114::read114(MasterScore* masterScore, XmlReader& e, ReadCo
             qreal tempo = e.attribute("fix", "2.0").toDouble();
             tm.setRelTempo(tempo);
             while (e.readNextStartElement()) {
-                if (e.name() == "tempo") {
+                const QString& t(e.name().toString());
+                if (t == "tempo") {
                     int tick   = e.attribute("tick").toInt();
                     double tmp = e.readElementText().toDouble();
                     tick       = ctx.fileDivision(tick);
@@ -2781,7 +2782,7 @@ Score::FileError Read114::read114(MasterScore* masterScore, XmlReader& e, ReadCo
                         tm.erase(pos);
                     }
                     tm.setTempo(tick, tmp);
-                } else if (e.name() == "relTempo") {
+                } else if (t == "relTempo") {
                     e.readElementText();
                 } else {
                     e.unknown();

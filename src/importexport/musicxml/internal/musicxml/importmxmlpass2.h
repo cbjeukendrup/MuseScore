@@ -152,7 +152,7 @@ class Notation
 public:
     Notation(const QString& name, const QString& parent = "",
              const SymId& symId = SymId::noSym) { _name = name; _parent = parent; _symId = symId; }
-    void addAttribute(const QStringRef name, const QStringRef value);
+    void addAttribute(const QStringView name, const QStringView value);
     QString attribute(const QString& name) const;
     QString name() const { return _name; }
     QString parent() const { return _parent; }

@@ -77,7 +77,7 @@ void StaffState::write(XmlWriter& xml) const
 void StaffState::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             _staffStateType = StaffStateType(e.readInt());
         } else if (tag == "Instrument") {

@@ -69,7 +69,7 @@ LineSegment::LineSegment(const LineSegment& s)
 
 bool LineSegment::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "subtype") {
         setSpannerSegmentType(SpannerSegmentType(e.readInt()));
     } else if (tag == "off2") {
@@ -1345,7 +1345,7 @@ void SLine::writeProperties(XmlWriter& xml) const
 
 bool SLine::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "tick2") {                  // obsolete
         if (tick() == Fraction(-1, 1)) {   // not necessarily set (for first note of score?) #30151

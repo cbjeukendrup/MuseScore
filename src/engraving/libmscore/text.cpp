@@ -52,7 +52,7 @@ Text::Text(EngravingItem* parent, Tid tid)
 void Text::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "style") {
             QString sn = e.readElementText();
             if (sn == "Tuplet") {              // ugly hack for compatibility

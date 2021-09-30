@@ -380,12 +380,12 @@ bool ConnectorInfoReader::read()
 {
     XmlReader& e = *_reader;
     const QString name(e.attribute("type"));
-    _type = Factory::name2type(&name);
+    _type = Factory::name2type(name);
 
     e.fillLocation(_currentLoc);
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "prev") {
             readEndpointLocation(_prevLoc);
@@ -418,7 +418,7 @@ void ConnectorInfoReader::readEndpointLocation(Location& l)
 {
     XmlReader& e = *_reader;
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
 
         if (tag == "location") {
             l = Location::relative();

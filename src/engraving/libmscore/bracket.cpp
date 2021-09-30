@@ -608,7 +608,7 @@ void Bracket::read(XmlReader& e)
     }
 
     while (e.readNextStartElement()) {
-        if (e.name() == "level") {
+        if (e.name().toString() == "level") {
             _bi->setColumn(e.readInt());
         } else if (!EngravingItem::readProperties(e)) {
             e.unknown();

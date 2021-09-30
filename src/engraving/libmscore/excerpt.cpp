@@ -157,7 +157,7 @@ void Excerpt::read(XmlReader& e)
     const QList<Part*>& pl = _oscore->parts();
     QString name;
     while (e.readNextStartElement()) {
-        const QStringRef& tag = e.name();
+        const QString& tag = e.name().toString();
         if (tag == "name") {
             name = e.readElementText();
         } else if (tag == "title") {

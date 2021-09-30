@@ -48,8 +48,6 @@ public:
     EditStaff(QWidget* parent = nullptr);
     EditStaff(const EditStaff&);
 
-    static int metaTypeId();
-
 private:
     void hideEvent(QHideEvent*) override;
     void apply();

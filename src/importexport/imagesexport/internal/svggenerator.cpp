@@ -22,7 +22,6 @@
 
 #include <QTextStream>
 #include <QBuffer>
-#include <QTextCodec>
 #include <QPainterPath>
 #include <QMimeType>
 #include <QMimeDatabase>
@@ -1072,10 +1071,7 @@ bool SvgPaintEngine::end()
 
     // Point the stream at the real output device (the .svg file)
     d->stream->setDevice(d->outputDevice);
-
-#ifndef QT_NO_TEXTCODEC
-    d->stream->setCodec(QTextCodec::codecForName("UTF-8"));
-#endif
+    d->stream->setEncoding(QStringConverter::Utf8);
 
     // Stream our strings out to the device, in order
     stream() << d->header;

@@ -662,7 +662,7 @@ static Fraction readCapVoice(Score* score, CapVoice* cvoice, int staffIdx, const
                     Fraction nn = (ticks * tupletCount) / f;
                     tuplet->setTicks(nn);
                 }
-                qDebug("Tuplet at %d: count: %d  tri: %d  prolonging: %d  ticks %d objects %d",
+                qDebug("Tuplet at %d: count: %d  tri: %d  prolonging: %d  ticks %d objects %lld",
                        tick.ticks(), o->count, o->tripartite, o->isProlonging, ticks.ticks(),
                        o->objects.size());
             }
@@ -1186,7 +1186,7 @@ void convertCapella(Score* score, Capella* cap, bool capxMode)
     // associated with a CapStaffLayout
     //
     if (staves != cap->staffLayouts().size()) {
-        qDebug("Capella: max number of staves != number of staff layouts (%d, %d)",
+        qDebug("Capella: max number of staves != number of staff layouts (%d, %lld)",
                staves, cap->staffLayouts().size());
         staves = qMax(staves, cap->staffLayouts().size());
     }
@@ -1528,7 +1528,7 @@ void TransposableObj::read()
     }
     variants = cap->readDrawObjectArray();
     if (variants.size() != b) {
-        qDebug("variants.size %d, expected %d", variants.size(), b);
+        qDebug("variants.size %lld, expected %d", variants.size(), b);
     }
     Q_ASSERT(variants.size() == b);
     /*int nRefNote =*/ cap->readInt();
@@ -2225,7 +2225,7 @@ QFont Capella::readFont()
     }
     index -= 1;
     if (index >= fonts.size()) {
-        qDebug("illegal font index %d (max %d)", index, fonts.size() - 1);
+        qDebug("illegal font index %d (max %lld)", index, fonts.size() - 1);
     }
     return fonts[index];
 }
@@ -2805,10 +2805,9 @@ Score::FileError importCapella(MasterScore* score, const QString& name)
     }
     catch (Capella::Error errNo) {
         if (!MScore::noGui) {
-            QMessageBox::warning(0,
+            QMessageBox::warning(nullptr,
                                  QWidget::tr("Import Capella"),
-                                 QWidget::tr("Load failed: %1").arg(cf.error(errNo)),
-                                 QString(), QWidget::tr("Quit"), QString(), 0, 1);
+                                 QWidget::tr("Load failed: %1").arg(cf.error(errNo)));
         }
         fp.close();
         // avoid another error message box

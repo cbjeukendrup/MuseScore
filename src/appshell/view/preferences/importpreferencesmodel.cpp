@@ -21,7 +21,7 @@
  */
 #include "importpreferencesmodel.h"
 
-#include <QTextCodec>
+//#include <QTextCodec>
 
 #include "libmscore/mscore.h"
 
@@ -41,13 +41,13 @@ void ImportPreferencesModel::load()
 
 QVariantList ImportPreferencesModel::charsets() const
 {
-    QList<QByteArray> charsets = QTextCodec::availableCodecs();
-    std::sort(charsets.begin(), charsets.end());
+//    QList<QByteArray> charsets = QTextCodec::availableCodecs();
+//    std::sort(charsets.begin(), charsets.end());
 
     QVariantList result;
-    for (QByteArray charset: charsets) {
-        result << QString(charset);
-    }
+//    for (QByteArray charset: charsets) {
+//        result << QString(charset);
+//    }
 
     return result;
 }

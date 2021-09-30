@@ -154,7 +154,7 @@ public:
     //! (moved from TextBase::drawTextWorkaround)
     void drawTextWorkaround(Font& f, const PointF pos, const QString text);
 
-    void drawSymbol(const PointF& point, uint ucs4Code);
+    void drawSymbol(const PointF& point, char32_t ucs4Code);
 
     void fillRect(const RectF& rect, const Brush& brush);
 

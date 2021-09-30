@@ -242,21 +242,21 @@ PropertyValue PropertyValue::fromQVariant(const QVariant& v, P_TYPE type)
     }
 
     //! NOTE Try determinate type by QVariant type
-    switch (v.type()) {
-    case QVariant::Invalid:     return PropertyValue();
-    case QVariant::Bool:        return PropertyValue(v.toBool());
-    case QVariant::Int:         return PropertyValue(v.toInt());
-    case QVariant::UInt:        return PropertyValue(v.toInt());
-    case QVariant::LongLong:    return PropertyValue(v.toInt());
-    case QVariant::ULongLong:   return PropertyValue(v.toInt());
-    case QVariant::Double:      return PropertyValue(v.toReal());
-    case QVariant::Char:        return PropertyValue(v.toInt());
-    case QVariant::String:      return PropertyValue(v.toString());
-    case QVariant::Size:        return PropertyValue(SizeF::fromQSizeF(QSizeF(v.toSize())));
-    case QVariant::SizeF:       return PropertyValue(SizeF::fromQSizeF(v.toSizeF()));
-    case QVariant::Point:       return PropertyValue(PointF::fromQPointF(QPointF(v.toPoint())));
-    case QVariant::PointF:      return PropertyValue(PointF::fromQPointF(v.toPointF()));
-    case QVariant::Color:       return PropertyValue(draw::Color::fromQColor(v.value<QColor>()));
+    switch (v.typeId()) {
+    case QMetaType::Type::UnknownType: return PropertyValue();
+    case QMetaType::Type::Bool:        return PropertyValue(v.toBool());
+    case QMetaType::Type::Int:         return PropertyValue(v.toInt());
+    case QMetaType::Type::UInt:        return PropertyValue(v.toInt());
+    case QMetaType::Type::LongLong:    return PropertyValue(v.toInt());
+    case QMetaType::Type::ULongLong:   return PropertyValue(v.toInt());
+    case QMetaType::Type::Double:      return PropertyValue(v.toReal());
+    case QMetaType::Type::Char:        return PropertyValue(v.toInt());
+    case QMetaType::Type::QString:     return PropertyValue(v.toString());
+    case QMetaType::Type::QSize:       return PropertyValue(SizeF::fromQSizeF(QSizeF(v.toSize())));
+    case QMetaType::Type::QSizeF:      return PropertyValue(SizeF::fromQSizeF(v.toSizeF()));
+    case QMetaType::Type::QPoint:      return PropertyValue(PointF::fromQPointF(QPointF(v.toPoint())));
+    case QMetaType::Type::QPointF:     return PropertyValue(PointF::fromQPointF(v.toPointF()));
+    case QMetaType::Type::QColor:      return PropertyValue(draw::Color::fromQColor(v.value<QColor>()));
     default:
         break;
     }

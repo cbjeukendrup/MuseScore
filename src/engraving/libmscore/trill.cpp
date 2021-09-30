@@ -406,7 +406,7 @@ void Trill::read(XmlReader& e)
     eraseSpannerSegments();
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             setTrillType(e.readElementText());
         } else if (tag == "Accidental") {
@@ -552,7 +552,7 @@ PropertyValue Trill::propertyDefault(Pid propertyId) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid Trill::propertyId(const QStringRef& name) const
+Pid Trill::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::TRILL_TYPE;

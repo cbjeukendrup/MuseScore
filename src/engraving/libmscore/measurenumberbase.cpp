@@ -103,7 +103,7 @@ PropertyValue MeasureNumberBase::propertyDefault(Pid id) const
 
 bool MeasureNumberBase::readProperties(XmlReader& xml)
 {
-    if (readProperty(xml.name(), xml, Pid::HPLACEMENT)) {
+    if (readProperty(xml.name().toString(), xml, Pid::HPLACEMENT)) {
         return true;
     } else {
         return TextBase::readProperties(xml);

@@ -154,7 +154,7 @@ void Volta::read(XmlReader& e)
     eraseSpannerSegments();
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "endings") {
             QString s = e.readElementText();
             QStringList sl = s.split(",", Qt::SkipEmptyParts);

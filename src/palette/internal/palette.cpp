@@ -231,7 +231,7 @@ bool Palette::read(XmlReader& e)
     m_name = e.attribute("name");
     m_type = Type::Unknown;
     while (e.readNextStartElement()) {
-        const QStringRef tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "gridWidth") {
             m_gridSize.setWidth(e.readDouble());
         } else if (tag == "gridHeight") {
@@ -350,17 +350,17 @@ bool Palette::readFromFile(const QString& p)
     QString rootfile = "";
     QList<QString> images;
     while (e.readNextStartElement()) {
-        if (e.name() != "container") {
+        if (e.name().toString() != "container") {
             e.unknown();
             break;
         }
         while (e.readNextStartElement()) {
-            if (e.name() != "rootfiles") {
+            if (e.name().toString() != "rootfiles") {
                 e.unknown();
                 break;
             }
             while (e.readNextStartElement()) {
-                const QStringRef& tag(e.name());
+                const QString& tag = e.name().toString();
 
                 if (tag == "rootfile") {
                     if (rootfile.isEmpty()) {
@@ -391,14 +391,14 @@ bool Palette::readFromFile(const QString& p)
     e.clear();
     e.addData(ba);
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             QString version = e.attribute("version");
             QStringList sl = version.split('.');
             int versionId = sl[0].toInt() * 100 + sl[1].toInt();
             gpaletteScore->setMscVersion(versionId); // TODO: what is this?
 
             while (e.readNextStartElement()) {
-                if (e.name() == "Palette") {
+                if (e.name().toString() == "Palette") {
                     read(e);
                 } else {
                     e.unknown();

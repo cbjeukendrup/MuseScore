@@ -356,7 +356,7 @@ EngravingItem* Factory::doCreateItem(ElementType type, EngravingItem* parent)
     return 0;
 }
 
-EngravingItem* Factory::createItemByName(const QStringRef& name, EngravingItem* parent, bool setupAccessible)
+EngravingItem* Factory::createItemByName(QStringView name, EngravingItem* parent, bool setupAccessible)
 {
     ElementType type = name2type(name, setupAccessible);
     if (type == ElementType::INVALID) {
@@ -366,10 +366,10 @@ EngravingItem* Factory::createItemByName(const QStringRef& name, EngravingItem* 
     return createItem(type, parent, setupAccessible);
 }
 
-ElementType Factory::name2type(const QStringRef& name, bool silent)
+ElementType Factory::name2type(QStringView name, bool silent)
 {
     for (int i = 0; i < int(ElementType::MAXTYPE); ++i) {
-        if (name == elementNames[i].name) {
+        if (name.toString() == elementNames[i].name) {
             return ElementType(i);
         }
     }

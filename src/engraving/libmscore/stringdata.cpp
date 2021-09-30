@@ -79,7 +79,7 @@ void StringData::read(XmlReader& e)
 {
     stringTable.clear();
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "frets") {
             _frets = e.readInt();
         } else if (tag == "string") {

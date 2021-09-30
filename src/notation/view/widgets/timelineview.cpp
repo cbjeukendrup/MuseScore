@@ -71,6 +71,8 @@ private:
 
     bool handleMouseEvent(QMouseEvent* event)
     {
+        UNUSED(event);
+        /* FIXME ### Qt 6
         QPoint pos = event ? event->pos() : QPoint();
         Ms::TRowLabels* labelsColumn = m_msTimeline->labelsColumn();
 
@@ -81,6 +83,7 @@ private:
             event->setLocalPos(labelsColumn->mapFrom(this, pos));
             return labelsColumn->handleEvent(event);
         }
+         */
 
         return false;
     }

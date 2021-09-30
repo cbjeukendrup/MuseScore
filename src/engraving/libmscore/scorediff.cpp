@@ -139,15 +139,17 @@ DiffType MscxModeDiff::fromDtlDiffType(dtl::edit_t dtlType)
 std::vector<TextDiff> MscxModeDiff::lineModeDiff(const QString& s1, const QString& s2)
 {
     // type declarations for dtl library
-    typedef QStringRef elem;
+    typedef QStringView elem;
     typedef std::pair<elem, dtl::elemInfo> sesElem;
     typedef std::vector<sesElem> sesElemVec;
 
-    const QVector<QStringRef> linesVec1 = s1.splitRef('\n');
-    std::vector<QStringRef> lines1(linesVec1.begin(), linesVec1.end());
-    const QVector<QStringRef> linesVec2 = s2.splitRef('\n');
-    std::vector<QStringRef> lines2(linesVec2.begin(), linesVec2.end());
-    dtl::Diff<QStringRef, std::vector<QStringRef> > diff(lines1, lines2);
+    const QStringView sv1 { s1 };
+    const QVector<QStringView> linesVec1 = sv1.split('\n');
+    std::vector<QStringView> lines1(linesVec1.begin(), linesVec1.end());
+    const QStringView sv2 { s2 };
+    const QVector<QStringView> linesVec2 = sv2.split('\n');
+    std::vector<QStringView> lines2(linesVec2.begin(), linesVec2.end());
+    dtl::Diff<QStringView, std::vector<QStringView> > diff(lines1, lines2);
 
     diff.compose();
 
@@ -499,19 +501,19 @@ void MscxModeDiff::readMscx(const QString& xml, std::vector<Tag>& extraTags)
     QRegularExpressionMatchIterator m = tagRegExp.globalMatch(xml);
     while (m.hasNext()) {
         QRegularExpressionMatch match = m.next();
-        QStringRef tag(match.capturedRef("name"));
+        const QString& tag(match.captured("name"));
         while ((match.capturedStart("name") > nextLineIndex) && (nextLineIndex > 0)) {
             ++line;
             nextLineIndex = xml.indexOf('\n', nextLineIndex + 1);
         }
-        if (match.capturedRef().startsWith("</")) {
+        if (match.captured().startsWith("</")) {
             // end element
-            handleTag(line, END_TAG, tag.toString(), extraTags);
+            handleTag(line, END_TAG, tag, extraTags);
             if (tag == "Tuplet") {
                 // special case: <Tuplet> / <endTuplet/> pair
                 handleTag(line, START_TAG, "__tupletBound", extraTags);
             }
-        } else if (match.capturedRef().endsWith("/>")) {
+        } else if (match.captured().endsWith("/>")) {
             // empty element: do nothing
             if (tag == "endTuplet") {
                 // special case: <Tuplet> / <endTuplet/> pair
@@ -519,7 +521,7 @@ void MscxModeDiff::readMscx(const QString& xml, std::vector<Tag>& extraTags)
             }
         } else {
             // start element
-            handleTag(line, START_TAG, tag.toString(), extraTags);
+            handleTag(line, START_TAG, tag, extraTags);
         }
     }
 }
@@ -667,7 +669,7 @@ BaseDiff* TextDiffParser::handleToken(const QXmlStreamReader& r, const Engraving
         return nullptr;
     }
     BaseDiff* diff = nullptr;
-    const QStringRef tag(r.name());
+    const QString& tag(r.name().toString());
 
     if (r.isStartElement()) {
         if (newElement) {
@@ -680,7 +682,7 @@ BaseDiff* TextDiffParser::handleToken(const QXmlStreamReader& r, const Engraving
             }
             contextsStack.push_back(newElement);
         } else if (tag == "Spanner") {
-            markupContext = tag.toString();
+            markupContext = tag;
         } else if (saveDiff) {
             const EngravingObject* ctx = contextsStack.back();
             if (markupContext == "Spanner" && !(ctx && ctx->isSpanner())) {
@@ -692,7 +694,7 @@ BaseDiff* TextDiffParser::handleToken(const QXmlStreamReader& r, const Engraving
                     MarkupDiff* d = new MarkupDiff;
                     diff = d;
                     d->ctx[iScore] = ctx;
-                    d->name = tag.toString();
+                    d->name = tag;
                     const EngravingObject* widerCtx = *(contextsStack.end() - 2);
                     if (widerCtx && widerCtx->isStaff()) {
                         d->info = toStaff(widerCtx)->idx();
@@ -709,7 +711,7 @@ BaseDiff* TextDiffParser::handleToken(const QXmlStreamReader& r, const Engraving
                     MarkupDiff* d = new MarkupDiff;
                     diff = d;
                     d->ctx[iScore] = contextsStack.back();
-                    d->name = tag.toString();
+                    d->name = tag;
                     if (tag == "metaTag") {
                         d->info = r.attributes().value("name").toString();
                     }
@@ -1276,12 +1278,13 @@ static QString addLinePrefix(const QString& str, const QString& prefix)
     if (prefix.isEmpty()) {
         return str;
     }
-    QVector<QStringRef> lines = str.splitRef('\n');
+    QStringView strView { str };
+    QVector<QStringView> lines = strView.split('\n');
     if (lines.back().isEmpty()) {
         lines.pop_back();
     }
     QStringList processedLines;
-    for (QStringRef& line : lines) {
+    for (QStringView& line : lines) {
         processedLines.push_back(QString(prefix).append(line));
     }
     return processedLines.join('\n');

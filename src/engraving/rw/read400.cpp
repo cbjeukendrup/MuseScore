@@ -46,9 +46,9 @@ bool Read400::read400(Ms::Score* score, XmlReader& e, ReadContext& ctx)
         return false;
     }
 
-    if (e.name() == "museScore") {
+    if (e.name().toString() == "museScore") {
         while (e.readNextStartElement()) {
-            const QStringRef& tag(e.name());
+            const QString& tag = e.name().toString();
             if (tag == "programVersion") {
                 e.skipCurrentElement();
             } else if (tag == "programRevision") {
@@ -87,7 +87,7 @@ bool Read400::readScore400(Ms::Score* score, XmlReader& e, ReadContext& ctx)
 
     while (e.readNextStartElement()) {
         e.setTrack(-1);
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Staff") {
             StaffRW::readStaff(score, e, ctx);
         } else if (tag == "Omr") {
@@ -172,7 +172,7 @@ bool Read400::readScore400(Ms::Score* score, XmlReader& e, ReadContext& ctx)
         } else if (tag == "Excerpt") {
             // Since version 400, the Excerpts are stored in a separate file
             e.skipCurrentElement();
-        } else if (e.name() == "Tracklist") {
+        } else if (tag == "Tracklist") {
             int strack = e.intAttribute("sTrack",   -1);
             int dtrack = e.intAttribute("dstTrack", -1);
             if (strack != -1 && dtrack != -1) {

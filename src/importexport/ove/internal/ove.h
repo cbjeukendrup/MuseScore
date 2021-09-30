@@ -809,7 +809,7 @@ private:
     int m_trackBarCount; // equal to m_measures.size()
 
     QList<int> m_partStaffCounts;
-    QTextCodec* m_codec;
+    QStringDecoder m_stringDecoder;
 };
 
 class Voice

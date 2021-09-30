@@ -136,7 +136,7 @@ Err ScoreReader::loadMscz(Ms::MasterScore* masterScore, const mu::engraving::Msc
 Err ScoreReader::read(MasterScore* score, XmlReader& e, ReadContext& ctx, compat::ReadStyleHook* styleHook)
 {
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             const QString& version = e.attribute("version");
             QStringList sl = version.split('.');
             score->setMscVersion(sl[0].toInt() * 100 + sl[1].toInt());
@@ -189,7 +189,7 @@ Err ScoreReader::read(MasterScore* score, XmlReader& e, ReadContext& ctx, compat
 Err ScoreReader::doRead(MasterScore* score, XmlReader& e, ReadContext& ctx)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString tag = e.name().toString();
         if (tag == "programVersion") {
             score->setMscoreVersion(e.readElementText());
         } else if (tag == "programRevision") {

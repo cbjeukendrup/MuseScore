@@ -778,7 +778,7 @@ void System::layout2(const LayoutContext& ctx)
     }
 
     if (visibleStaves.empty()) {
-        qDebug("====no visible staves, staves %d, score staves %d", _staves.size(), score()->nstaves());
+        qDebug("====no visible staves, staves %lld, score staves %d", _staves.size(), score()->nstaves());
         return;
     }
 
@@ -937,7 +937,7 @@ void System::setInstrumentNames(const LayoutContext& ctx, bool longName, Fractio
         return;
     }
     if (!score()->showInstrumentNames()
-        || (style()->styleB(Sid::hideInstrumentNameIfOneInstrument) && score()->parts().size() == 1)) {
+        || (style()->styleD(Sid::hideInstrumentNameIfOneInstrument) && score()->parts().size() == 1)) {
         for (SysStaff* staff : qAsConst(_staves)) {
             foreach (InstrumentName* t, staff->instrumentNames) {
                 ctx.score()->removeElement(t);
@@ -1343,7 +1343,7 @@ void System::write(XmlWriter& xml) const
 void System::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "SystemDivider") {
             SystemDivider* sd = new SystemDivider(this);
             sd->read(e);

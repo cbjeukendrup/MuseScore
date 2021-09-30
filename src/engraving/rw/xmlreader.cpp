@@ -123,7 +123,7 @@ PointF XmlReader::readPoint()
 #ifndef NDEBUG
     if (!attributes().hasAttribute("x")) {
         QXmlStreamAttributes map = attributes();
-        qDebug("XmlReader::readPoint: x attribute missing: %s (%d)",
+        qDebug("XmlReader::readPoint: x attribute missing: %s (%lld)",
                name().toUtf8().data(), map.size());
         for (int i = 0; i < map.size(); ++i) {
             const QXmlStreamAttribute& a = map.at(i);
@@ -206,8 +206,8 @@ Fraction XmlReader::readFraction()
         if (i == -1) {
             return Fraction::fromTicks(s.toInt());
         } else {
-            z = s.leftRef(i).toInt();
-            n = s.midRef(i + 1).toInt();
+            z = s.left(i).toInt();
+            n = s.mid(i + 1).toInt();
         }
     }
     return Fraction(z, n);
@@ -670,7 +670,7 @@ void XmlReader::reconnectBrokenConnectors()
         cptr->addToScore(pasteMode());
         removeConnector(cptr);
     }
-    qDebug("reconnected %d broken connectors", reconnected.count());
+    qDebug("reconnected %lld broken connectors", reconnected.count());
 }
 
 //---------------------------------------------------------

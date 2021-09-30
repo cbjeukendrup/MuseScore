@@ -295,7 +295,7 @@ void Clef::setSmall(bool val)
 void Clef::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "concertClefType") {
             _clefTypes._concertClef = TConv::fromXml(e.readElementText(), ClefType::G);
         } else if (tag == "transposingClefType") {

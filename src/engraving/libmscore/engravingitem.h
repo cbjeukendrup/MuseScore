@@ -534,7 +534,7 @@ public:
     void undoChangeProperty(Pid id, const mu::engraving::PropertyValue&, PropertyFlags ps) override;
     using EngravingObject::undoChangeProperty;
     mu::engraving::PropertyValue propertyDefault(Pid) const override;
-    Pid propertyId(const QStringRef& xmlName) const override;
+    Pid propertyId(const QString& xmlName) const override;
     virtual EngravingItem* propertyDelegate(Pid) { return 0; }     // return Spanner for SpannerSegment for some properties
 
     bool custom(Pid) const;

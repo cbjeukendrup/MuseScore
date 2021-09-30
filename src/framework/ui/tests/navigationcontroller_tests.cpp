@@ -201,14 +201,15 @@ public:
 #ifdef Q_OS_LINUX
     QEvent expectSendingEventOnNavigation(Env& env)
     {
-        QEvent event(QEvent::None);
+#warning todo
+//        QEvent event(QEvent::None);
 
         //! For Linux it needs to send spontanous event for canceling reading the name of previous control on accessibility
         QWindow* window = new QWindow();
         EXPECT_CALL(*env.mainWindow, qWindow()).WillOnce(Return(window));
         EXPECT_CALL(*env.application, notify(window, _)).WillOnce(DoAll(SaveArgPointee<1>(&event), Return(true)));
 
-        return event;
+        return QEvent(QEvent::None);
     }
 
     void checkSendingEventOnNavigation(const QEvent& event)

@@ -67,9 +67,9 @@ void SlurSegment::draw(mu::draw::Painter* painter) const
     qreal mag = staff() ? staff()->staffMag(slur()->tick()) : 1.0;
 
     //Replace generic Qt dash patterns with improved equivalents to show true dots (keep in sync with tie.cpp)
-    std::vector<double> dotted     = { 0.01, 1.99 };   // tighter than Qt PenStyle::DotLine equivalent - woud be { 0.01, 2.99 }
-    std::vector<double> dashed     = { 3.00, 3.00 };   // Compensating for caps. Qt default PenStyle::DashLine is { 4.0, 2.0 }
-    std::vector<double> wideDashed = { 5.00, 6.00 };
+    std::vector<qreal> dotted     = { 0.01, 1.99 };   // tighter than Qt PenStyle::DotLine equivalent - woud be { 0.01, 2.99 }
+    std::vector<qreal> dashed     = { 3.00, 3.00 };   // Compensating for caps. Qt default PenStyle::DashLine is { 4.0, 2.0 }
+    std::vector<qreal> wideDashed = { 5.00, 6.00 };
 
     switch (slurTie()->lineType()) {
     case 0:
@@ -297,7 +297,7 @@ void SlurSegment::computeBezier(mu::PointF p6o)
     p2  = t.map(p2);
     p6o = t.map(p6o);
 
-    double smallH = 0.5;
+    qreal smallH = 0.5;
     qreal d = p2.x() / _spatium;
     if (d <= 2.0) {
         shoulderH = d * 0.5 * smallH * _spatium;
@@ -1014,7 +1014,7 @@ void Slur::write(XmlWriter& xml) const
 
 bool Slur::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
     if (tag == "stemArr") {
         _sourceStemArrangement = e.readInt();
         return true;

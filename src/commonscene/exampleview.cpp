@@ -65,27 +65,28 @@ ExampleView::ExampleView(QWidget* parent)
             qDebug("no valid pixmap %s", qPrintable(wallpaperPath));
         }
     }
-    // setup drag canvas state
-    sm          = new QStateMachine(this);
-    QState* stateActive = new QState;
 
-    QState* s1 = new QState(stateActive);
-    s1->setObjectName("example-normal");
-    s1->assignProperty(this, "cursor", QCursor(Qt::ArrowCursor));
-
-    QState* s = new QState(stateActive);
-    s->setObjectName("example-drag");
-    s->assignProperty(this, "cursor", QCursor(Qt::SizeAllCursor));
-    QEventTransition* cl = new QEventTransition(this, QEvent::MouseButtonRelease);
-    cl->setTargetState(s1);
-    s->addTransition(cl);
-    s1->addTransition(new DragTransitionExampleView(this));
-
-    sm->addState(stateActive);
-    stateActive->setInitialState(s1);
-    sm->setInitialState(stateActive);
-
-    sm->start();
+//    // setup drag canvas state
+//    sm          = new QStateMachine(this);
+//    QState* stateActive = new QState;
+//
+//    QState* s1 = new QState(stateActive);
+//    s1->setObjectName("example-normal");
+//    s1->assignProperty(this, "cursor", QCursor(Qt::ArrowCursor));
+//
+//    QState* s = new QState(stateActive);
+//    s->setObjectName("example-drag");
+//    s->assignProperty(this, "cursor", QCursor(Qt::SizeAllCursor));
+//    QEventTransition* cl = new QEventTransition(this, QEvent::MouseButtonRelease);
+//    cl->setTargetState(s1);
+//    s->addTransition(cl);
+//    s1->addTransition(new DragTransitionExampleView(this));
+//
+//    sm->addState(stateActive);
+//    stateActive->setInitialState(s1);
+//    sm->setInitialState(stateActive);
+//
+//    sm->start();
 
     m_defaultScaling = 0.9 * uiConfiguration()->dpi() / DPI; // 90% of nominal
 }
@@ -285,7 +286,7 @@ void ExampleView::dragMoveEvent(QDragMoveEvent* event)
         return;
     }
 
-    PointF pos = PointF::fromQPointF(imatrix.map(QPointF(event->pos())));
+    PointF pos = PointF::fromQPointF(imatrix.map(event->position()));
     QList<EngravingItem*> el = elementsAt(pos);
     bool found = false;
     foreach (const EngravingItem* e, el) {
@@ -339,7 +340,7 @@ void ExampleView::setDropTarget(const EngravingItem* el)
 
 void ExampleView::dropEvent(QDropEvent* event)
 {
-    PointF pos = PointF::fromQPointF(imatrix.map(QPointF(event->pos())));
+    PointF pos = PointF::fromQPointF(imatrix.map(event->position()));
 
     if (!dragElement) {
         return;
@@ -435,13 +436,6 @@ void ExampleView::dragExampleView(QMouseEvent* ev)
     scroll(dx, 0);
 }
 
-void DragTransitionExampleView::onTransition(QEvent* e)
-{
-    QStateMachine::WrappedEvent* we = static_cast<QStateMachine::WrappedEvent*>(e);
-    QMouseEvent* me = static_cast<QMouseEvent*>(we->event());
-    canvas->dragExampleView(me);
-}
-
 //---------------------------------------------------------
 //   wheelEvent
 //---------------------------------------------------------
@@ -513,3 +507,14 @@ void ExampleView::constraintCanvas(int* dxx)
     *dxx = dx;
 }
 }
+
+//-----------------------------------------------------------------------------
+//   onTransition
+//-----------------------------------------------------------------------------
+
+//void DragTransitionExampleView::onTransition(QEvent* e)
+//{
+//    QStateMachine::WrappedEvent* we = static_cast<QStateMachine::WrappedEvent*>(e);
+//    QMouseEvent* me = static_cast<QMouseEvent*>(we->event());
+//    canvas->dragExampleView(me);
+//}

@@ -172,16 +172,6 @@ MasterPalette::MasterPalette(QWidget* parent)
     WidgetStateStore::restoreGeometry(this);
 }
 
-MasterPalette::MasterPalette(const MasterPalette& dialog)
-    : QDialog(dialog.parentWidget())
-{
-}
-
-int MasterPalette::static_metaTypeId()
-{
-    return qRegisterMetaType<Ms::MasterPalette>("MasterPalette");
-}
-
 //---------------------------------------------------------
 //   retranslate
 //---------------------------------------------------------

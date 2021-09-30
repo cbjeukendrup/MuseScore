@@ -50,8 +50,6 @@ public:
     StaffTextPropertiesDialog(const StaffTextPropertiesDialog& other);
     ~StaffTextPropertiesDialog() override;
 
-    static int static_metaTypeId();
-
 private slots:
     void saveValues();
     void channelItemChanged(QTreeWidgetItem*, QTreeWidgetItem*);

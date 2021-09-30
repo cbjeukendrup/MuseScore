@@ -161,14 +161,14 @@ void ChordLine::read(XmlReader& e)
 {
     path = PainterPath();
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "Path") {
             path = PainterPath();
             PointF curveTo;
             PointF p1;
             int state = 0;
             while (e.readNextStartElement()) {
-                const QStringRef& nextTag(e.name());
+                const QString& nextTag = e.name().toString();
                 if (nextTag == "Element") {
                     int type = e.intAttribute("type");
                     qreal x  = e.doubleAttribute("x");
@@ -297,7 +297,7 @@ void ChordLine::startEditDrag(EditData& ed)
 
 void ChordLine::editDrag(EditData& ed)
 {
-    auto n = path.elementCount();
+    size_t n = path.elementCount();
     PainterPath p;
     qreal sp = spatium();
     _lengthX += ed.delta.x();
@@ -378,7 +378,7 @@ void ChordLine::editDrag(EditData& ed)
 std::vector<PointF> ChordLine::gripsPositions(const EditData&) const
 {
     qreal sp = spatium();
-    auto n   = path.elementCount();
+    size_t n = path.elementCount();
     PointF cp(pagePos());
     if (_straight) {
         // limit the number of grips to one
@@ -481,7 +481,7 @@ PropertyValue ChordLine::propertyDefault(Pid pid) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid ChordLine::propertyId(const QStringRef& name) const
+Pid ChordLine::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::CHORD_LINE_TYPE;

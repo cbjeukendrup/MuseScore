@@ -265,7 +265,7 @@ void Vibrato::read(XmlReader& e)
     eraseSpannerSegments();
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "subtype") {
             setVibratoType(e.readElementText());
         } else if (tag == "play") {
@@ -409,7 +409,7 @@ PropertyValue Vibrato::propertyDefault(Pid propertyId) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid Vibrato::propertyId(const QStringRef& name) const
+Pid Vibrato::propertyId(const QString& name) const
 {
     if (name == "subtype") {
         return Pid::VIBRATO_TYPE;

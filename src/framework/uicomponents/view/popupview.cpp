@@ -341,7 +341,7 @@ void PopupView::mousePressEvent(QMouseEvent* event)
     }
 
     if (m_closePolicy == ClosePolicy::CloseOnPressOutsideParent) {
-        if (!isMouseWithinBoundaries(event->globalPos())) {
+        if (!isMouseWithinBoundaries(event->globalPosition())) {
             close();
         }
     }
@@ -354,15 +354,15 @@ void PopupView::mouseReleaseEvent(QMouseEvent* event)
     }
 
     if (m_closePolicy == ClosePolicy::CloseOnReleaseOutsideParent) {
-        if (!isMouseWithinBoundaries(event->globalPos())) {
+        if (!isMouseWithinBoundaries(event->globalPosition())) {
             close();
         }
     }
 }
 
-bool PopupView::isMouseWithinBoundaries(const QPoint& mousePos) const
+bool PopupView::isMouseWithinBoundaries(const QPointF& mousePos) const
 {
-    QRect viewRect = m_window->geometry();
+    QRectF viewRect = m_window->geometry();
     bool contains = viewRect.contains(mousePos);
     if (!contains) {
         //! NOTE We also check the parent because often clicking on the parent should toggle the popup,

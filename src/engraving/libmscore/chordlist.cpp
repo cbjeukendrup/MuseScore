@@ -416,7 +416,7 @@ void ChordToken::read(XmlReader& e)
         tokenClass = ChordTokenClass::ALL;
     }
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "name") {
             names += e.readElementText();
         } else if (tag == "render") {
@@ -1597,7 +1597,7 @@ void ChordDescription::read(XmlReader& e)
     int ni = 0;
     id = e.attribute("id").toInt();
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "name") {
             QString n = e.readElementText();
             // stack names for this file on top of the list
@@ -1670,7 +1670,7 @@ void ChordList::read(XmlReader& e)
     int fontIdx = fonts.size();
     _autoAdjust = false;
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "font") {
             ChordFont f;
             f.family = e.attribute("family", "default");
@@ -1680,7 +1680,8 @@ void ChordList::read(XmlReader& e)
             f.mag    = 1.0;
             f.fontClass = e.attribute("class");
             while (e.readNextStartElement()) {
-                if (e.name() == "sym") {
+                const QString& tag = e.name().toString();
+                if (tag == "sym") {
                     ChordSymbol cs;
                     QString code;
                     QString symClass;
@@ -1693,19 +1694,19 @@ void ChordList::read(XmlReader& e)
                         bool ok = true;
                         int val = code.toInt(&ok, 0);
                         if (!ok) {
-                            cs.code = 0;
+                            cs.code = QChar(0);
                             cs.value = code;
                         } else if (val & 0xffff0000) {
-                            cs.code = 0;
+                            cs.code = QChar(0);
                             QChar high = QChar(QChar::highSurrogate(val));
                             QChar low = QChar(QChar::lowSurrogate(val));
                             cs.value = QString("%1%2").arg(high).arg(low);
                         } else {
-                            cs.code = val;
+                            cs.code = QChar(val);
                             cs.value = QString(cs.code);
                         }
                     } else {
-                        cs.code = 0;
+                        cs.code = QChar(0);
                     }
                     if (cs.value == "") {
                         cs.value = cs.name;
@@ -1713,7 +1714,7 @@ void ChordList::read(XmlReader& e)
                     cs.name = symClass + cs.name;
                     symbols.insert(cs.name, cs);
                     e.readNext();
-                } else if (e.name() == "mag") {
+                } else if (tag == "mag") {
                     f.mag = e.readDouble();
                 } else {
                     e.unknown();
@@ -1867,7 +1868,7 @@ bool ChordList::read(QIODevice* device)
     XmlReader e(device);
 
     while (e.readNextStartElement()) {
-        if (e.name() == "museScore") {
+        if (e.name().toString() == "museScore") {
             // QString version = e.attribute(QString("version"));
             // QStringList sl = version.split('.');
             // int _mscVersion = sl[0].toInt() * 100 + sl[1].toInt();

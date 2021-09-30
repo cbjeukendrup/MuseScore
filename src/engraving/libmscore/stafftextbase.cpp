@@ -110,7 +110,7 @@ void StaffTextBase::read(XmlReader& e)
 
 bool StaffTextBase::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (tag == "MidiAction") {
         int channel = e.intAttribute("channel", 0);

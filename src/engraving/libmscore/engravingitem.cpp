@@ -818,7 +818,7 @@ void EngravingItem::writeProperties(XmlWriter& xml) const
 
 bool EngravingItem::readProperties(XmlReader& e)
 {
-    const QStringRef& tag(e.name());
+    const QString& tag = e.name().toString();
 
     if (readProperty(tag, e, Pid::SIZE_SPATIUM_DEPENDENT)) {
     } else if (readProperty(tag, e, Pid::OFFSET)) {
@@ -858,7 +858,7 @@ bool EngravingItem::readProperties(XmlReader& e)
             bool locationRead = false;
             int localIndexDiff = 0;
             while (e.readNextStartElement()) {
-                const QStringRef& ntag(e.name());
+                const QString& ntag(e.name().toString());
 
                 if (ntag == "score") {
                     QString val(e.readElementText());
@@ -901,7 +901,7 @@ bool EngravingItem::readProperties(XmlReader& e)
         _links = e.linkIds().value(id);
         if (!_links) {
             if (!score()->isMaster()) {       // DEBUG
-                qDebug("---link %d not found (%d)", id, e.linkIds().size());
+                qDebug("---link %d not found (%lld)", id, e.linkIds().size());
             }
             _links = new LinkedObjects(score(), id);
             e.linkIds().insert(id, _links);
@@ -1157,9 +1157,9 @@ ElementType EngravingItem::readType(XmlReader& e, PointF* dragOffset,
                                     Fraction* duration)
 {
     while (e.readNextStartElement()) {
-        if (e.name() == "EngravingItem") {
+        if (e.name().toString() == "EngravingItem") {
             while (e.readNextStartElement()) {
-                const QStringRef& tag = e.name();
+                const QString& tag = e.name().toString();
                 if (tag == "dragOffset") {
                     *dragOffset = e.readPoint();
                 } else if (tag == "duration") {
@@ -1443,7 +1443,7 @@ PropertyValue EngravingItem::propertyDefault(Pid pid) const
 //   propertyId
 //---------------------------------------------------------
 
-Pid EngravingItem::propertyId(const QStringRef& name) const
+Pid EngravingItem::propertyId(const QString& name) const
 {
     if (name == "pos" || name == "offset") {
         return Pid::OFFSET;

@@ -88,11 +88,6 @@ SelectDialog::SelectDialog(const SelectDialog& other)
 {
 }
 
-int SelectDialog::metaTypeId()
-{
-    return QMetaType::type("SelectDialog");
-}
-
 //---------------------------------------------------------
 //   setPattern
 //---------------------------------------------------------

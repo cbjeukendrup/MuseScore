@@ -129,7 +129,7 @@ void Jump::layout()
 void Jump::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString& tag = e.name().toString();
         if (tag == "jumpTo") {
             _jumpTo = e.readElementText();
         } else if (tag == "playUntil") {

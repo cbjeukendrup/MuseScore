@@ -106,11 +106,6 @@ EditStaff::EditStaff(const EditStaff& other)
 {
 }
 
-int EditStaff::metaTypeId()
-{
-    return QMetaType::type("EditStaff");
-}
-
 void EditStaff::setStaff(Staff* s, const Fraction& tick)
 {
     if (m_staff != nullptr) {

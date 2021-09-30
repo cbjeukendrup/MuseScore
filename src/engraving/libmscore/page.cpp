@@ -572,7 +572,7 @@ void Page::write(XmlWriter& xml) const
 void Page::read(XmlReader& e)
 {
     while (e.readNextStartElement()) {
-        if (e.name() == "System") {
+        if (e.name().toString() == "System") {
             System* system = Factory::createSystem(score()->dummy()->page());
             score()->systems().push_back(system);
             system->read(e);

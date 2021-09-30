@@ -95,7 +95,7 @@ void MeasureRW::readMeasure(Measure* measure, XmlReader& e, ReadContext& ctx, in
     }
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString tag = e.name().toString();
 
         if (tag == "voice") {
             e.setTrack(nextTrack++);
@@ -206,7 +206,7 @@ void MeasureRW::readVoice(Measure* measure, XmlReader& e, ReadContext& ctx, int 
     Fraction timeStretch(staff->timeStretch(measure->tick()));
 
     while (e.readNextStartElement()) {
-        const QStringRef& tag(e.name());
+        const QString tag = e.name().toString();
 
         if (tag == "location") {
             Location loc = Location::relative();

@@ -1032,34 +1032,34 @@ Segment* skipTuplet(Tuplet* tuplet)
 SymIdList timeSigSymIdsFromString(const QString& string)
 {
     static const QHash<QChar, SymId> dict = {
-        { 43,    SymId::timeSigPlusSmall },             // '+'
-        { 48,    SymId::timeSig0 },                     // '0'
-        { 49,    SymId::timeSig1 },                     // '1'
-        { 50,    SymId::timeSig2 },                     // '2'
-        { 51,    SymId::timeSig3 },                     // '3'
-        { 52,    SymId::timeSig4 },                     // '4'
-        { 53,    SymId::timeSig5 },                     // '5'
-        { 54,    SymId::timeSig6 },                     // '6'
-        { 55,    SymId::timeSig7 },                     // '7'
-        { 56,    SymId::timeSig8 },                     // '8'
-        { 57,    SymId::timeSig9 },                     // '9'
-        { 67,    SymId::timeSigCommon },                // 'C'
-        { 40,    SymId::timeSigParensLeftSmall },       // '('
-        { 41,    SymId::timeSigParensRightSmall },      // ')'
-        { 162,   SymId::timeSigCutCommon },             // '¢'
-        { 189,   SymId::timeSigFractionHalf },
-        { 188,   SymId::timeSigFractionQuarter },
-        { 59664, SymId::mensuralProlation1 },
-        { 79,    SymId::mensuralProlation2 },           // 'O'
-        { 59665, SymId::mensuralProlation2 },
-        { 216,   SymId::mensuralProlation3 },           // 'Ø'
-        { 59666, SymId::mensuralProlation3 },
-        { 59667, SymId::mensuralProlation4 },
-        { 59668, SymId::mensuralProlation5 },
-        { 59670, SymId::mensuralProlation7 },
-        { 59671, SymId::mensuralProlation8 },
-        { 59673, SymId::mensuralProlation10 },
-        { 59674, SymId::mensuralProlation11 },
+        { QChar(43),    SymId::timeSigPlusSmall },             // '+'
+        { QChar(48),    SymId::timeSig0 },                     // '0'
+        { QChar(49),    SymId::timeSig1 },                     // '1'
+        { QChar(50),    SymId::timeSig2 },                     // '2'
+        { QChar(51),    SymId::timeSig3 },                     // '3'
+        { QChar(52),    SymId::timeSig4 },                     // '4'
+        { QChar(53),    SymId::timeSig5 },                     // '5'
+        { QChar(54),    SymId::timeSig6 },                     // '6'
+        { QChar(55),    SymId::timeSig7 },                     // '7'
+        { QChar(56),    SymId::timeSig8 },                     // '8'
+        { QChar(57),    SymId::timeSig9 },                     // '9'
+        { QChar(67),    SymId::timeSigCommon },                // 'C'
+        { QChar(40),    SymId::timeSigParensLeftSmall },       // '('
+        { QChar(41),    SymId::timeSigParensRightSmall },      // ')'
+        { QChar(162),   SymId::timeSigCutCommon },             // '¢'
+        { QChar(189),   SymId::timeSigFractionHalf },
+        { QChar(188),   SymId::timeSigFractionQuarter },
+        { QChar(59664), SymId::mensuralProlation1 },
+        { QChar(79),    SymId::mensuralProlation2 },           // 'O'
+        { QChar(59665), SymId::mensuralProlation2 },
+        { QChar(216),   SymId::mensuralProlation3 },           // 'Ø'
+        { QChar(59666), SymId::mensuralProlation3 },
+        { QChar(59667), SymId::mensuralProlation4 },
+        { QChar(59668), SymId::mensuralProlation5 },
+        { QChar(59670), SymId::mensuralProlation7 },
+        { QChar(59671), SymId::mensuralProlation8 },
+        { QChar(59673), SymId::mensuralProlation10 },
+        { QChar(59674), SymId::mensuralProlation11 },
     };
 
     SymIdList list;

@@ -230,7 +230,7 @@ void BufferedPaintProvider::drawTextWorkaround(const Font& f, const PointF& pos,
     drawText(pos, text);
 }
 
-void BufferedPaintProvider::drawSymbol(const PointF& point, uint ucs4Code)
+void BufferedPaintProvider::drawSymbol(const PointF& point, char32_t ucs4Code)
 {
     drawText(point, QString::fromUcs4(&ucs4Code, 1));
 }

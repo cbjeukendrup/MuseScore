@@ -682,7 +682,7 @@ int GuitarPro6::findNumMeasures(GPPartInfo* partInfo)
     int numMeasures = (b.split(" ").last().toInt() + 1) / score->parts().length();
 
     if (numMeasures > b.size()) {
-        qDebug("GuitarPro6:findNumMeasures: bars %d < numMeasures %d\n", b.size(), numMeasures);
+        qDebug("GuitarPro6:findNumMeasures: bars %lld < numMeasures %d\n", b.size(), numMeasures);
         // HACK (ws)
         numMeasures = b.size();
     }

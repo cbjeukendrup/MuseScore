@@ -184,7 +184,7 @@ QString Settings::dataPath() const
                            .arg(QCoreApplication::applicationDirPath())
                            .arg(QCoreApplication::applicationName()));
 #else
-    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 #endif
 }
 
