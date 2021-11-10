@@ -110,7 +110,7 @@ ListView {
 
             navigation: radioButtonDelegate.navigation
 
-            onHandleMenuItem: {
+            onHandleMenuItem: function(itemId) {
                 Qt.callLater(appMenuModel.handleMenuItem, itemId)
             }
         }

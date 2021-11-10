@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick //2.15
+//import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
@@ -69,7 +69,9 @@ Item {
         navigation.section: root.navigationSection
         navigation.order: 2
 
-        onAddCustomPaletteRequested: paletteTree.insertCustomPalette(0, paletteName);
+        onAddCustomPaletteRequested: function(paletteName) {
+            paletteTree.insertCustomPalette(0, paletteName)
+        }
     }
 
     StyledTextLabel {

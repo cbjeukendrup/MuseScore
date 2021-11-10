@@ -30,9 +30,10 @@ Item {
     id: root
 
     property var treeView: undefined
-    property var index: styleData.index
+    property var index: model.index
     property string filterKey
     property int type: InstrumentsTreeItemType.UNDEFINED
+    property bool isExpanded: false
     property bool isSelected: false
     property bool isDragAvailable: false
     property alias isExpandable: expandButton.visible
@@ -189,8 +190,8 @@ Item {
 
             State {
                 name: "PART_EXPANDED"
-                when: styleData.isExpanded && !root.isSelected &&
-                      root.type === InstrumentsTreeItemType.PART
+                when: root.isExpanded && !root.isSelected &&
+                      root.type === InstrumentTreeItemType.PART
 
                 PropertyChanges {
                     target: background
@@ -417,7 +418,7 @@ Item {
     }
 
     Behavior on opacity {
-        enabled: styleData.depth !== 0
+//        enabled: styleData.depth !== 0
         NumberAnimation { duration: 150 }
     }
 

@@ -132,7 +132,7 @@ FocusScope {
                         }
                     }
 
-                    onHideContextMenuRequested: function() {
+                    onHideContextMenuRequested: {
                         contextMenuLoader.close()
                     }
 

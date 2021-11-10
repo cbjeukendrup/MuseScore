@@ -19,11 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtGraphicalEffects 1.0
+import QtQuick 2
+//import QtGraphicalEffects 1
 
-DropShadow {
-    color: "#75000000"
-    verticalOffset: 4
-    samples: 30
+Item {
+    property Item source
+    property color color: "#75000000"
+    property real radius
+    property real verticalOffset: 4
+    property int samples: 30
 }
+//DropShadow {
+//    color: "#75000000"
+//    verticalOffset: 4
+//    samples: 30
+//}

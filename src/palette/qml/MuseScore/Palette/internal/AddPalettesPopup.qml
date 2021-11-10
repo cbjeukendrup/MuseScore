@@ -20,9 +20,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.8
-import QtQuick.Controls 2.1
-import QtQuick.Layouts 1.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import MuseScore.Palette 1.0
 import MuseScore.UiComponents 1.0

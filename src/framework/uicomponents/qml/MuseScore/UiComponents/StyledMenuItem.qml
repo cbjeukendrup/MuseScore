@@ -78,7 +78,7 @@ ListItemBlank {
         return text.replace('&', '')
     }
 
-    navigation.onNavigationEvent: {
+    navigation.onNavigationEvent: function(event) {
         switch (event.type) {
         case NavigationEvent.Right:
             if (!itemPrv.hasSubMenu) {
@@ -120,19 +120,19 @@ ListItemBlank {
     QtObject {
         id: itemPrv
 
-        property bool hasShortcut: Boolean(modelData) && Boolean(modelData.shortcut)
-        property string shortcut: hasShortcut ? modelData.shortcut : ""
+        property bool hasShortcut: Boolean(root.modelData?.shortcut)
+        property string shortcut: hasShortcut ? root.modelData.shortcut : ""
 
-        property bool hasSubMenu: Boolean(modelData) && Boolean(modelData.subitems) && modelData.subitems.length > 0
+        property bool hasSubMenu: Boolean(root.modelData?.subitems) && root.modelData.subitems.length > 0
         property var showedSubMenu: null
 
-        property bool isCheckable: Boolean(modelData) && Boolean(modelData.checkable)
-        property bool isChecked: isCheckable && Boolean(modelData.checked)
+        property bool isCheckable: root.modelData?.checkable ?? false
+        property bool isChecked: isCheckable && Boolean(root.modelData?.checked)
 
-        property bool isSelectable: Boolean(modelData) && Boolean(modelData.selectable)
-        property bool isSelected: isSelectable && Boolean(modelData.selected)
+        property bool isSelectable: Boolean(root.modelData?.selectable)
+        property bool isSelected: isSelectable && Boolean(root.modelData?.selected)
 
-        property bool hasIcon: Boolean(modelData) && Boolean(modelData.icon) && modelData.icon !== IconCode.NONE
+        property bool hasIcon: Boolean(root.modelData?.icon) && root.modelData.icon !== IconCode.NONE
 
         function showSubMenu() {
             if (itemPrv.showedSubMenu) {
@@ -146,7 +146,7 @@ ListItemBlank {
 
             menu.navigationParentControl = root.navigation
 
-            menu.model = modelData.subitems
+            menu.model = root.modelData.subitems
 
             menu.handleMenuItem.connect(function(itemId) {
                 Qt.callLater(root.handleMenuItem, itemId)
@@ -156,12 +156,12 @@ ListItemBlank {
             menu.closed.connect(function() {
                 itemPrv.showedSubMenu = null
                 menu.destroy()
-                subMenuClosed()
+                root.subMenuClosed()
             })
 
             menu.opened.connect(function() {
                 itemPrv.showedSubMenu = menu
-                subMenuShowed(menu)
+                root.subMenuShowed(menu)
             })
 
             root.openSubMenuRequested(menu)
@@ -230,7 +230,7 @@ ListItemBlank {
             width: 16
             iconCode: {
                 if (root.iconAndCheckMarkMode !== StyledMenuItem.ShowBoth && itemPrv.hasIcon) {
-                    return itemPrv.hasIcon ? modelData.icon : IconCode.NONE
+                    return root.modelData?.icon ?? IconCode.NONE
                 } else if (itemPrv.isCheckable) {
                     return itemPrv.isChecked ? IconCode.TICK_RIGHT_ANGLE : IconCode.NONE
                 } else  if (itemPrv.isSelectable) {
@@ -246,14 +246,14 @@ ListItemBlank {
             id: secondaryIconLabel
             Layout.alignment: Qt.AlignLeft
             width: 16
-            iconCode: itemPrv.hasIcon ? modelData.icon : IconCode.NONE
+            iconCode: root.modelData?.icon ?? IconCode.NONE
             visible: root.iconAndCheckMarkMode === StyledMenuItem.ShowBoth
         }
 
         StyledTextLabel {
             id: titleLabel
             Layout.fillWidth: true
-            text: Boolean(modelData) && Boolean(modelData.title) ? modelData.title : ""
+            text: root.modelData?.title ?? ""
             horizontalAlignment: Text.AlignLeft
         }
 
@@ -274,7 +274,7 @@ ListItemBlank {
         }
     }
 
-    onHovered: {
+    onHovered: function (isHovered, mouseX, mouseY) {
         if (!itemPrv.hasSubMenu) {
             return
         }

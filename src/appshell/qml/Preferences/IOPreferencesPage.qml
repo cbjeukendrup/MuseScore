@@ -55,7 +55,7 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
 
-            onCurrentAudioApiIndexChangeRequested: {
+            onCurrentAudioApiIndexChangeRequested: function (newIndex) {
                 ioModel.currentAudioApiIndex = newIndex
             }
         }
@@ -72,11 +72,11 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
 
-            onCurrentInputDeviceIndexChangeRequested: {
+            onCurrentInputDeviceIndexChangeRequested: function (newIndex) {
                 ioModel.currentMidiInputDeviceIndex = newIndex
             }
 
-            onCurrentOuputDeviceIndexChangeRequested: {
+            onCurrentOuputDeviceIndexChangeRequested: function (newIndex) {
                 ioModel.currentMidiOutputDeviceIndex = newIndex
             }
         }

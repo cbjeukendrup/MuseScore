@@ -20,13 +20,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.8
-import QtQuick.Controls 2.15
-import QtQml.Models 2.2
+import QtQuick
 
-import MuseScore.Palette 1.0
-import MuseScore.UiComponents 1.0
-import MuseScore.Ui 1.0
+import MuseScore.Palette
+import MuseScore.UiComponents
+import MuseScore.Ui
 
 import "utils.js" as Utils
 
@@ -211,7 +209,7 @@ GridView {
         interval: 400
     }
 
-    PaletteGrid {
+    PaletteGridLinesCanvas {
         id: grid
         z: 1
         anchors.fill: parent
@@ -226,7 +224,7 @@ GridView {
             anchors.fill: parent
 
             property var action
-            property var proposedAction: Qt.IgnoreAction
+            property int proposedAction: Qt.IgnoreAction
             property bool internal: false
 
             function onDrag(drag) {
@@ -258,7 +256,7 @@ GridView {
                 placeholder.makePlaceholder(idx, { decoration: ui.theme.textFieldColor, toolTip: "placeholder", accessibleText: "", cellActive: false, mimeData: {} });
             }
 
-            onEntered: {
+            onEntered: function(drag) {
                 onDragOverPaletteFinished();
 
                 // first check if controller allows dropping this item here
@@ -271,7 +269,7 @@ GridView {
                     internal = false;
                 }
 
-                const accept = (action & drag.supportedActions) && (internal || !externalDropBlocked);
+                const accept = (action & drag.supportedActions) && (internal || !paletteView.externalDropBlocked);
 
                 if (accept) {
                     drag.accept(action);
@@ -285,7 +283,9 @@ GridView {
                 }
             }
 
-            onPositionChanged: onDrag(drag)
+            onPositionChanged: function(drag) {
+                onDrag(drag)
+            }
 
             function onDragOverPaletteFinished() {
                 if (placeholder.active) {
@@ -300,7 +300,7 @@ GridView {
 
             onExited: onDragOverPaletteFinished();
 
-            onDropped: {
+            onDropped: function(drop) {
                 if (!action) {
                     onDragOverPaletteFinished();
                     return;
@@ -498,7 +498,7 @@ GridView {
             property bool internalDrag: false
             property bool dragCopy: false
 
-            isSelected: (paletteView.selectionModel && paletteView.selectionModel.hasSelection) ? paletteView.isSelected(modelIndex) : false // hasSelection is to trigger property bindings if selection changes, see https://doc.qt.io/qt-5/qml-qtqml-models-itemselectionmodel.html#hasSelection-prop
+            isSelected: paletteView.selectionModel?.hasSelection ? paletteView.isSelected(modelIndex) : false // hasSelection is to trigger property bindings if selection changes, see https://doc.qt.io/qt-5/qml-qtqml-models-itemselectionmodel.html#hasSelection-prop
 
             width: paletteView.cellWidth
             height: paletteView.cellHeight
@@ -629,7 +629,7 @@ GridView {
                     { id: "properties", title: qsTrc("palette", "Properties…"), enabled: contextMenu.canEdit }
                 ]
 
-                onHandleMenuItem: {
+                onHandleMenuItem: function (itemId) {
                     switch(itemId) {
                     case "delete":
                         paletteView.paletteController.remove(contextMenu.modelIndex)

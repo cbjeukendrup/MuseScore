@@ -190,7 +190,7 @@ StyledPopupView {
 
                     padding: root.padding
 
-                    onOpenSubMenuRequested: {
+                    onOpenSubMenuRequested: function(menu) {
                         if (prv.showedSubMenu){
                             if (prv.showedSubMenu === menu) {
                                 return
@@ -202,7 +202,7 @@ StyledPopupView {
                         menu.toggleOpened()
                     }
 
-                    onSubMenuShowed: {
+                    onSubMenuShowed: function(menu) {
                         root.closePolicy = PopupView.NoAutoClose
                         prv.showedSubMenu = menu
                     }
@@ -212,7 +212,7 @@ StyledPopupView {
                         prv.showedSubMenu = null
                     }
 
-                    onHandleMenuItem: {
+                    onHandleMenuItem: function (itemId) {
                         // NOTE: reset view state
                         view.update()
 

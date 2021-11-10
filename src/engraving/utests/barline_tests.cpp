@@ -62,11 +62,11 @@ public:
 //---------------------------------------------------------
 
 // actual 3-staff bracket should be high 28.6 SP ca.: allow for some layout margin
-static const qreal BRACKET0_HEIGHT_MIN     = 27;
-static const qreal BRACKET0_HEIGHT_MAX     = 30;
+static constexpr qreal BRACKET0_HEIGHT_MIN     = 27;
+static constexpr qreal BRACKET0_HEIGHT_MAX     = 30;
 // actual 2-staff bracket should be high 18.1 SP ca.
-static const qreal BRACKET_HEIGHT_MIN      = 17;
-static const qreal BRACKET_HEIGHT_MAX      = 20;
+static constexpr qreal BRACKET_HEIGHT_MIN      = 17;
+static constexpr qreal BRACKET_HEIGHT_MAX      = 20;
 
 TEST_F(BarlineTests, barline01)
 {

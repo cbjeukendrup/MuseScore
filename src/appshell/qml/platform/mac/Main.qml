@@ -19,10 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import Qt.labs.platform 1.1 as PLATFORM
+import QtQuick
+//import QtQuick.Controls
+import Qt.labs.platform as PLATFORM
 
-import MuseScore.AppShell 1.0
+import MuseScore.AppShell
 
 import "../../"
 
@@ -98,11 +99,11 @@ AppWindow {
                     var isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
-                        var subMenu = makeMenu(item)
+                        var subMenu = root.makeMenu(item)
 
                         addMenu(subMenu)
                     } else {
-                        var menuItem = makeMenuItem(this, item)
+                        var menuItem = root.makeMenuItem(this, item)
 
                         addItem(menuItem)
                     }

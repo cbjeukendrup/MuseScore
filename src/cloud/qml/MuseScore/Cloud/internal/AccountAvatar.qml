@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.7
-import QtGraphicalEffects 1.0
+//import QtGraphicalEffects 1.0
 
 Image {
     id: root
@@ -32,13 +32,13 @@ Image {
 
     fillMode: Image.PreserveAspectCrop
 
-    layer.enabled: true
-    layer.effect: OpacityMask {
-        maskSource: Rectangle {
-            width: root.width
-            height: root.height
-            radius: width / 2
-            visible: false
-        }
-    }
+//    layer.enabled: true
+//    layer.effect: OpacityMask {
+//        maskSource: Rectangle {
+//            width: root.width
+//            height: root.height
+//            radius: width / 2
+//            visible: false
+//        }
+//    }
 }

@@ -105,7 +105,7 @@ StyledDialogView {
         StyledMenuLoader {
             id: menuLoader
 
-            onHandleMenuItem: {
+            onHandleMenuItem: function(itemId) {
                 console.log("selected " + itemId)
             }
         }

@@ -19,14 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Dialogs 1.2
+import QtQuick 2
+import QtQuick.Controls 2
 
-import MuseScore.Ui 1.0
-import MuseScore.UiComponents 1.0
-import MuseScore.Dock 1.0
-import MuseScore.Preferences 1.0
+import MuseScore.Ui
+import MuseScore.UiComponents
+import MuseScore.Dock
+import MuseScore.Preferences
 
 Rectangle {
     id: root
@@ -150,15 +149,15 @@ Rectangle {
             anchors.fill: parent
             color: val
 
-            ColorDialog {
-                id: colorDialog
-                title: "Please choose a color"
-                onAccepted: colorControl.changed(colorDialog.color)
-            }
+//            ColorDialog {
+//                id: colorDialog
+//                title: "Please choose a color"
+//                onAccepted: colorControl.changed(colorDialog.color)
+//            }
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: colorDialog.open()
+//                onClicked: colorDialog.open()
             }
         }
     }

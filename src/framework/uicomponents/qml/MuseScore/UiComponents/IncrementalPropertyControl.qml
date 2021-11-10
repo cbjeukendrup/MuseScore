@@ -71,7 +71,7 @@ Item {
         root.valueEdited(+newValue.toFixed(decimals))
     }
 
-    Keys.onPressed: {
+    Keys.onPressed: function(event) {
         switch (event.key) {
         case Qt.Key_Up:
             increment()
@@ -140,7 +140,7 @@ Item {
             onDecreaseButtonClicked: root.decrement()
         }
 
-        onCurrentTextEdited: {
+        onCurrentTextEdited: function (newTextValue) {
             var newVal = parseFloat(newTextValue)
 
             if (isNaN(newVal)) {

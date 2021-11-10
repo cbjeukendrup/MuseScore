@@ -20,6 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
@@ -49,6 +50,7 @@ DockPage {
         switch (name) {
         case "settings": root.central = settingsComp; break
         case "gallery": root.central = galleryComp; break
+        case "icons": root.central = iconsComp; break
         case "interactive": root.central = interactiveComp; break
         case "mu3dialogs": root.central = notationDialogs; break
         case "telemetry": root.central = telemetryComp; break
@@ -85,6 +87,7 @@ DockPage {
                     model: [
                         { "name": "settings", "title": "Settings" },
                         { "name": "gallery", "title": "UI Gallery" },
+                        { "name": "icons", "title": "Icons" },
                         { "name": "interactive", "title": "Interactive" },
                         { "name": "mu3dialogs", "title": "MU3Dialogs" },
                         { "name": "telemetry", "title": "Telemetry" },
@@ -98,7 +101,7 @@ DockPage {
                         { "name": "navigation", "title": "KeyNav" }
                     ]
 
-                    onSelected: {
+                    onSelected: function (name) {
                         root.setCurrentCentral(name)
                     }
                 }
@@ -118,6 +121,32 @@ DockPage {
         id: galleryComp
 
         GeneralComponentsGallery {}
+    }
+
+    Component {
+        id: iconsComp
+
+        ListView {
+            model: [...Array(IconCode.NONE - IconCode.SMALL_ARROW_UP).keys()].map((n) => (n + IconCode.SMALL_ARROW_UP))
+
+            ScrollBar.vertical: StyledScrollBar {}
+
+            delegate: ListItemBlank {
+                Row {
+                    spacing: 12
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+
+                    StyledIconLabel {
+                        iconCode: modelData
+                    }
+
+                    StyledTextLabel {
+                        text: "0x" + modelData.toString(16).toUpperCase()
+                    }
+                }
+            }
+        }
     }
 
     Component {

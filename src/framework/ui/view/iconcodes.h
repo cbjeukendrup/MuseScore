@@ -44,7 +44,7 @@
 
 namespace mu::ui {
 /**
- * @brief The IconCode class simplifies access to the icons from the icon font
+ * @brief The IconCode::Code class simplifies access to the icons from the icon font
  *
  * @details Each enum value is a UTF-16-like address of the icon in the icon font.
  *          The current icon-font (MusescoreIcon.ttf) is located in the 'MuseScore/fonts/mscore' folder,

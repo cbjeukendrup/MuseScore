@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
-import QtGraphicalEffects 1.0
+//import QtGraphicalEffects 1.0
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
@@ -46,7 +46,7 @@ FocusScope {
         accessible.role: MUAccessible.Button
         accessible.name: root.title
 
-        onActiveChanged: {
+        onActiveChanged: function(active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -86,14 +86,14 @@ FocusScope {
                     }
                 }
 
-                layer.enabled: true
-                layer.effect: OpacityMask {
-                    maskSource: Rectangle {
-                        width: scoreRect.width
-                        height: scoreRect.height
-                        radius: scoreRect.radius
-                    }
-                }
+//                layer.enabled: true
+//                layer.effect: OpacityMask {
+//                    maskSource: Rectangle {
+//                        width: scoreRect.width
+//                        height: scoreRect.height
+//                        radius: scoreRect.radius
+//                    }
+//                }
             }
 
             Rectangle {
@@ -141,14 +141,14 @@ FocusScope {
                 }
             ]
 
-            RectangularGlow {
-                anchors.fill: scoreRect
-                z: -1
+//            RectangularGlow {
+//                anchors.fill: scoreRect
+//                z: -1
 
-                glowRadius: 20
-                color: "#08000000"
-                cornerRadius: scoreRect.radius + glowRadius
-            }
+//                glowRadius: 20
+//                color: "#08000000"
+//                cornerRadius: scoreRect.radius + glowRadius
+//            }
         }
 
         Column {

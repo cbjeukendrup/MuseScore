@@ -49,7 +49,7 @@ BaseSection {
             navigation.panel: root.navigation
             navigation.row: 1
 
-            onValueEdited: {
+            onValueEdited: function (newValue) {
                 root.currentAudioApiIndexChangeRequested(currentIndex)
             }
         }

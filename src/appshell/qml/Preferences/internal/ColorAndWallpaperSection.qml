@@ -117,7 +117,7 @@ BaseSection {
             navigationRowOrderStart: 1
             navigationColumnOrderStart: 1
 
-            onPathEdited: {
+            onPathEdited: function (newPath) {
                 root.wallpaperPathChangeRequested(newPath)
             }
         }

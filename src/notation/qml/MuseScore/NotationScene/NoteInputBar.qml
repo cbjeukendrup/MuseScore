@@ -106,31 +106,35 @@ Item {
 
         sectionDelegate: SeparatorLine {
             orientation: gridView.orientation
-            visible: itemIndex !== 0
+
+            property var section: null
+            property int index: 0
+
+            visible: index !== 0
         }
 
         itemDelegate: FlatButton {
             id: btn
 
-            property var item: Boolean(itemModel) ? itemModel : null
-            property var hasMenu: Boolean(item) && item.subitems.length !== 0
+            property var item: null
+            property bool hasMenu: Boolean(item) && item.subitems.length !== 0
 
             width: gridView.cellWidth
             height: gridView.cellWidth
 
-            accentButton: (Boolean(item) && item.checked) || menuLoader.isMenuOpened
+            accentButton: (item?.checked ?? false) || menuLoader.isMenuOpened
             transparent: !accentButton
 
-            icon: Boolean(item) ? item.icon : IconCode.NONE
-            iconFont: ui.theme.toolbarIconsFont
+            icon: item?.icon ?? IconCode.NONE
+//            iconFont: ui.theme.toolbarIconsFont
 
-            toolTipTitle: Boolean(item) ? item.title : ""
-            toolTipDescription: Boolean(item) ? item.description : ""
-            toolTipShortcut: Boolean(item) ? item.shortcut : ""
+            toolTipTitle: item?.title ?? ""
+            toolTipDescription: item?.description ?? ""
+            toolTipShortcut: item?.shortcut ?? ""
 
             navigation.panel: keynavSub
-            navigation.name: item.id
-            navigation.order: Boolean(item) ? item.order : 0
+            navigation.name: item?.id ?? ""
+            navigation.order: item?.order ?? 0
             isClickOnKeyNavTriggered: false
             navigation.onTriggered: {
                 if (menuLoader.isMenuOpened || hasMenu) {
@@ -176,7 +180,7 @@ Item {
             }
 
             Canvas {
-                visible: Boolean(btn.item) && btn.item.isMenuSecondary
+                visible: btn.item?.isMenuSecondary ?? false
 
                 property color fillColor: ui.theme.fontPrimaryColor
                 onFillColorChanged: {

@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtQuick.Controls 1.0
-import QtQuick.Controls.Styles 1.4
-import MuseScore.Ui 1.0
+import QtQuick 2
+import QtQuick.Controls 2
 
-TabView {
+import MuseScore.Ui
+
+TabBar {
     id: root
 
     width: parent.width
@@ -56,14 +56,14 @@ TabView {
         y: 4
         x: {
             if (root.currentIndex < 0) {
-                return
+                return 0
             }
 
-            root.currentIndex * (root.width / count)
+            return root.currentIndex * (root.width / root.count)
         }
 
         height: 3
-        width: root.width / count
+        width: root.width / root.count
         radius: 2
         color: ui.theme.accentColor
 
@@ -74,6 +74,7 @@ TabView {
         }
     }
 
+    /*
     style: TabViewStyle {
 
         id: style
@@ -115,4 +116,5 @@ TabView {
             color: ui.theme.backgroundPrimaryColor
         }
     }
+    */
 }

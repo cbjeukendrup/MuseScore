@@ -70,7 +70,7 @@ Item {
             navigation.column: root.navigationColumnOrderStart
             navigation.accessible.name: root.pathFieldTitle + " " + pathField.currentText
 
-            onCurrentTextEdited: {
+            onCurrentTextEdited: function (newTextValue) {
                 root.pathEdited(newTextValue)
             }
         }
@@ -89,7 +89,7 @@ Item {
 
             onClicked: {
                 var selectedPath
-                if (pickerType === FilePicker.PickerType.File) {
+                if (root.pickerType === FilePicker.PickerType.File) {
                     selectedPath = filePickerModel.selectFile()
                 } else {
                     selectedPath = filePickerModel.selectDirectory()

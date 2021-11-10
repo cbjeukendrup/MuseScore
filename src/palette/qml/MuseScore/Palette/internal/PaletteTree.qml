@@ -20,13 +20,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.8
-import QtQuick.Controls 2.1
-import QtQml.Models 2.2
+import QtQuick
+import QtQuick.Controls
+import QtQml.Models
 
-import MuseScore.Palette 1.0
-import MuseScore.Ui 1.0
-import MuseScore.UiComponents 1.0
+import MuseScore.Palette
+import MuseScore.Ui
+import MuseScore.UiComponents
 
 import "utils.js" as Utils
 
@@ -61,7 +61,7 @@ ListView {
         name: "PalettesTree"
         enabled: paletteTree.enabled && paletteTree.visible
         direction: NavigationPanel.Both
-        onActiveChanged: {
+        onActiveChanged: function(active) {
             if (active) {
                 paletteTree.forceActiveFocus()
             }
@@ -244,7 +244,7 @@ ListView {
             bottomPadding: expanded ? 4 : 0
             property int rowIndex: index
             property int navigationRow: (index + 1) * 10000 // to make unique
-            property var modelIndex: paletteTree.model.modelIndex(index, 0)
+            property var modelIndex: paletteTree.model.modelIndex(index)
 
             onActiveFocusChanged: {
                 if (activeFocus) {
@@ -398,8 +398,8 @@ ListView {
                     }
                 }
 
-                onDropped: {
-                    if (drop.proposedAction == Qt.MoveAction)
+                onDropped: function (drop) {
+                    if (drop.proposedAction !== Qt.MoveAction)
                         drop.acceptProposedAction();
                 }
             }
@@ -471,7 +471,9 @@ ListView {
                     }
 
                     editingEnabled: model.editable
-                    onEnableEditingToggled: model.editable = val
+                    onEnableEditingToggled: function(val) {
+                        model.editable = val
+                    }
 
                     onHideSelectedElementsRequested: paletteTree.removeSelectedItems(control.modelIndex);
 
@@ -497,8 +499,8 @@ ListView {
                             control.Drag.imageSource = result.url
                         })
 
-                        onClicked: control.onClicked(mouse)
-                        onDoubleClicked: control.onDoubleClicked(mouse)
+                        onClicked: function (mouse) { control.clicked() }
+                        onDoubleClicked: function (mouse) { control.doubleClicked() }
                     }
                 }
 
@@ -510,9 +512,10 @@ ListView {
                     height: implicitHeight
                     border { width: 1; color: ui.theme.strokeColor }
 
-                    Palette {
+                    PaletteGridView {
                         id: mainPalette
-                        anchors { fill: parent; margins: parent.padding }
+                        anchors.fill: parent
+                        anchors.margins: parent.padding
 
                         navigationPanel: keynavTree
                         navigationRow: control.navigationRow + 1
@@ -531,7 +534,7 @@ ListView {
                         }
 
                         showMoreButton: !filter.length
-                        onMoreButtonClicked: control.togglePopup(btn);
+                        onMoreButtonClicked: function(btn) { control.togglePopup(btn) }
 
                         onVisibleChanged: {
                             if (!visible && control.popupExpanded) {
@@ -591,7 +594,7 @@ ListView {
                             scrollToPopupBottom();
                     }
 
-                    onAddElementsRequested: {
+                    onAddElementsRequested: function(mimeDataList) {
                         const parentIndex = control.modelIndex;
                         var idx = paletteTree.paletteModel.rowCount(parentIndex);
 

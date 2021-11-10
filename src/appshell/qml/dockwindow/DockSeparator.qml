@@ -20,9 +20,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.15
+import QtQuick 2
 
-import MuseScore.Ui 1.0
+import MuseScore.Ui
 
 Rectangle {
     id: root
@@ -39,22 +39,24 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: -5 //! NOTE: extra space for user convenience
 
-        cursorShape: separatorCpp ? (separatorCpp.isVertical ? Qt.SizeVerCursor : Qt.SizeHorCursor)
-                                   : Qt.SizeHorCursor
+        cursorShape: root.separatorCpp
+                     ? (root.separatorCpp.isVertical ? Qt.SizeVerCursor : Qt.SizeHorCursor)
+                     : Qt.SizeHorCursor
+
         onPressed: {
-            separatorCpp.onMousePressed()
+            root.separatorCpp.onMousePressed()
         }
 
         onReleased: {
-            separatorCpp.onMouseReleased()
+            root.separatorCpp.onMouseReleased()
         }
 
-        onPositionChanged: {
-            separatorCpp.onMouseMoved(Qt.point(mouse.x, mouse.y))
+        onPositionChanged: function (mouse) {
+            root.separatorCpp.onMouseMoved(Qt.point(mouse.x, mouse.y))
         }
 
         onDoubleClicked: {
-            separatorCpp.onMouseDoubleClicked()
+            root.eparatorCpp.onMouseDoubleClicked()
         }
     }
 }

@@ -46,7 +46,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 0
 
-        onValueEdited: {
+        onValueEdited: function(newValue) {
             root.guitarProCharsetChangeRequested(newValue)
         }
     }
@@ -62,7 +62,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: {
+        onValueEdited: function(newValue) {
             root.overtuneCharsetChangeRequested(newValue)
         }
     }

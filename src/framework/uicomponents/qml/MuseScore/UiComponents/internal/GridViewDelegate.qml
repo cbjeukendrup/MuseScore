@@ -30,6 +30,7 @@ Item {
 
     property Component itemDelegate: Item {}
     property string sectionRole: "sectionRole"
+    property var sectionValue
 
     property int cellWidth: 0
     property int cellHeight: 0
@@ -50,7 +51,7 @@ Item {
         filters: [
             FilterValue {
                 roleName: root.sectionRole
-                roleValue: modelData
+                roleValue: root.sectionValue
                 compareType: CompareType.Equal
             }
         ]
@@ -99,11 +100,10 @@ Item {
 
                 anchors.centerIn: parent
 
-                property var itemModel: null
                 sourceComponent: root.itemDelegate
 
                 onLoaded: {
-                    itemModel = Qt.binding( function() { return Boolean(model) ? model : null });
+                    item["item"] = Qt.binding(() => model);
                 }
             }
         }

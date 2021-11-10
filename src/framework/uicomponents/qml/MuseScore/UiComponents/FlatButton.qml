@@ -19,9 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import MuseScore.Ui 1.0
-import MuseScore.UiComponents 1.0
+import QtQml
+import QtQuick
+
+import MuseScore.Ui
+import MuseScore.UiComponents
 
 FocusScope {
     id: root
@@ -68,9 +70,9 @@ FocusScope {
 
     objectName: root.text
 
-    height: contentLoader.item.height + 14
-    width: Boolean(text) ? Math.max(contentLoader.item.width + 2 * margins, root.isVertical ? minWidth : 0)
-                         : contentLoader.item.width + 16
+    height: (contentLoader.item?.height ?? 0) + 14
+    width: Boolean(text) ? Math.max((contentLoader.item?.width ?? 0) + margins, root.isVertical ? minWidth : 0)
+                         : (contentLoader.item?.width ?? 0) + 16
 
     opacity: root.enabled ? 1.0 : ui.theme.itemOpacityDisabled
 

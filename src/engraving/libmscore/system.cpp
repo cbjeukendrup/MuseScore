@@ -937,7 +937,7 @@ void System::setInstrumentNames(const LayoutContext& ctx, bool longName, Fractio
         return;
     }
     if (!score()->showInstrumentNames()
-        || (style()->styleD(Sid::hideInstrumentNameIfOneInstrument) && score()->parts().size() == 1)) {
+        || (style()->styleB(Sid::hideInstrumentNameIfOneInstrument) && score()->parts().size() == 1)) {
         for (SysStaff* staff : qAsConst(_staves)) {
             foreach (InstrumentName* t, staff->instrumentNames) {
                 ctx.score()->removeElement(t);

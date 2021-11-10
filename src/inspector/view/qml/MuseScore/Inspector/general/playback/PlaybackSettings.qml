@@ -38,11 +38,11 @@ TabPanel {
     width: parent.width
 
     Connections {
-        target: proxyModel
+        target: root.proxyModel
 
         function onIsEmptyChanged() {
-            var hasGeneralSettings = proxyModel.hasGeneralSettings
-            var hasDynamicsSettings = proxyModel.hasDynamicsSettings
+            var hasGeneralSettings = root.proxyModel.hasGeneralSettings
+            var hasDynamicsSettings = root.proxyModel.hasDynamicsSettings
 
             if (hasGeneralSettings && !hasDynamicsSettings) {
                 root.currentIndex = 0
@@ -62,7 +62,7 @@ TabPanel {
         height: implicitHeight
         width: root.width
 
-        title: qsTrc("inspector", "General")
+        text: qsTrc("inspector", "General")
         checked: root.currentIndex === 0
 
         navigation.name: "GeneralSettingsTab"
@@ -91,7 +91,7 @@ TabPanel {
         height: implicitHeight
         width: root.width
 
-        title: qsTrc("inspector", "Dynamics")
+        text: qsTrc("inspector", "Dynamics")
         checked: root.currentIndex === 1
 
         navigation.name: "DynamicsSettingsTab"

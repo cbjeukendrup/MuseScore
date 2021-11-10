@@ -81,7 +81,7 @@ FocusScope {
         accessible.name: root.text
         accessible.visualItem: root
 
-        onActiveChanged: {
+        onActiveChanged: function (active) {
             if (active) {
                 root.ensureActiveFocus()
             }

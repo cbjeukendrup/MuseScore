@@ -20,15 +20,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
-import QtQuick.Controls 1.5
+import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 
-Tab {
+TabButton {
     id: root
 
     property alias navigation: navCtrl
-    property bool checked: false
 
     signal navigationTriggered()
 
@@ -36,7 +35,7 @@ Tab {
         id: navCtrl
         name: root.objectName != "" ? root.objectName : "TabItem"
         enabled: root.enabled
-        accessible.name: root.title
+        accessible.name: root.text
         accessible.role: MUAccessible.RadioButton
         accessible.checked: root.checked
         onTriggered: root.navigationTriggered()

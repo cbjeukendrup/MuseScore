@@ -52,7 +52,7 @@ Item {
     QtObject {
         id: privateProperties
 
-        property int spacingBeforeSection: isHorizontal ? columnSpacing : rowSpacing
+        property int spacingBeforeSection: root.isHorizontal ? root.columnSpacing : root.rowSpacing
         property int spacingAfterSection: spacingBeforeSection
 
         function modelSections() {
@@ -61,12 +61,13 @@ Item {
             for (var i = 0; i < root.model.length; i++) {
                 var element = root.model.get(i)
 
-                var section = element[sectionRole]
+                var section = element[root.sectionRole]
                 if (!_sections.includes(section)) {
                     _sections.push(section)
                 }
             }
 
+            console.log(JSON.stringify(_sections))
             return _sections
         }
     }
@@ -89,24 +90,32 @@ Item {
                 model: Boolean(root.model) ? privateProperties.modelSections() : []
 
                 Row {
+                    id: sectionRow
                     spacing: privateProperties.spacingAfterSection
 
                     height: root.sectionHeight
+
+                    required property int index
+                    required property var modelData
 
                     GridViewSection {
                         width: root.sectionWidth
                         height: root.sectionHeight
 
                         sectionDelegate: root.sectionDelegate
+
+                        index: sectionRow.index
+                        sectionValue: sectionRow.modelData
                     }
 
                     GridViewDelegate {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        model: Boolean(root.model) ? root.model : null
+                        model: root.model
 
                         itemDelegate: root.itemDelegate
                         sectionRole: root.sectionRole
+                        sectionValue: sectionRow.modelData
 
                         cellWidth: root.cellWidth
                         cellHeight: root.cellHeight
@@ -133,24 +142,32 @@ Item {
                 model: Boolean(root.model) ? privateProperties.modelSections() : []
 
                 Column {
+                    id: sectionColumn
                     spacing: privateProperties.spacingAfterSection
 
                     width: root.sectionWidth
+
+                    required property int index
+                    required property var modelData
 
                     GridViewSection {
                         width: root.sectionWidth
                         height: root.sectionHeight
 
                         sectionDelegate: root.sectionDelegate
+
+                        index: sectionColumn.index
+                        sectionValue: sectionColumn.modelData
                     }
 
                     GridViewDelegate {
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        model: Boolean(root.model) ? root.model : null
+                        model: root.model
 
                         itemDelegate: root.itemDelegate
                         sectionRole: root.sectionRole
+                        sectionValue: sectionColumn.modelData
 
                         cellWidth: root.cellWidth
                         cellHeight: root.cellHeight

@@ -19,13 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtQuick.Controls 2.0
-import QtQuick.Controls 1.5
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
-import MuseScore.UiComponents 1.0
-import MuseScore.Ui 1.0
+import MuseScore.UiComponents
+import MuseScore.Ui
 
 Rectangle {
     id: root
@@ -313,7 +312,7 @@ Rectangle {
                 StyledMenuLoader {
                     id: menuLoader
 
-                    onHandleMenuItem: {
+                    onHandleMenuItem: function (itemId) {
                         console.log("selected " + itemId)
                     }
                 }
@@ -360,7 +359,7 @@ Rectangle {
 
             color: "black"
 
-            onNewColorSelected: {
+            onNewColorSelected: function(newColor) {
                 color = newColor
             }
         }
@@ -555,7 +554,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -570,7 +569,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -584,7 +583,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -698,10 +697,10 @@ Rectangle {
             height: 40
             width: 200
 
-            Tab {
+            TabItem {
                 id: firstTab
 
-                title: "Tab 1"
+                text: "Tab 1"
 
                 Rectangle {
                     anchors.top: parent.top
@@ -714,10 +713,10 @@ Rectangle {
                 }
             }
 
-            Tab {
+            TabItem {
                 id: secondTab
 
-                title: "Tab 2"
+                text: "Tab 2"
 
                 Rectangle {
                     anchors.top: parent.top
@@ -730,10 +729,10 @@ Rectangle {
                 }
             }
 
-            Tab {
+            TabItem {
                 id: thirdTab
 
-                title: "Tab 3"
+                text: "Tab 3"
 
                 Rectangle {
                     anchors.top: parent.top

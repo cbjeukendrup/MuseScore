@@ -47,20 +47,10 @@ Loader {
 
     active: visible
 
-    sourceComponent: ListView {
-        id: sectionContentList
-
-        width: contentItem.childrenRect.width
-        height: contentHeight
-        contentHeight: contentItem.childrenRect.height
-
-        interactive: false
-        orientation: Qt.Horizontal
+    sourceComponent: Row {
         spacing: 4
 
-        model: root.model
-
-        header: Item {
+        Item {
             height: root.headerHeight
             width: root.headerWidth
 
@@ -71,12 +61,26 @@ Loader {
                     leftMargin: 12
                 }
 
-                horizontalAlignment: Qt.AlignRight
+                horizontalAlignment: Text.AlignRight
                 text: root.headerTitle
                 visible: root.headerVisible
             }
         }
 
-        delegate: root.delegateComponent
+        ListView {
+            id: sectionContentList
+
+            width: contentItem.childrenRect.height
+            height: contentHeight
+            contentHeight: contentItem.childrenRect.height
+
+            interactive: false
+            orientation: Qt.Horizontal
+            spacing: 4
+
+            model: root.model
+
+            delegate: root.delegateComponent
+        }
     }
 }

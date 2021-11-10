@@ -45,8 +45,8 @@ Column {
 
     HorizontalSpacingSection {
         id: horizontalSpacingSection
-        leadingSpace: model ? model.leadingSpace : null
-        barWidth: model ? model.barWidth : null
+        leadingSpace: root.model?.leadingSpace ?? null
+        barWidth: root.model?.barWidth ?? null
 
         navigationPanel: root.navigationPanel
         navigationRowStart: 0
@@ -57,7 +57,7 @@ Column {
     VerticalSpacingSection {
         id: verticalSpacingSection
 
-        minimumDistance: model ? model.minimumDistance : null
+        minimumDistance: root.model?.minimumDistance ?? null
 
         navigationPanel: root.navigationPanel
         navigationRowStart: horizontalSpacingSection.navigationRowEnd + 1
@@ -68,23 +68,21 @@ Column {
     AppearanceOffsetSection {
         id: offsetSection
 
-        horizontalOffset: model ? model.horizontalOffset : null
-        verticalOffset: model ? model.verticalOffset : null
-        isSnappedToGrid: model ? model.isSnappedToGrid : null
+        horizontalOffset: root.model?.horizontalOffset ?? null
+        verticalOffset: root.model?.verticalOffset ?? null
+        isSnappedToGrid: root.model?.isSnappedToGrid ?? false
 
         navigationPanel: root.navigationPanel
         navigationRowStart: verticalSpacingSection.navigationRowEnd + 1
 
-        onSnapToGridToggled: {
-            if (model) {
-                model.isSnappedToGrid = snap
+        onSnapToGridToggled: function(snap) {
+            if (root.model) {
+                root.model.isSnappedToGrid = snap
             }
         }
 
         onConfigureGridRequested: {
-            if (model) {
-                model.configureGrid()
-            }
+            root.model?.configureGrid()
         }
     }
 
@@ -97,22 +95,18 @@ Column {
         navigationRowStart: offsetSection.navigationRowEnd
 
         onPushBackRequested: {
-            if (root.model) {
-                root.model.pushBackInOrder()
-            }
+            root.model?.pushBackInOrder()
         }
 
         onPushFrontRequested: {
-            if (root.model) {
-                root.model.pushFrontInOrder()
-            }
+            root.model?.pushFrontInOrder()
         }
     }
 
     SeparatorLine { anchors.margins: -12 }
 
     ColorSection {
-        propertyItem: root.model ? root.model.color : null
+        propertyItem: root.model?.color ?? null
 
         navigationPanel: root.navigationPanel
         navigationRowStart: arrangeSection.navigationRowEnd

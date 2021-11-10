@@ -19,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.9
-import QtQuick.Controls 1.5
-import QtQuick.Layouts 1.3
-import MuseScore.UiComponents 1.0
+import QtQuick 2
+import QtQuick.Layouts 1
+
+import MuseScore.UiComponents
 import "../../../common"
 
 TabPanel {
@@ -43,7 +43,7 @@ TabPanel {
     TabItem {
         id: generalTab
 
-        title: qsTrc("inspector", "General")
+        text: qsTrc("inspector", "General")
         checked: root.currentIndex === 0
 
         navigation.name: "GeneralTab"
@@ -69,9 +69,8 @@ TabPanel {
     TabItem {
         id: advancedTab
 
-        title: qsTrc("inspector", "Settings")
+        text: qsTrc("inspector", "Settings")
         checked: root.currentIndex === 1
-
         enabled: root.model ? root.model.areSettingsAvailable : false
 
         navigation.name: "SettingsTab"

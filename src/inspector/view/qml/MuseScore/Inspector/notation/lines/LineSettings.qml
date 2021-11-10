@@ -20,7 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
-import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.15
 
 import MuseScore.UiComponents 1.0
@@ -121,7 +120,7 @@ TabPanel {
     TabItem {
         id: styleTab
 
-        title: qsTrc("inspector", "Style")
+        text: qsTrc("inspector", "Style")
         checked: root.currentIndex === 0
 
         navigation.name: "StyleTab"
@@ -129,23 +128,23 @@ TabPanel {
         navigation.row: root.navigationRowStart
         onNavigationTriggered: root.currentIndex = 0
 
-        sourceComponent: {
-            var modelType = root.model ? root.model.modelType : -1
+//        sourceComponent: {
+//            var modelType = root.model ? root.model.modelType : -1
 
-            switch(modelType) {
-            case Inspector.TYPE_HAIRPIN: return hairpinStyleSettings
-            case Inspector.TYPE_VOLTA: return voltaStyleSettings
-            case Inspector.TYPE_OTTAVA: return ottavaStyleSettings
-            }
+//            switch(modelType) {
+//            case Inspector.TYPE_HAIRPIN: return hairpinStyleSettings
+//            case Inspector.TYPE_VOLTA: return voltaStyleSettings
+//            case Inspector.TYPE_OTTAVA: return ottavaStyleSettings
+//            }
 
-            return commonStyleSettings
-        }
+//            return commonStyleSettings
+//        }
     }
 
     TabItem {
         id: textTab
 
-        title: qsTrc("inspector", "Text")
+        text: qsTrc("inspector", "Text")
         checked: root.currentIndex === 1
 
         navigation.name: "GeneralTab"

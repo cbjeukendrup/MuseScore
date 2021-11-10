@@ -19,12 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.8
-import QtQuick.Controls 2.1
+import QtQuick
 
-import MuseScore.Palette 1.0
-import MuseScore.UiComponents 1.0
-import MuseScore.Ui 1.0
+import MuseScore.Palette
+import MuseScore.UiComponents
+import MuseScore.Ui
 
 Item {
     id: root
@@ -154,7 +153,7 @@ Item {
             {id: "properties", title: qsTrc("palette", "Palette properties…") },
         ]
 
-        onHandleMenuItem: {
+        onHandleMenuItem: function(itemId) {
             switch(itemId) {
             case "hide": root.hidePaletteRequested(); break
             case "new": root.insertNewPaletteRequested(); break

@@ -91,7 +91,7 @@ ExpandableBlank {
             navigationRowStart: root.navigation.row + 1
             anchorItem: root.anchorItem
 
-            onEnsureContentVisibleRequested: {
+            onEnsureContentVisibleRequested: function(invisibleContentHeight) {
                 root.ensureContentVisibleRequested(-invisibleContentHeight)
             }
         }
@@ -106,7 +106,7 @@ ExpandableBlank {
             navigationRowStart: root.navigation.row + 1
             anchorItem: root.anchorItem
 
-            onEnsureContentVisibleRequested: {
+            onEnsureContentVisibleRequested: function(invisibleContentHeight) {
                 root.ensureContentVisibleRequested(-invisibleContentHeight)
             }
         }
@@ -121,7 +121,7 @@ ExpandableBlank {
             navigationRowStart: root.navigation.row + 1
             anchorItem: root.anchorItem
 
-            onEnsureContentVisibleRequested: {
+            onEnsureContentVisibleRequested: function(invisibleContentHeight) {
                 root.ensureContentVisibleRequested(-invisibleContentHeight)
             }
         }

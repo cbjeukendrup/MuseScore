@@ -21,8 +21,8 @@
  */
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+//import QtQuick.Controls 1.4
+//import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
@@ -87,10 +87,10 @@ Item {
             navigation.section: root.navigationSection
             navigation.order: 2
 
-            isMovingUpAvailable: instrumentsTreeModel.isMovingUpAvailable
-            isMovingDownAvailable: instrumentsTreeModel.isMovingDownAvailable
-            isAddingAvailable: instrumentsTreeModel.isAddingAvailable
-            isRemovingAvailable: instrumentsTreeModel.isRemovingAvailable
+            isMovingUpAvailable: false//instrumentsTreeModel.isMovingUpAvailable
+            isMovingDownAvailable: false//instrumentsTreeModel.isMovingDownAvailable
+            isAddingAvailable: false//instrumentsTreeModel.isAddingAvailable
+            isRemovingAvailable: false//instrumentsTreeModel.isRemovingAvailable
 
             onAddRequested: {
                 instrumentsTreeModel.addInstruments()
@@ -117,7 +117,7 @@ Item {
             Layout.rightMargin: 20
 
             text: qsTrc("instruments", "There are no instruments in your score. To choose some, press <b>Add</b>, or use the shortcut <b>‘i’</b>")
-            visible: instrumentsTreeModel.isEmpty && instrumentsTreeModel.isAddingAvailable
+            visible: true//instrumentsTreeModel.isEmpty && instrumentsTreeModel.isAddingAvailable
 
             verticalAlignment: Qt.AlignTop
             wrapMode: Text.WordWrap
@@ -130,7 +130,7 @@ Item {
             Layout.fillHeight: true
 
             contentWidth: width
-            contentHeight: instrumentsTreeView.height
+//            contentHeight: instrumentsTreeView.height
 
             clip: true
             boundsBehavior: Flickable.StopAtBounds
@@ -138,6 +138,7 @@ Item {
 
             ScrollBar.vertical: StyledScrollBar {}
 
+            /*
             TreeView {
                 id: instrumentsTreeView
 
@@ -148,10 +149,7 @@ Item {
 
                 visible: !instrumentsTreeModel.isEmpty
 
-                model: InstrumentsPanelTreeModel {
-                    id: instrumentsTreeModel
-                }
-
+                model: instrumentsTreeModel
                 selection: instrumentsTreeModel ? instrumentsTreeModel.selectionModel : null
 
                 alternatingRowColors: false
@@ -331,6 +329,7 @@ Item {
                     }
                 }
             }
+*/
         }
     }
 }

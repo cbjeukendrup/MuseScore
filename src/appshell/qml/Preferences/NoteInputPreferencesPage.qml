@@ -47,15 +47,15 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
 
-            onAdvanceToNextNoteChangeRequested: {
+            onAdvanceToNextNoteChangeRequested: function(advance) {
                 noteInputModel.advanceToNextNoteOnKeyRelease = advance
             }
 
-            onColorNotesChangeRequested: {
+            onColorNotesChangeRequested: function(color) {
                 noteInputModel.colorNotesOusideOfUsablePitchRange = color
             }
 
-            onDelayBetweenNotesChangeRequested: {
+            onDelayBetweenNotesChangeRequested: function(delay) {
                 noteInputModel.delayBetweenNotesInRealTimeModeMilliseconds = delay
             }
         }
@@ -71,19 +71,19 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
 
-            onPlayNotesWhenEditingChangeRequested: {
+            onPlayNotesWhenEditingChangeRequested: function(play) {
                 noteInputModel.playChordWhenEditing = play
             }
 
-            onPlayChordWhenEditingChangeRequested: {
+            onPlayChordWhenEditingChangeRequested: function(play) {
                 noteInputModel.playChordWhenEditing = play
             }
 
-            onPlayChordSymbolWhenEditingChangeRequested: {
+            onPlayChordSymbolWhenEditingChangeRequested: function(play) {
                 noteInputModel.playChordSymbolWhenEditing = play
             }
 
-            onNotePlayDurationChangeRequested: {
+            onNotePlayDurationChangeRequested: function(duration) {
                 noteInputModel.notePlayDurationMilliseconds = duration
             }
         }

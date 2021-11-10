@@ -62,7 +62,7 @@ Row {
 
         navigation.accessible.name: titleLabel.text + " " + currentValue + " " + measureUnitsSymbol
 
-        onValueEdited: {
+        onValueEdited: function (newValue) {
             root.valueEdited(newValue)
         }
     }

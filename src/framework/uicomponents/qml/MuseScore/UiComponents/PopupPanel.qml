@@ -19,10 +19,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtGraphicalEffects 1.0
+import QtQuick 2
 
-import MuseScore.Ui 1.0
+import MuseScore.Ui
 
 Rectangle {
     id: root
@@ -132,13 +131,13 @@ Rectangle {
         }
     }
 
-    FastBlur {
-        anchors.fill: effectSource
+//    FastBlur {
+//        anchors.fill: effectSource
 
-        source: effectSource
-        radius: 100
-        transparentBorder: true
-    }
+//        source: effectSource
+//        radius: 100
+//        transparentBorder: true
+//    }
 
     Loader {
         id: contentLoader

@@ -38,11 +38,11 @@ HairpinLineSettingsModel::HairpinLineSettingsModel(QObject* parent, IElementRepo
     if (lineType == Diminuendo) {
         setModelType(InspectorModelType::TYPE_DIMINUENDO);
         setTitle(qtrc("inspector", "Diminuendo"));
-        setIcon(ui::IconCode::Code::DIMINUENDO);
+        setIcon(IconCode::DIMINUENDO);
     } else {
         setModelType(InspectorModelType::TYPE_CRESCENDO);
         setTitle(qtrc("inspector", "Crescendo"));
-        setIcon(ui::IconCode::Code::CRESCENDO);
+        setIcon(IconCode::CRESCENDO);
     }
 
     static const QList<HookTypeInfo> hookTypes {

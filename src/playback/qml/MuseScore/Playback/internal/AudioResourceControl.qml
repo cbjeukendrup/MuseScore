@@ -321,7 +321,7 @@ Item {
                     menuAnchorItem: root.menuAnchorItem ? root.menuAnchorItem : ui.rootItem
                     navigation: menuButton.navigation
 
-                    onHandleMenuItem: {
+                    onHandleMenuItem: function(itemId) {
                         if (root.resourceItemModel) {
                             root.resourceItemModel.handleMenuItem(itemId)
                         }

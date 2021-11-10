@@ -19,12 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.9
-import QtQuick.Controls 1.5
-import QtQuick.Layouts 1.3
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
-import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
+import MuseScore.Ui 1.0
 import MuseScore.Inspector 1.0
 
 import "../../common"
@@ -68,7 +67,7 @@ TabPanel {
 
         width: root.width
 
-        title: headModel ? headModel.title : ""
+        text: headModel ? headModel.title : ""
         checked: root.currentIndex === 0
 
         navigation.name: "HeadTab"
@@ -103,7 +102,7 @@ TabPanel {
         height: implicitHeight
         width: root.width
 
-        title: stemModel ? stemModel.title : ""
+        text: stemModel ? stemModel.title : ""
         checked: root.currentIndex === 1
 
         navigation.name: "StemTab"
@@ -133,11 +132,11 @@ TabPanel {
     TabItem {
         id: beamTab
 
-        readonly property QtObject beamModel: root.model ? root.model.modelByType(Inspector.TYPE_BEAM) : null
+        readonly property QtObject beamModel: root.model?.modelByType(Inspector.TYPE_BEAM)
 
         width: root.width
 
-        title: beamModel ? beamModel.title : ""
+        text: beamModel?.title ?? ""
         checked: root.currentIndex === 2
 
         navigation.name: "BeamTab"

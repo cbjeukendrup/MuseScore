@@ -22,7 +22,7 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
-import QtGraphicalEffects 1.0
+//import QtGraphicalEffects 1.0
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
@@ -118,15 +118,15 @@ FocusScope {
 
                     fillMode: Image.PreserveAspectCrop
 
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        maskSource: Rectangle {
-                            width: avatar.width
-                            height: avatar.height
-                            radius: width / 2
-                            visible: false
-                        }
-                    }
+//                    layer.enabled: true
+//                    layer.effect: OpacityMask {
+//                        maskSource: Rectangle {
+//                            width: avatar.width
+//                            height: avatar.height
+//                            radius: width / 2
+//                            visible: false
+//                        }
+//                    }
                 }
 
                 Column {

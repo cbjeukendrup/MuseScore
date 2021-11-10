@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
-import QtGraphicalEffects 1.0
+//import QtGraphicalEffects 1.0
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
@@ -46,7 +46,7 @@ FocusScope {
         accessible.role: MUAccessible.Button
         accessible.name: root.title + ". " + root.author
 
-        onActiveChanged: {
+        onActiveChanged: function(active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -117,14 +117,14 @@ FocusScope {
                 }
             ]
 
-            RectangularGlow {
-                anchors.fill: thumbnailRect
-                z: -1
+//            RectangularGlow {
+//                anchors.fill: thumbnailRect
+//                z: -1
 
-                glowRadius: 20
-                color: "#08000000"
-                cornerRadius: thumbnailRect.radius + glowRadius
-            }
+//                glowRadius: 20
+//                color: "#08000000"
+//                cornerRadius: thumbnailRect.radius + glowRadius
+//            }
         }
 
         StyledTextLabel {

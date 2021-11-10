@@ -23,19 +23,21 @@ import QtQuick 2.15
 
 Item {
     id: root
+
     property alias sectionDelegate: loader.sourceComponent
+
+    property int index: 0
+    property var sectionValue: null
+
+    visible: loader.item?.visible ?? true
 
     Loader {
         id: loader
         anchors.fill: parent
 
-        property var itemModel: null
-        property int itemIndex: 0
-
         onLoaded: {
-            itemModel = Qt.binding( function() { return Boolean(modelData) ? modelData : null });
-            itemIndex = index
-    //        root.visible = Qt.binding( function() { return Boolean(item) ? item.visible : false })
+            item.index = Qt.binding(() => root.index)
+            item.section = Qt.binding(() => root.sectionValue)
         }
     }
 }

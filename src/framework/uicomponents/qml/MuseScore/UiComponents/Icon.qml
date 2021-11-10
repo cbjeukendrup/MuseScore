@@ -19,15 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.1
-import QtGraphicalEffects 1.0
+import QtQuick 2.15
+//import QtGraphicalEffects 1.0
 
 Item {
     id: root
 
     property alias icon: image.source
     property alias sourceSize: image.sourceSize
-    property alias color: colorOverlay.color
+//    property alias color: colorOverlay.color
     property int pixelSize: 16
 
     implicitHeight: root.icon == "" ? 0 : pixelSize
@@ -38,17 +38,17 @@ Item {
 
         anchors.centerIn: parent
 
-        height: pixelSize
+        height: root.pixelSize
         width: implicitWidth
 
         fillMode: Image.PreserveAspectFit
     }
 
-    ColorOverlay {
-        id: colorOverlay
+//    ColorOverlay {
+//        id: colorOverlay
 
-        anchors.fill: image
-        source: image
-        color: ui.theme.fontPrimaryColor
-    }
+//        anchors.fill: image
+//        source: image
+//        color: ui.theme.fontPrimaryColor
+//    }
 }
