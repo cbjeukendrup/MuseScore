@@ -223,17 +223,17 @@ inline value::value(int type, bool)
 {
     switch (type) {
 #define INIT(p, v)                                                                                                                 \
-case p##type:                                                                                                                    \
-    u_.p = v;                                                                                                                      \
-    break
-        INIT(boolean_, false);
-        INIT(number_, 0.0);
+    case p##type:                                                                                                                    \
+        u_.p = v;                                                                                                                      \
+        break
+    INIT(boolean_, false);
+    INIT(number_, 0.0);
 #ifdef PICOJSON_USE_INT64
-        INIT(int64_, 0);
+    INIT(int64_, 0);
 #endif
-        INIT(string_, new std::string());
-        INIT(array_, new array());
-        INIT(object_, new object());
+    INIT(string_, new std::string());
+    INIT(array_, new array());
+    INIT(object_, new object());
 #undef INIT
     default:
         break;
@@ -327,12 +327,12 @@ inline void value::clear()
 {
     switch (type_) {
 #define DEINIT(p)                                                                                                                  \
-case p##type:                                                                                                                    \
-    delete u_.p;                                                                                                                   \
-    break
-        DEINIT(string_);
-        DEINIT(array_);
-        DEINIT(object_);
+    case p##type:                                                                                                                    \
+        delete u_.p;                                                                                                                   \
+        break
+    DEINIT(string_);
+    DEINIT(array_);
+    DEINIT(object_);
 #undef DEINIT
     default:
         break;
@@ -349,12 +349,12 @@ inline value::value(const value& x)
 {
     switch (type_) {
 #define INIT(p, v)                                                                                                                 \
-case p##type:                                                                                                                    \
-    u_.p = v;                                                                                                                      \
-    break
-        INIT(string_, new std::string(*x.u_.string_));
-        INIT(array_, new array(*x.u_.array_));
-        INIT(object_, new object(*x.u_.object_));
+    case p##type:                                                                                                                    \
+        u_.p = v;                                                                                                                      \
+        break
+    INIT(string_, new std::string(*x.u_.string_));
+    INIT(array_, new array(*x.u_.array_));
+    INIT(object_, new object(*x.u_.object_));
 #undef INIT
     default:
         u_ = x.u_;
@@ -620,17 +620,17 @@ template<typename Iter> struct serialize_str_char {
     {
         switch (c) {
 #define MAP(val, sym)                                                                                                              \
-case val:                                                                                                                        \
-    copy(sym, oi);                                                                                                                 \
-    break
-            MAP('"', "\\\"");
-            MAP('\\', "\\\\");
-            MAP('/', "\\/");
-            MAP('\b', "\\b");
-            MAP('\f', "\\f");
-            MAP('\n', "\\n");
-            MAP('\r', "\\r");
-            MAP('\t', "\\t");
+    case val:                                                                                                                        \
+        copy(sym, oi);                                                                                                                 \
+        break
+        MAP('"', "\\\"");
+        MAP('\\', "\\\\");
+        MAP('/', "\\/");
+        MAP('\b', "\\b");
+        MAP('\f', "\\f");
+        MAP('\n', "\\n");
+        MAP('\r', "\\r");
+        MAP('\t', "\\t");
 #undef MAP
         default:
             if (static_cast<unsigned char>(c) < 0x20 || c == 0x7f) {
@@ -905,17 +905,17 @@ template<typename String, typename Iter> inline bool _parse_string(String& out, 
             }
             switch (ch) {
 #define MAP(sym, val)                                                                                                              \
-case sym:                                                                                                                        \
-    out.push_back(val);                                                                                                            \
-    break
-                MAP('"', '\"');
-                MAP('\\', '\\');
-                MAP('/', '/');
-                MAP('b', '\b');
-                MAP('f', '\f');
-                MAP('n', '\n');
-                MAP('r', '\r');
-                MAP('t', '\t');
+    case sym:                                                                                                                        \
+        out.push_back(val);                                                                                                            \
+        break
+            MAP('"', '\"');
+            MAP('\\', '\\');
+            MAP('/', '/');
+            MAP('b', '\b');
+            MAP('f', '\f');
+            MAP('n', '\n');
+            MAP('r', '\r');
+            MAP('t', '\t');
 #undef MAP
             case 'u':
                 if (!_parse_codepoint(out, in)) {
@@ -997,16 +997,16 @@ template<typename Context, typename Iter> inline bool _parse(Context& ctx, input
     int ch = in.getc();
     switch (ch) {
 #define IS(ch, text, op)                                                                                                           \
-case ch:                                                                                                                         \
-    if (in.match(text) && op) {                                                                                                    \
-        return true;                                                                                                                 \
-    } \
-    else {                                                                                                                       \
-        return false;                                                                                                                \
-    }
-        IS('n', "ull", ctx.set_null());
-        IS('f', "alse", ctx.set_bool(false));
-        IS('t', "rue", ctx.set_bool(true));
+    case ch:                                                                                                                         \
+        if (in.match(text) && op) {                                                                                                    \
+            return true;                                                                                                                 \
+        } \
+        else {                                                                                                                       \
+            return false;                                                                                                                \
+        }
+    IS('n', "ull", ctx.set_null());
+    IS('f', "alse", ctx.set_bool(false));
+    IS('t', "rue", ctx.set_bool(true));
 #undef IS
     case '"':
         return ctx.parse_string(in);

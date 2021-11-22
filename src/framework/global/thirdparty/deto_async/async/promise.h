@@ -56,7 +56,7 @@ public:
         mutable Promise<T...> p;
     };
 
-    using Body = std::function<Result(Resolve, Reject)>;
+    using Body = std::function<Result (Resolve, Reject)>;
 
     Promise(Body body, const std::thread::id& th = std::this_thread::get_id())
     {

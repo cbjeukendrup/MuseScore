@@ -40,7 +40,7 @@ namespace mu::engraving {
     public:
 #define END_QT_REGISTERED_ENUM(Name) \
     Q_ENUM(Name); \
-}; \
+    }; \
     using Name = MSQE_##Name::Name;
 #else
 #define BEGIN_QT_REGISTERED_ENUM(Name)
