@@ -56,14 +56,17 @@ DockToolBarView {
     minimumWidth: Math.min(contentWidth, maximumWidth)
     minimumHeight: Math.min(contentHeight, maximumHeight)
 
-    property int thickness: 36
-
     QtObject {
         id: prv
 
-        readonly property int maximumLength: 16777215
-        readonly property int gripButtonWidth: gripButton.visible ? gripButton.width + 2 * gripButtonPadding : 0
-        readonly property int gripButtonHeight: gripButton.visible ? gripButton.height + 2 * gripButtonPadding : 0
+        property real implicitContentWidth: 0
+        property real implicitContentHeight: 0
+
+        readonly property real minimumThickness: 36
+        readonly property real maximumLength: 16777215
+
+        readonly property real gripButtonWidth: gripButton.visible ? gripButton.width + 2 * gripButtonPadding : 0
+        readonly property real gripButtonHeight: gripButton.visible ? gripButton.height + 2 * gripButtonPadding : 0
     }
 
     Item {
@@ -101,13 +104,20 @@ DockToolBarView {
             when: !root.isVertical
 
             PropertyChanges {
+                target: prv
+
+                implicitContentWidth: prv.gripButtonWidth + contentLoader.implicitWidth
+                implicitContentHeight: Math.max(prv.gripButtonHeight, contentLoader.implicitHeight + contentBottomPadding + contentTopPadding)
+            }
+
+            PropertyChanges {
                 target: root
 
-                contentWidth: prv.gripButtonWidth + contentLoader.implicitWidth
-                contentHeight: Math.max(prv.gripButtonHeight, contentLoader.implicitHeight + contentBottomPadding + contentTopPadding)
+                contentWidth: prv.implicitContentWidth
+                contentHeight: Math.max(prv.implicitContentHeight, prv.minimumThickness)
 
                 maximumWidth: floating ? contentWidth : prv.maximumLength
-                maximumHeight: floating ? contentHeight : thickness
+                maximumHeight: contentHeight
             }
 
             PropertyChanges {
@@ -142,12 +152,19 @@ DockToolBarView {
             when: root.isVertical
 
             PropertyChanges {
+                target: prv
+
+                implicitContentWidth: Math.max(prv.gripButtonWidth, contentLoader.implicitWidth)
+                implicitContentHeight: prv.gripButtonHeight + contentLoader.implicitHeight
+            }
+
+            PropertyChanges {
                 target: root
 
-                contentWidth: Math.max(prv.gripButtonWidth, contentLoader.implicitWidth + contentBottomPadding + contentTopPadding)
-                contentHeight: prv.gripButtonHeight + contentLoader.implicitHeight
+                contentWidth: Math.max(prv.implicitContentWidth, prv.minimumThickness)
+                contentHeight: prv.implicitContentHeight
 
-                maximumWidth: thickness
+                maximumWidth: contentWidth
                 maximumHeight: floating ? contentHeight : prv.maximumLength
             }
 

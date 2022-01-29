@@ -182,8 +182,6 @@ DockPage {
                 root.toolBarRightDropDestination
             ]
 
-            thickness: orientation === Qt.Horizontal ? 40 : 76
-
             NoteInputBar {
                 orientation: noteInputBar.orientation
                 floating: noteInputBar.floating

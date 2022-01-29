@@ -35,8 +35,8 @@ Item {
     property alias navigation: navPanel
     property bool floating: false
 
-    width: content.width
-    height: content.height
+    implicitWidth: content.width
+    implicitHeight: content.height
 
     NavigationPanel {
         id: navPanel
