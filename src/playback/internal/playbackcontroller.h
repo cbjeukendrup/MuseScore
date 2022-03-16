@@ -134,6 +134,8 @@ private:
     void setupSequenceTracks();
     void setupSequencePlayer();
 
+    void updateMuteStates();
+
     void setCurrentTick(const midi::tick_t tick);
     void addTrack(const engraving::InstrumentTrackId& instrumentTrackId, const std::string& title);
     void setTrackActivity(const engraving::InstrumentTrackId& instrumentTrackId, const bool isActive);

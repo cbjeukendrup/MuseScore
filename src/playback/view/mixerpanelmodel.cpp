@@ -27,6 +27,7 @@
 
 using namespace mu::playback;
 using namespace mu::audio;
+using namespace mu::project;
 
 static constexpr int INVALID_INDEX = -1;
 
@@ -222,6 +223,9 @@ MixerChannelItem* MixerPanelModel::buildTrackChannelItem(const audio::TrackSeque
     MixerChannelItem* item = new MixerChannelItem(this, trackId);
     item->setPanelSection(m_itemsNavigationSection);
 
+    engraving::InstrumentTrackId instrumentTrackId = <#??#>;
+    item->loadSoloMuteState(audioSettings()->soloMuteState(instrumentTrackId));
+
     playback()->tracks()->inputParams(sequenceId, trackId)
     .onResolve(this, [item](AudioInputParams inParams) {
         item->loadInputParams(std::move(inParams));
@@ -300,14 +304,9 @@ MixerChannelItem* MixerPanelModel::buildTrackChannelItem(const audio::TrackSeque
         playback()->audioOutput()->setOutputParams(sequenceId, trackId, params);
     });
 
-    connect(item, &MixerChannelItem::soloStateToggled, this, [this, item](const bool solo) {
-        for (MixerChannelItem* ch : m_mixerChannelList) {
-            if (item == ch || ch->isMasterChannel() || ch->solo()) {
-                continue;
-            }
-
-            ch->setMutedBySolo(solo);
-        }
+    connect(item, &MixerChannelItem::soloMuteStateChanged, this,
+            [this, instrumentTrackId](const project::IProjectAudioSettings::SoloMuteState& state) {
+        audioSettings()->setSoloMuteState(instrumentTrackId, state);
     });
 
     return item;
@@ -342,16 +341,6 @@ MixerChannelItem* MixerPanelModel::buildMasterChannelItem()
         playback()->audioOutput()->setMasterOutputParams(params);
     });
 
-    connect(item, &MixerChannelItem::soloStateToggled, this, [this, item](const bool solo) {
-        for (MixerChannelItem* ch : m_mixerChannelList) {
-            if (item == ch || ch->solo()) {
-                continue;
-            }
-
-            ch->setMutedBySolo(solo);
-        }
-    });
-
     return item;
 }
 
@@ -364,4 +353,14 @@ MixerChannelItem* MixerPanelModel::trackChannelItem(const audio::TrackId& trackI
     }
 
     return nullptr;
+}
+
+INotationProjectPtr MixerPanelModel::currentProject() const
+{
+    return context()->currentProject();
+}
+
+IProjectAudioSettingsPtr MixerPanelModel::audioSettings() const
+{
+    return currentProject() ? currentProject()->audioSettings() : nullptr;
 }

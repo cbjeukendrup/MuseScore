@@ -602,6 +602,8 @@ void PlaybackController::removeNonExistingTracks()
             removeTrack(pair.first);
         }
     }
+
+    updateMuteStates();
 }
 
 void PlaybackController::removeTrack(const InstrumentTrackId& partId)
@@ -698,10 +700,19 @@ void PlaybackController::setupSequenceTracks()
 
     addTrack(notationPlayback()->metronomeTrackId(), qtrc("playback", "Metronome").toStdString());
 
+    updateMuteStates();
+
+    audioSettings()->soloMuteStateChanged().onReceive(this,
+                                                      [this](const InstrumentTrackId&, const project::IProjectAudioSettings::SoloMuteState&) {
+        updateMuteStates();
+    });
+
     partList.onItemAdded(this, [this](const Part* part) {
         for (const auto& pair : *part->instruments()) {
             addTrack({ part->id(), pair.second->id().toStdString() }, part->partName().toStdString());
         }
+
+        updateMuteStates();
     });
 
     partList.onItemChanged(this, [this](const Part* part) {
@@ -766,6 +777,45 @@ void PlaybackController::setupSequencePlayer()
             m_isPlayingChanged.notify();
         }
     });
+}
+
+void PlaybackController::updateMuteStates()
+{
+    if (!masterNotationParts() || !audioSettings() || !playback()) {
+        return;
+    }
+
+    NotifyList<const Part*> partList = masterNotationParts()->partList();
+    bool hasSolo = false;
+
+    for (const Part* part : partList) {
+        for (const auto& pair : *part->instruments()) {
+            InstrumentTrackId instrumentTrackId = { part->id(), pair.second->id().toStdString() };
+            if (audioSettings()->soloMuteState(instrumentTrackId).solo) {
+                hasSolo = true;
+                break;
+            }
+        }
+    }
+
+    for (const Part* part : partList) {
+        for (const auto& pair : *part->instruments()) {
+            InstrumentTrackId instrumentTrackId = { part->id(), pair.second->id().toStdString() };
+            auto soloMuteState = audioSettings()->soloMuteState(instrumentTrackId);
+
+            bool shouldBeMuted = soloMuteState.mute
+                                 || (hasSolo && !soloMuteState.solo)
+                                 || (!part->isVisible());
+
+            AudioOutputParams params = trackOutputParams(instrumentTrackId);
+            if (shouldBeMuted != params.muted) {
+                params.muted = shouldBeMuted;
+
+                audio::TrackId trackId = m_trackIdMap[instrumentTrackId];
+                playback()->audioOutput()->setOutputParams(m_currentSequenceId, trackId, std::move(params));
+            }
+        }
+    }
 }
 
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const
