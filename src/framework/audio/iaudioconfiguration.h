@@ -43,6 +43,7 @@ public:
     virtual std::string currentAudioApi() const = 0;
     virtual void setCurrentAudioApi(const std::string& name) = 0;
 
+    virtual unsigned int sampleRate() const = 0;
     virtual audioch_t audioChannelsCount() const = 0;
     virtual unsigned int driverBufferSize() const = 0; // samples
 

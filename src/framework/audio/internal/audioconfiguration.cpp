@@ -92,6 +92,11 @@ void AudioConfiguration::setCurrentAudioApi(const std::string& name)
     settings()->setSharedValue(AUDIO_API_KEY, Val(name));
 }
 
+unsigned int AudioConfiguration::sampleRate() const
+{
+    return 44100;
+}
+
 audioch_t AudioConfiguration::audioChannelsCount() const
 {
     return AUDIO_CHANNELS;

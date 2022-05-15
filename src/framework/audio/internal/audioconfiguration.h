@@ -42,6 +42,7 @@ public:
     std::string currentAudioApi() const override;
     void setCurrentAudioApi(const std::string& name) override;
 
+    unsigned int sampleRate() const override;
     audioch_t audioChannelsCount() const override;
     unsigned int driverBufferSize() const override;
 

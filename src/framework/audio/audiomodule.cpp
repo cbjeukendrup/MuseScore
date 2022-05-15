@@ -167,7 +167,7 @@ void AudioModule::onInit(const framework::IApplication::RunMode& mode)
 
     // Setup audio driver
     IAudioDriver::Spec requiredSpec;
-    requiredSpec.sampleRate = 48000;
+    requiredSpec.sampleRate = s_audioConfiguration->sampleRate();
     requiredSpec.format = IAudioDriver::Format::AudioF32;
     requiredSpec.channels = s_audioConfiguration->audioChannelsCount();
     requiredSpec.samples = s_audioConfiguration->driverBufferSize();
