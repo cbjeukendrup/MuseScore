@@ -155,6 +155,40 @@ void MixerPanelModel::loadItems()
     setupConnections();
 }
 
+void MixerPanelModel::sortItems()
+{
+    beginResetModel();
+
+    const auto& instrumentTrackIdMap = controller()->instrumentTrackIdMap();
+
+    QList<MixerChannelItem*> newMixerChannelList;
+
+    // Move channels in the correct order from m_mixerChannelList to newMixerChannelList
+    for (const Part* part : masterNotationParts()->partList()) {
+        for (const InstrumentTrackId& instrumentTrackId : part->instrumentTrackIdList()) {
+            auto search = instrumentTrackIdMap.find(instrumentTrackId);
+            if (search == instrumentTrackIdMap.cend()) {
+                continue;
+            }
+
+            MixerChannelItem* item = trackChannelItem(search->second);
+            if (!item) {
+                continue;
+            }
+
+            newMixerChannelList << item;
+            m_mixerChannelList.removeOne(item);
+        }
+    }
+
+    // Metronome/chords/master remained as residue in m_mixerChannelList
+    newMixerChannelList << m_mixerChannelList;
+
+    m_mixerChannelList = newMixerChannelList;
+
+    endResetModel();
+}
+
 void MixerPanelModel::addItem(const audio::TrackId trackId, const engraving::InstrumentTrackId& instrumentTrackId)
 {
     TRACEFUNC;
@@ -244,6 +278,10 @@ void MixerPanelModel::setupConnections()
         if (MixerChannelItem* item = trackChannelItem(trackId)) {
             item->loadOutputParams(std::move(params));
         }
+    });
+
+    masterNotationParts()->partsChanged().onNotify(this, [this]() {
+        sortItems();
     });
 }
 

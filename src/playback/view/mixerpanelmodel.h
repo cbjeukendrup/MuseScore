@@ -66,6 +66,7 @@ private:
     };
 
     void loadItems();
+    void sortItems();
     void addItem(const audio::TrackId trackId, const engraving::InstrumentTrackId& instrumentTrackId);
     void removeItem(const audio::TrackId trackId);
     void updateItemsPanelsOrder();
