@@ -24,7 +24,7 @@
 echo "Setup Linux build environment"
 trap 'echo Setup failed; exit 1' ERR
 
-GCC_VERSION="10"
+GCC_VERSION="7"
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -g|--gcc_version) GCC_VERSION="$2"; shift ;;
