@@ -40,7 +40,7 @@ class AbstractEventSequencer : public async::Asyncable
 {
 public:
     using EventType = std::variant<Types...>;
-    using EventSequence = std::set<EventType>;
+    using EventSequence = std::vector<EventType>;
     using EventSequenceMap = std::map<msecs_t, EventSequence>;
 
     typedef typename EventSequenceMap::const_iterator SequenceIterator;
@@ -207,7 +207,8 @@ protected:
     void handleMainStream(EventSequence& result)
     {
         if (m_currentMainSequenceIt->first <= m_playbackPosition) {
-            result.insert(m_currentMainSequenceIt->second.cbegin(),
+            result.insert(result.end(),
+                          m_currentMainSequenceIt->second.cbegin(),
                           m_currentMainSequenceIt->second.cend());
 
             m_currentMainSequenceIt = std::next(m_currentMainSequenceIt);
@@ -221,7 +222,8 @@ protected:
         }
 
         if (m_currentDynamicsIt->first <= m_playbackPosition) {
-            result.insert(m_currentDynamicsIt->second.cbegin(),
+            result.insert(result.end(),
+                          m_currentDynamicsIt->second.cbegin(),
                           m_currentDynamicsIt->second.cend());
 
             m_currentDynamicsIt = std::next(m_currentDynamicsIt);

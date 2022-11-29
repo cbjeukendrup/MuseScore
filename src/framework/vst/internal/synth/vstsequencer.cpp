@@ -62,7 +62,7 @@ void VstSequencer::updateDynamicChanges(const mpe::DynamicLevelMap& changes)
     m_dynamicEvents.clear();
 
     for (const auto& pair : changes) {
-        m_dynamicEvents[pair.first].emplace(expressionLevel(pair.second));
+        m_dynamicEvents[pair.first].emplace_back(expressionLevel(pair.second));
     }
 
     updateDynamicChangesIterator();
@@ -91,8 +91,8 @@ void VstSequencer::updatePlaybackEvents(EventSequenceMap& destination, const mpe
             float velocityFraction = noteVelocityFraction(noteEvent);
             float tuning = noteTuning(noteEvent, noteId);
 
-            destination[timestampFrom].emplace(buildEvent(VstEvent::kNoteOnEvent, noteId, velocityFraction, tuning));
-            destination[timestampTo].emplace(buildEvent(VstEvent::kNoteOffEvent, noteId, velocityFraction, tuning));
+            destination[timestampFrom].emplace_back(buildEvent(VstEvent::kNoteOnEvent, noteId, velocityFraction, tuning));
+            destination[timestampTo].emplace_back(buildEvent(VstEvent::kNoteOffEvent, noteId, velocityFraction, tuning));
 
             appendControlSwitch(destination, noteEvent, PEDAL_CC_SUPPORTED_TYPES, SUSTAIN_IDX);
         }
@@ -120,10 +120,11 @@ void VstSequencer::appendControlSwitch(EventSequenceMap& destination, const mpe:
         const mpe::ArticulationAppliedData& articulationData = noteEvent.expressionCtx().articulations.at(currentType);
         const mpe::ArticulationMeta& articulationMeta = articulationData.meta;
 
-        destination[noteEvent.arrangementCtx().actualTimestamp].emplace(buildParamInfo(controlIt->second, 1 /*on*/));
-        destination[articulationMeta.timestamp + articulationMeta.overallDuration].emplace(buildParamInfo(controlIt->second, 0 /*off*/));
+        destination[noteEvent.arrangementCtx().actualTimestamp].emplace_back(buildParamInfo(controlIt->second, 1 /*on*/));
+        destination[articulationMeta.timestamp + articulationMeta.overallDuration].emplace_back(
+            buildParamInfo(controlIt->second, 0 /*off*/));
     } else {
-        destination[noteEvent.arrangementCtx().actualTimestamp].emplace(buildParamInfo(controlIt->second, 0 /*off*/));
+        destination[noteEvent.arrangementCtx().actualTimestamp].emplace_back(buildParamInfo(controlIt->second, 0 /*off*/));
     }
 }
 

@@ -164,12 +164,18 @@ bool FluidSynth::handleEvent(const midi::Event& event)
     int ret = FLUID_OK;
     switch (event.opcode()) {
     case Event::Opcode::NoteOn: {
-        ret = fluid_synth_noteon(m_fluid->synth, event.channel(), event.note(), event.velocity());
-        m_tuning.add(event.note(), event.pitchTuningCents());
+        if (!m_notesOn[event.note()]) {
+            ret = fluid_synth_noteon(m_fluid->synth, event.channel(), event.note(), event.velocity());
+            m_tuning.add(event.note(), event.pitchTuningCents());
+        }
+        ++m_notesOn[event.note()];
     } break;
     case Event::Opcode::NoteOff: {
-        ret = fluid_synth_noteoff(m_fluid->synth, event.channel(), event.note());
-        m_tuning.add(event.note(), event.pitchTuningCents());
+        --m_notesOn[event.note()];
+        if (!m_notesOn[event.note()]) {
+            ret = fluid_synth_noteoff(m_fluid->synth, event.channel(), event.note());
+            m_tuning.add(event.note(), event.pitchTuningCents());
+        }
     } break;
     case Event::Opcode::ControlChange: {
         if (event.index() == midi::EXPRESSION_CONTROLLER) {
@@ -294,6 +300,7 @@ void FluidSynth::revokePlayingNotes()
     }
 
     fluid_synth_all_notes_off(m_fluid->synth, -1);
+    m_notesOn.fill(0);
 }
 
 void FluidSynth::flushSound()
@@ -304,7 +311,6 @@ void FluidSynth::flushSound()
 
     revokePlayingNotes();
 
-    fluid_synth_all_sounds_off(m_fluid->synth, -1);
     fluid_synth_cc(m_fluid->synth, -1, 121, 127);
 }
 

@@ -105,10 +105,10 @@ void MuseSamplerSequencer::updateOffStreamEvents(const mpe::PlaybackEventsMap& c
             ms_NoteArticulation articulationFlag = noteArticulationTypes(noteEvent);
 
             ms_AuditionStartNoteEvent noteOn = { pitch, articulationFlag, 0.5 };
-            m_offStreamEvents[timestampFrom].emplace(std::move(noteOn));
+            m_offStreamEvents[timestampFrom].emplace_back(std::move(noteOn));
 
             ms_AuditionStopNoteEvent noteOff = { pitch };
-            m_offStreamEvents[timestampTo].emplace(std::move(noteOff));
+            m_offStreamEvents[timestampTo].emplace_back(std::move(noteOff));
         }
     }
 

@@ -117,6 +117,7 @@ private:
     FluidSequencer m_sequencer;
     std::set<io::path_t> m_sfontPaths;
 
+    std::array<int8_t, 128> m_notesOn;
     KeyTuning m_tuning;
 };
 

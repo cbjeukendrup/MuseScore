@@ -68,7 +68,7 @@ void FluidSequencer::updateDynamicChanges(const mpe::DynamicLevelMap& changes)
         event.setIndex(midi::EXPRESSION_CONTROLLER);
         event.setData(expressionLevel(pair.second));
 
-        m_dynamicEvents[pair.first].emplace(std::move(event));
+        m_dynamicEvents[pair.first].emplace_back(std::move(event));
     }
 
     updateDynamicChangesIterator();
@@ -98,14 +98,14 @@ void FluidSequencer::updatePlaybackEvents(EventSequenceMap& destination, const m
             noteOn.setVelocity(velocity);
             noteOn.setPitchNote(noteIdx, tuning);
 
-            destination[timestampFrom].emplace(std::move(noteOn));
+            destination[timestampFrom].emplace_back(std::move(noteOn));
 
             midi::Event noteOff(Event::Opcode::NoteOff, Event::MessageType::ChannelVoice20);
             noteOff.setChannel(channelIdx);
             noteOff.setNote(noteIdx);
             noteOff.setPitchNote(noteIdx, tuning);
 
-            destination[timestampTo].emplace(std::move(noteOff));
+            destination[timestampTo].emplace_back(std::move(noteOff));
 
             appendControlSwitch(destination, noteEvent, PEDAL_CC_SUPPORTED_TYPES, 64);
             appendPitchBend(destination, noteEvent, BEND_SUPPORTED_TYPES, channelIdx);
@@ -133,19 +133,19 @@ void FluidSequencer::appendControlSwitch(EventSequenceMap& destination, const mp
         start.setIndex(midiControlIdx);
         start.setData(127);
 
-        destination[noteEvent.arrangementCtx().actualTimestamp].emplace(std::move(start));
+        destination[noteEvent.arrangementCtx().actualTimestamp].emplace_back(std::move(start));
 
         midi::Event end(Event::Opcode::ControlChange, Event::MessageType::ChannelVoice10);
         end.setIndex(midiControlIdx);
         end.setData(0);
 
-        destination[articulationMeta.timestamp + articulationMeta.overallDuration].emplace(std::move(end));
+        destination[articulationMeta.timestamp + articulationMeta.overallDuration].emplace_back(std::move(end));
     } else {
         midi::Event cc(Event::Opcode::ControlChange, Event::MessageType::ChannelVoice10);
         cc.setIndex(midiControlIdx);
         cc.setData(0);
 
-        destination[noteEvent.arrangementCtx().actualTimestamp].emplace(std::move(cc));
+        destination[noteEvent.arrangementCtx().actualTimestamp].emplace_back(std::move(cc));
     }
 }
 
@@ -175,7 +175,7 @@ void FluidSequencer::appendPitchBend(EventSequenceMap& destination, const mpe::N
                 timestamp_t currentPoint = timestampFrom + noteEvent.arrangementCtx().actualDuration * percentageToFactor(it->first);
 
                 event.setData(pitchBendLevel(it->second));
-                destination[currentPoint].emplace(event);
+                destination[currentPoint].emplace_back(event);
                 return;
             }
 
@@ -190,7 +190,7 @@ void FluidSequencer::appendPitchBend(EventSequenceMap& destination, const mpe::N
 
                 int pitchBendVal = pitchBendLevel(it->second + (i * pitchStep));
                 event.setData(pitchBendVal);
-                destination[currentPoint].emplace(event);
+                destination[currentPoint].emplace_back(event);
             }
 
             it++;
@@ -200,7 +200,7 @@ void FluidSequencer::appendPitchBend(EventSequenceMap& destination, const mpe::N
     }
 
     event.setData(8192);
-    destination[timestampFrom].emplace(std::move(event));
+    destination[timestampFrom].emplace_back(std::move(event));
 }
 
 channel_t FluidSequencer::channel(const mpe::NoteEvent& noteEvent) const
