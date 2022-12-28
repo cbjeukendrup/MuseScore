@@ -163,7 +163,9 @@ int AppShell::run(int argc, char** argv)
     // ====================================================
     globalModule.onInit(runMode);
     for (mu::modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "before onInit " << m->moduleName();
         m->onInit(runMode);
+        LOGI() << "after onInit " << m->moduleName();
     }
 
     // ====================================================
@@ -171,7 +173,9 @@ int AppShell::run(int argc, char** argv)
     // ====================================================
     globalModule.onAllInited(runMode);
     for (mu::modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "before onAllInited " << m->moduleName();
         m->onAllInited(runMode);
+        LOGI() << "after onAllInited " << m->moduleName();
     }
 
     // ====================================================

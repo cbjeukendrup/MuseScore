@@ -97,13 +97,19 @@ bool WasapiAudioDriver::open(const Spec& spec, Spec* activeSpec)
 
     hstring deviceId;
 
+    LOGI() << "before trying to get device id";
     if (m_deviceId.empty() || m_deviceId == DEFAULT_DEVICE_ID) {
         deviceId = s_data.wasapiClient->defaultDeviceId();
     } else {
         deviceId = to_hstring<std::string>(m_deviceId);
     }
+    LOGI() << "after trying to get device id";
 
+    LOGI() << "before asyncInitializeAudioDevice";
     s_data.wasapiClient->asyncInitializeAudioDevice(deviceId);
+    LOGI() << "after asyncInitializeAudioDevice";
+
+    LOGI() << "before WaitForMultipleObjects";
 
     static constexpr DWORD handleCount = 2;
     const HANDLE handles[handleCount] = { s_data.clientStartedEvent, s_data.clientFailedToStartEvent };
@@ -112,12 +118,19 @@ bool WasapiAudioDriver::open(const Spec& spec, Spec* activeSpec)
     if (waitResult != WAIT_OBJECT_0) {
         // Either the event was the second event (namely s_data.clientFailedToStartEvent)
         // Or some wait error occurred
+
+        LOGI() << "after WaitForMultipleObjects; it failed";
+
         return false;
     }
+
+    LOGI() << "after WaitForMultipleObjects; it succeeded";
 
     m_activeSpec = m_desiredSpec;
     m_activeSpec.sampleRate = s_data.wasapiClient->sampleRate();
     *activeSpec = m_activeSpec;
+
+    LOGI() << "succesfully opened audio driver";
 
     m_isOpened = true;
 
