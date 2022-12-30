@@ -175,7 +175,9 @@ HRESULT WasapiAudioClient::ActivateCompleted(IActivateAudioInterfaceAsyncOperati
                                                     m_mixFormat.get(),
                                                     nullptr));
         } else {
-            check_hresult(m_audioClient->InitializeSharedAudioStream(AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
+            check_hresult(m_audioClient->InitializeSharedAudioStream(AUDCLNT_STREAMFLAGS_EVENTCALLBACK
+                                                                     | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
+                                                                     | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY,
                                                                      m_minPeriodInFrames,
                                                                      m_mixFormat.get(),
                                                                      nullptr));
