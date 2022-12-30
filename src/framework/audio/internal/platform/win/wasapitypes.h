@@ -66,7 +66,7 @@ struct unique_cotaskmem_ptr
     unique_cotaskmem_ptr(unique_cotaskmem_ptr const&) = delete;
     unique_cotaskmem_ptr(unique_cotaskmem_ptr&& other)
         : m_p(std::exchange(other.m_p, nullptr)) {}
-    unique_cotaskmem_ptr& operator=(unique_cotaskmem_ptr const& other)
+    unique_cotaskmem_ptr& operator=(unique_cotaskmem_ptr& other)
     {
         CoTaskMemFree(std::exchange(m_p, std::exchange(other.m_p, nullptr)));
         return *this;

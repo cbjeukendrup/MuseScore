@@ -137,6 +137,17 @@ void WasapiAudioClient::asyncInitializeAudioDevice(const hstring& deviceId) noex
     }
 }
 
+static void logWAVEFORMATEX(WAVEFORMATEX* format)
+{
+    LOGI() << "Format tag: " << format->wFormatTag;
+    LOGI() << "Channels: " << format->nChannels;
+    LOGI() << "Sample rate: " << format->nSamplesPerSec;
+    LOGI() << "Average bytes per second: " << format->nAvgBytesPerSec;
+    LOGI() << "Block align: " << format->nBlockAlign;
+    LOGI() << "Bits per sample: " << format->wBitsPerSample;
+    LOGI() << "cbSize: " << format->cbSize;
+}
+
 //
 //  ActivateCompleted()
 //
@@ -186,12 +197,7 @@ HRESULT WasapiAudioClient::ActivateCompleted(IActivateAudioInterfaceAsyncOperati
         }
 
         LOGI() << "Initialized WASAPI audio endpoint with: ";
-        LOGI() << "Sample rate: " << m_mixFormat->nSamplesPerSec;
-        LOGI() << "Channels: " << m_mixFormat->nChannels;
-        LOGI() << "Average bytes per second: " << m_mixFormat->nAvgBytesPerSec;
-        LOGI() << "Block align: " << m_mixFormat->nBlockAlign;
-        LOGI() << "Bits per sample: " << m_mixFormat->wBitsPerSample;
-        LOGI() << "cbSize: " << m_mixFormat->cbSize;
+        logWAVEFORMATEX(m_mixFormat.get());
         LOGI() << "HnsBufferDuration: " << m_hnsBufferDuration;
         LOGI() << "Minimal period in frames: " << m_minPeriodInFrames;
         LOGI() << "Default period in frames: " << m_defaultPeriodInFrames;
@@ -302,13 +308,19 @@ HRESULT WasapiAudioClient::configureDeviceInternal() noexcept
         LOGI() << "WASAPI: Getting device mix format";
         check_hresult(m_audioClient->GetMixFormat(m_mixFormat.put()));
 
-        if (!audioProps.bIsOffload) {
-            LOGI() << "WASAPI: Getting shared mode engine period";
-            // The wfx parameter below is optional (Its needed only for MATCH_FORMAT clients). Otherwise, wfx will be assumed
-            // to be the current engine format based on the processing mode for this stream
-            check_hresult(m_audioClient->GetSharedModeEnginePeriod(m_mixFormat.get(), &m_defaultPeriodInFrames,
-                                                                   &m_fundamentalPeriodInFrames,
-                                                                   &m_minPeriodInFrames, &m_maxPeriodInFrames));
+        LOGI() << "WASAPI: Mix format after getting from audio client:";
+        logWAVEFORMATEX(m_mixFormat.get());
+
+        unique_cotaskmem_ptr<WAVEFORMATEX> mixFormat2;
+        auto isSupported = m_audioClient->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, m_mixFormat.get(), mixFormat2.put());
+        if (S_OK == isSupported) {
+            LOGI() << "WASAPI: Mix format from audio client is supported";
+        } else if (S_FALSE == isSupported) {
+            LOGI() << "WASAPI: Mix format from audio client is not supported, using closest match:";
+            logWAVEFORMATEX(mixFormat2.get());
+            m_mixFormat = mixFormat2;
+        } else {
+            LOGE() << "WASAPI: Mix format from audio client is not supported!";
         }
 
         m_mixFormat->wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
@@ -317,6 +329,29 @@ HRESULT WasapiAudioClient::configureDeviceInternal() noexcept
         m_mixFormat->nAvgBytesPerSec = m_mixFormat->nSamplesPerSec * m_mixFormat->nChannels * sizeof(float);
         m_mixFormat->nBlockAlign = (m_mixFormat->nChannels * m_mixFormat->wBitsPerSample) / 8;
         m_mixFormat->cbSize = 0;
+
+        isSupported = m_audioClient->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, m_mixFormat.get(), mixFormat2.put());
+        if (S_OK == isSupported) {
+            LOGI() << "WASAPI: Modified mix format is supported";
+        } else if (S_FALSE == isSupported) {
+            LOGI() << "WASAPI: Modified mix format is not supported, using closest match:";
+            logWAVEFORMATEX(mixFormat2.get());
+            m_mixFormat = mixFormat2;
+        } else {
+            LOGE() << "WASAPI: Modified mix format is not supported!";
+        }
+
+        LOGI() << "WASAPI: Anyway, now it is:";
+        logWAVEFORMATEX(m_mixFormat.get());
+
+        if (!audioProps.bIsOffload) {
+            LOGI() << "WASAPI: Getting shared mode engine period";
+            // The wfx parameter below is optional (Its needed only for MATCH_FORMAT clients). Otherwise, wfx will be assumed
+            // to be the current engine format based on the processing mode for this stream
+            check_hresult(m_audioClient->GetSharedModeEnginePeriod(m_mixFormat.get(), &m_defaultPeriodInFrames,
+                                                                   &m_fundamentalPeriodInFrames,
+                                                                   &m_minPeriodInFrames, &m_maxPeriodInFrames));
+        }
 
         LOGI() << "WASAPI: Device successfully configured";
 
