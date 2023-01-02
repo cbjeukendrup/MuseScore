@@ -175,9 +175,12 @@ HRESULT WasapiAudioClient::ActivateCompleted(IActivateAudioInterfaceAsyncOperati
                                                     m_mixFormat.get(),
                                                     nullptr));
         } else {
-            check_hresult(m_audioClient->InitializeSharedAudioStream(AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-                                                                     | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-                                                                     | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY,
+            DWORD flags = AUDCLNT_STREAMFLAGS_EVENTCALLBACK;
+            unique_cotaskmem_ptr<WAVEFORMATEX> mixFormat2;
+            if (S_OK != m_audioClient->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, m_mixFormat.get(), mixFormat2.put())) {
+                flags |= AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY;
+            }
+            check_hresult(m_audioClient->InitializeSharedAudioStream(flags,
                                                                      m_minPeriodInFrames,
                                                                      m_mixFormat.get(),
                                                                      nullptr));
