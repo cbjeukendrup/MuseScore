@@ -73,7 +73,7 @@ void Sticking::read(XmlReader& e)
 
 bool Sticking::isEditAllowed(EditData& ed) const
 {
-    if (isTextNavigationKey(ed.key, ed.modifiers)) {
+    if (isInterTextNavigationKey(ed.key, ed.modifiers)) {
         return false;
     }
 

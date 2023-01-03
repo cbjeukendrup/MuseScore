@@ -1319,7 +1319,7 @@ void FiguredBass::startEdit(EditData& ed)
 
 bool FiguredBass::isEditAllowed(EditData& ed) const
 {
-    if (isTextNavigationKey(ed.key, ed.modifiers)) {
+    if (isInterTextNavigationKey(ed.key, ed.modifiers)) {
         return false;
     }
 

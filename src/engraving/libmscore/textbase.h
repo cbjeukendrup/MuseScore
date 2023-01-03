@@ -507,10 +507,28 @@ public:
     using EngravingObject::undoChangeProperty;
 };
 
-inline bool isTextNavigationKey(int key, KeyboardModifiers modifiers)
+/// Returns true if the pressed key should move between distinct text elements,
+/// rather than inside the current element, for example when navigation bewteen
+/// syllables in the case of Lyrics, or chords in the case of Chord Symbols.
+inline bool isInterTextNavigationKey(int key, KeyboardModifiers modifiers)
 {
-    // space + TextEditingControlModifier = insert nonbreaking space, so that's *not* a navigation key
-    return (key == Key_Space && modifiers != TextEditingControlModifier) || key == Key_Tab;
+    if (modifiers & TextEditingControlModifier) {
+        static const std::set<int> INTER_TEXT_NAVIGATION_KEYS {
+            Key_Left,
+            Key_Right
+        };
+
+        return INTER_TEXT_NAVIGATION_KEYS.find(key) != INTER_TEXT_NAVIGATION_KEYS.cend();
+    }
+
+    // TextEditingControlModifier + Space = insert nonbreaking space, so that's *not* a navigation key;
+    // But Space without TextEditingControlModifier *is* a navigation key.
+    if (key == Key_Space) {
+        return !(modifiers & TextEditingControlModifier);
+    }
+
+    // Tab is always a navigation key
+    return key == Key_Tab;
 }
 } // namespace mu::engraving
 

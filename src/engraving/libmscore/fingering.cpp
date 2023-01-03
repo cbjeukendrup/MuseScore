@@ -254,7 +254,7 @@ void Fingering::draw(mu::draw::Painter* painter) const
 
 bool Fingering::isEditAllowed(EditData& ed) const
 {
-    if (isTextNavigationKey(ed.key, ed.modifiers)) {
+    if (isInterTextNavigationKey(ed.key, ed.modifiers)) {
         return false;
     }
 
