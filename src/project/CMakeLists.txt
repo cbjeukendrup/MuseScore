@@ -138,7 +138,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/projectpropertiesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/audiogenerationsettingsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/audiogenerationsettingsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/qsmodel.mm
+    ${CMAKE_CURRENT_LIST_DIR}/view/qsmodel.h
     )
+
+set_source_files_properties(
+    ${CMAKE_CURRENT_LIST_DIR}/view/qsmodel.mm
+    PROPERTIES
+    SKIP_UNITY_BUILD_INCLUSION ON
+    SKIP_PRECOMPILE_HEADERS ON
+)
 
 set(MODULE_LINK
     uicomponents

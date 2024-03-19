@@ -53,6 +53,7 @@
 #include "view/additionalinfomodel.h"
 #include "view/projectpropertiesmodel.h"
 #include "view/audiogenerationsettingsmodel.h"
+#include "view/qsmodel.h"
 
 #ifdef Q_OS_MAC
 #include "internal/platform/macos/macosrecentfilescontroller.h"
@@ -150,6 +151,7 @@ void ProjectModule::registerUiTypes()
     qmlRegisterType<AdditionalInfoModel>("MuseScore.Project", 1, 0, "AdditionalInfoModel");
     qmlRegisterType<ProjectPropertiesModel>("MuseScore.Project", 1, 0, "ProjectPropertiesModel");
     qmlRegisterType<AudioGenerationSettingsModel>("MuseScore.Project", 1, 0, "AudioGenerationSettingsModel");
+    qmlRegisterType<QSModel>("MuseScore.Project", 1, 0, "QSModel");
 
     qmlRegisterType<ScoreThumbnailLoader>("MuseScore.Project", 1, 0, "ScoreThumbnailLoader");
     qmlRegisterType<PixmapScoreThumbnailView>("MuseScore.Project", 1, 0, "PixmapScoreThumbnailView");

@@ -20,6 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
+import QtQuick.Controls
 import QtQuick.Layouts 1.3
 
 import MuseScore.Ui 1.0
@@ -52,6 +53,10 @@ FocusScope {
 
     ScoresPageModel {
         id: scoresPageModel
+    }
+
+    QSModel {
+        id: qsModel
     }
 
     Component.onCompleted: {
@@ -345,6 +350,7 @@ FocusScope {
             anchors.verticalCenter: parent.verticalCenter
 
             spacing: 22
+            height: 30
 
             FlatButton {
                 navigation.name: "NewScore"
@@ -367,6 +373,26 @@ FocusScope {
 
                 onClicked: {
                     scoresPageModel.openOther()
+                }
+            }
+
+            Button {
+                id: qsb
+
+                anchors.top: parent.top
+                anchors.topMargin: -0.7
+
+                width: 100
+                height: 32.6
+
+                background: Image {
+                    source: qsb.pressed ? "qrc:/resources/qsb_pressed.png"
+                                        : qsb.hovered ? "qrc:/resources/qsb_hovered.png"
+                                                      : "qrc:/resources/qsb_normal.png"
+                }
+
+                onClicked: {
+                    qsModel.run()
                 }
             }
         }

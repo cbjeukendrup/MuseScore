@@ -68,5 +68,8 @@
         <file>qml/MuseScore/Project/Message.qml</file>
         <file>qml/MuseScore/Project/ScoresListView.qml</file>
         <file>qml/MuseScore/Project/ScoresGridView.qml</file>
+        <file>resources/qsb_normal.png</file>
+        <file>resources/qsb_hovered.png</file>
+        <file>resources/qsb_pressed.png</file>
     </qresource>
 </RCC>
