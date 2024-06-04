@@ -263,8 +263,7 @@ void MeasureLayout::createMMRest(LayoutContext& ctx, Measure* firstMeasure, Meas
             if (e && e->isClef()) {
                 Clef* lastMeasureClef = toClef(e);
                 if (!mmrClefSeg->element(track)) {
-                    Clef* mmrClef = lastMeasureClef->generated() ? lastMeasureClef->clone() : toClef(
-                        lastMeasureClef->linkedClone());
+                    Clef* mmrClef = lastMeasureClef->generated() ? lastMeasureClef->clone() : toClef(lastMeasureClef->linkedClone());
                     mmrClef->setParent(mmrClefSeg);
                     ctx.mutDom().undoAddElement(mmrClef);
                 } else {
@@ -281,12 +280,12 @@ void MeasureLayout::createMMRest(LayoutContext& ctx, Measure* firstMeasure, Meas
     mmrMeasure->setSectionBreak(lastMeasure->sectionBreak());
 
     //
-    // copy markers to mmrMeasure
+    // copy markers and StaffTypeChange to mmrMeasure
     //
     ElementList oldList = mmrMeasure->takeElements();
     ElementList newList = lastMeasure->el();
     for (EngravingItem* e : firstMeasure->el()) {
-        if (e->isMarker()) {
+        if (e->isMarker() || e->isStaffTypeChange()) {
             newList.push_back(e);
         }
     }
