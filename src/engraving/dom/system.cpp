@@ -835,7 +835,7 @@ double System::minTop() const
 {
     staff_idx_t si = firstVisibleSysStaff();
     SysStaff* s = si == muse::nidx ? nullptr : staff(si);
-    if (s) {
+    if (s && s->skyline().north().valid()) {
         return -s->skyline().north().max();
     }
     return 0.0;
@@ -853,7 +853,7 @@ double System::minBottom() const
     }
     staff_idx_t si = lastVisibleSysStaff();
     SysStaff* s = si == muse::nidx ? nullptr : staff(si);
-    if (s) {
+    if (s && s->skyline().south().valid()) {
         return s->skyline().south().max() - s->bbox().height();
     }
     return 0.0;

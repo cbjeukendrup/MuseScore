@@ -2869,8 +2869,12 @@ void ChordLayout::resolveRestVSChord(std::vector<Rest*>& rests, std::vector<Chor
                 continue;
             }
 
-            double clearance = 0.0;
             Shape restShape = rest->shape().translate(rest->pos() - offset);
+            if (restShape.empty()) {
+                continue;
+            }
+
+            double clearance = 0.0;
             if (chord->segment() == rest->segment()) {
                 clearance = restAbove
                             ? restShape.verticalClearance(chordShape)

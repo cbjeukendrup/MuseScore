@@ -2583,6 +2583,9 @@ double Segment::minRight() const
 {
     double distance = 0.0;
     for (const Shape& sh : shapes()) {
+        if (sh.empty()) {
+            continue;
+        }
         distance = std::max(distance, sh.right());
     }
     if (isClefType()) {
@@ -2598,6 +2601,9 @@ double Segment::minLeft() const
 {
     double distance = 0.0;
     for (const Shape& sh : shapes()) {
+        if (sh.empty()) {
+            continue;
+        }
         double l = sh.left();
         if (l > distance) {
             distance = l;

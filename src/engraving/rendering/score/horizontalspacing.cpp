@@ -119,8 +119,8 @@ double HorizontalSpacing::minHorizontalDistance(const Segment* f, const Segment*
         d = ns ? minHorizontalDistance(fshape, ns->staffShape(staffIdx), sp, squeezeFactor) : 0.0;
         // first chordrest of a staff should clear the widest header for any staff
         // so make sure segment is as wide as it needs to be
-        if (systemHeaderGap) {
-            d = std::max(d, f->staffShape(staffIdx).right());
+        if (systemHeaderGap && !fshape.empty()) {
+            d = std::max(d, fshape.right());
         }
         ww = std::max(ww, d);
     }
