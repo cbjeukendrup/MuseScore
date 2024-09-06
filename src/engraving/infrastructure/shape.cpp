@@ -289,6 +289,10 @@ bool Shape::clearsVertically(const Shape& a) const
 
 double Shape::left() const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = DBL_MAX;
     for (const ShapeElement& r : m_elements) {
         if (!RealIsNull(r.height()) && !(r.item() && r.item()->isTextBase()) && r.left() < dist) {
@@ -306,6 +310,10 @@ double Shape::left() const
 
 double Shape::right() const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = -DBL_MAX;
     for (const RectF& r : m_elements) {
         if (r.right() > dist) {
@@ -326,6 +334,10 @@ double Shape::right() const
 
 double Shape::top() const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = DBL_MAX;
     for (const RectF& r : m_elements) {
         if (r.top() < dist) {
@@ -341,6 +353,10 @@ double Shape::top() const
 
 double Shape::bottom() const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = -DBL_MAX;
     for (const RectF& r : m_elements) {
         if (r.bottom() > dist) {
@@ -352,6 +368,10 @@ double Shape::bottom() const
 
 double Shape::rightMostEdgeAtHeight(double yAbove, double yBelow) const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double edge = -DBL_MAX;
     for (const ShapeElement& sh : m_elements) {
         if (sh.bottom() > yAbove && sh.top() < yBelow) {
@@ -364,6 +384,10 @@ double Shape::rightMostEdgeAtHeight(double yAbove, double yBelow) const
 
 double Shape::leftMostEdgeAtHeight(double yAbove, double yBelow) const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double edge = DBL_MAX;
     for (const ShapeElement& sh : m_elements) {
         if (sh.bottom() > yAbove && sh.top() < yBelow) {
@@ -382,6 +406,10 @@ double Shape::leftMostEdgeAtHeight(double yAbove, double yBelow) const
 
 double Shape::topDistance(const PointF& p) const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = DBL_MAX;
     for (const RectF& r : m_elements) {
         if (p.x() >= r.left() && p.x() < r.right()) {
@@ -399,6 +427,10 @@ double Shape::topDistance(const PointF& p) const
 
 double Shape::bottomDistance(const PointF& p) const
 {
+    IF_ASSERT_FAILED(!empty()) {
+        return 0;
+    }
+
     double dist = DBL_MAX;
     for (const RectF& r : m_elements) {
         if (p.x() >= r.left() && p.x() < r.right()) {
