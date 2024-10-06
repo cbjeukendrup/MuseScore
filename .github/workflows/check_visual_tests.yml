@@ -67,19 +67,11 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v6
 
-    - name: Restore ccache files
-      id: restore-ccache
-      uses: actions/cache/restore@v5
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-vtests-current-ccache-
-        restore-keys: |
-          ${{runner.os}}-${{runner.arch}}-vtests-current-ccache-
-          ${{runner.os}}-${{runner.arch}}-vtests-reference-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -97,28 +89,11 @@ jobs:
     - name: Build and Pack
       run: |
         bash ./buildscripts/ci/vtests/build_and_pack.sh
-
-    - name: Show ccache stats
-      run: |
-        ccache -sv
     - name: Upload
       uses: actions/upload-artifact@v6
       with:
         name: current_build
         path: ./build.artifacts/
-
-    - name: Prepare ccache files for saving
-      id: prepare-save-ccache
-      if: always()
-      run: |
-        ccache --recompress 10
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
-    - name: Save ccache files
-      if: always()
-      uses: actions/cache/save@v5
-      with:
-        key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
-        path: ${{ github.workspace }}/.ccache
 
 
   build_reference:
@@ -132,19 +107,11 @@ jobs:
       with:
         ref: ${{ needs.setup.outputs.reference_ref }}
 
-    - name: Restore ccache files
-      id: restore-ccache
-      uses: actions/cache/restore@v5
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-vtests-reference-ccache-
-        restore-keys: |
-          ${{runner.os}}-${{runner.arch}}-vtests-reference-ccache-
-          ${{runner.os}}-${{runner.arch}}-vtests-current-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -162,27 +129,11 @@ jobs:
     - name: Build and Pack
       run: |
         bash ./buildscripts/ci/vtests/build_and_pack.sh
-    - name: Show ccache stats
-      run: |
-        ccache -sv
     - name: Upload
       uses: actions/upload-artifact@v6
       with:
         name: reference_build
         path: ./build.artifacts/
-
-    - name: Prepare ccache files for saving
-      id: prepare-save-ccache
-      if: always()
-      run: |
-        ccache --recompress 10
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
-    - name: Save ccache files
-      if: always()
-      uses: actions/cache/save@v5
-      with:
-        key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
-        path: ${{ github.workspace }}/.ccache
 
 
   generate_and_compare:
