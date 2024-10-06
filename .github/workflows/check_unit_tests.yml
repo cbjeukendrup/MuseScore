@@ -32,18 +32,11 @@ jobs:
 
         echo "BUILD_NUMBER=$BUILD_NUMBER" | tee -a $GITHUB_ENV
 
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-tests-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-tests-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        sudo apt-get update && sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Free up disk space
       run: |
@@ -78,8 +71,6 @@ jobs:
         fi
 
         bash ./buildscripts/ci/linux/build_utest.sh -n ${{ env.BUILD_NUMBER }} --enable_code_coverage ${ENABLE_CODE_COVERAGE}
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Run tests
       run: |
         bash ./buildscripts/ci/linux/runutests.sh

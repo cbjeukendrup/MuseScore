@@ -147,18 +147,11 @@ jobs:
         echo "DO_PUBLISH=$DO_PUBLISH" | tee -a $GITHUB_ENV
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" | tee -a $GITHUB_ENV
 
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        brew install ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -188,8 +181,6 @@ jobs:
       run: |
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         bash ./buildscripts/ci/macos/build.sh -n ${{ env.BUILD_NUMBER }} --crash_log_url $C_URL
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Package
       run: |
         S_S="${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}"; if [ -z "$S_S" ]; then S_S="''"; fi

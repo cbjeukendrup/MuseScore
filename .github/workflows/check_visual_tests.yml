@@ -71,18 +71,11 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v4
 
-    - name: Get ccache timestamp
-      run: echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-tests-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-tests-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        sudo apt-get update && sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -99,8 +92,6 @@ jobs:
     - name: Build and Pack
       run: |
         bash ./buildscripts/ci/vtests/build_and_pack.sh
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
@@ -118,18 +109,11 @@ jobs:
       with:
         ref: ${{ needs.setup.outputs.reference_sha }}
 
-    - name: Get ccache timestamp
-      run: echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-tests-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-tests-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        sudo apt-get update && sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -146,8 +130,6 @@ jobs:
     - name: Build and Pack
       run: |
         bash ./buildscripts/ci/vtests/build_and_pack.sh
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Upload
       uses: actions/upload-artifact@v4
       with:

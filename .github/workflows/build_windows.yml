@@ -140,18 +140,11 @@ jobs:
         echo "DO_PUBLISH=$DO_PUBLISH" | tee -a $GITHUB_ENV
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" | tee -a $GITHUB_ENV
 
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        choco install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
 
     - name: Register msvc problem matcher
       run: echo "::add-matcher::.github/problem_matchers/msvc.json"
@@ -187,8 +180,6 @@ jobs:
       run: |
         IF ${{ env.SENTRY_URL != 0 }} == true ( SET C_URL="${{ env.SENTRY_URL }}" ) ELSE ( SET C_URL="" )
         buildscripts\ci\windows\build.bat -n ${{ env.BUILD_NUMBER }} --crash_log_url %C_URL%
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Deploy
       shell: cmd
       run: |
@@ -288,19 +279,12 @@ jobs:
         echo "DO_PUBLISH=$DO_PUBLISH" | tee -a $GITHUB_ENV
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" | tee -a $GITHUB_ENV
 
-        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
-
-    - name: Restore ccache files
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
-    - name: Setup ccache
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@v0.0.8
+    - name: Enable sccache
       run: |
-        choco install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
-
+        echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
+  
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -332,8 +316,6 @@ jobs:
       run: |
         IF ${{ env.SENTRY_URL != 0 }} == true ( SET C_URL="${{ env.SENTRY_URL }}" ) ELSE ( SET C_URL="" )
         buildscripts\ci\windows\build.bat --portable ON -n ${{ env.BUILD_NUMBER }} --crash_log_url %C_URL%
-        echo "============== ccache ==============="
-        ccache -sv
     - name: Deploy
       shell: cmd
       run: |
