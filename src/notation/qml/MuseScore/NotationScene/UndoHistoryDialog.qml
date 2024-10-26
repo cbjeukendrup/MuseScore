@@ -39,33 +39,19 @@ StyledDialogView {
     resizable: true
 
     Component.onCompleted: {
-        populateList()
+        undoRedoHistoryModel.load()
     }
 
     UndoRedoHistoryModel {
         id: undoRedoHistoryModel
     }
 
-    property int selectedIndex: {
-        var val = undoRedoHistoryModel.undoRedoActionCount() - undoRedoHistoryModel.undoRedoActionCurrentIdx()
-        if (val < 0) {
-            return 0
-        } else if ((val > 0) && (val >= undoRedoHistoryModel.undoRedoActionCount())) {
-            return undoRedoHistoryModel.undoRedoActionCount() - 1
-        }
-        return val
-    }
+    property int selectedRowIndex: undoRedoHistoryModel.currentActionRowIndex
+    readonly property int selectedActionIndex: undoRedoHistoryModel.rowIndexToActionIndex(selectedRowIndex)
 
-    function populateList() {
-        listView.model.clear() // Clear the existing model
-
-        for (var i = undoRedoHistoryModel.undoRedoActionCount() - 1; i >= 0; i--) {
-            listView.model.append({ text: undoRedoHistoryModel.undoRedoActionNameAtIdx(i) }) // Add each action name
-        }
-    }
-
-    function actionIndex() {
-        return undoRedoHistoryModel.undoRedoActionCount() - selectedIndex - 1
+    function done() {
+        root.ret = { errcode: 0, value: selectedActionIndex }
+        root.hide()
     }
 
     ColumnLayout {
@@ -96,14 +82,14 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: ListModel {}
+            model: undoRedoHistoryModel
 
             delegate: ListItemBlank {
-                isSelected: root.selectedIndex === model.index
+                isSelected: root.selectedRowIndex === model.index
 
                 navigation.panel: navPanel
                 navigation.order: index
-                navigation.accessible.name: model.text
+                navigation.accessible.name: model.actionName
                 navigation.accessible.row: model.index
 
                 StyledTextLabel {
@@ -113,18 +99,17 @@ StyledDialogView {
                     anchors.right: parent.right
                     anchors.rightMargin: 12
 
-                    text: model.text
+                    text: model.actionName
                     font: ui.theme.bodyBoldFont
                     horizontalAlignment: Text.AlignLeft
                 }
 
                 onClicked: {
-                    root.selectedIndex = model.index
+                    root.selectedRowIndex = model.index
                 }
 
                 onDoubleClicked: {
-                    root.ret = { errcode: 0, value: actionIndex() }
-                    root.hide()
+                    root.done()
                 }
             }
         }
@@ -151,8 +136,7 @@ StyledDialogView {
                 accentButton: true
 
                 onClicked: {
-                    root.ret = { errcode: 0, value: actionIndex() }
-                    root.hide()
+                    root.done()
                 }
             }
         }

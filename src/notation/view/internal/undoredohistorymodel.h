@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#include <QObject>
+#include <QAbstractListModel>
 
 #include "async/asyncable.h"
 #include "context/iglobalcontext.h"
@@ -32,20 +32,41 @@ class MenuItem;
 }
 
 namespace mu::notation {
-class UndoRedoHistoryModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class UndoRedoHistoryModel : public QAbstractListModel, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
+
+    Q_PROPERTY(int currentActionRowIndex READ currentActionRowIndex NOTIFY currentActionIndexChanged)
 
     muse::Inject<context::IGlobalContext> context = { this };
 
 public:
     explicit UndoRedoHistoryModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE size_t undoRedoActionCount() const;
-    Q_INVOKABLE size_t undoRedoActionCurrentIdx() const;
-    Q_INVOKABLE const QString undoRedoActionNameAtIdx(size_t idx) const;
+    Q_INVOKABLE void load();
+
+    QVariant data(const QModelIndex& index, int role) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
+    int currentActionRowIndex() const;
+
+    Q_INVOKABLE int rowIndexToActionIndex(int row) const;
+
+signals:
+    void currentActionIndexChanged();
 
 private:
+    enum Roles {
+        ActionNameRole = Qt::UserRole + 1,
+    };
+
     INotationUndoStackPtr undoStack() const;
+
+    size_t undoRedoActionCount() const;
+    size_t undoRedoActionCurrentIdx() const;
+    QString undoRedoActionNameAtActionIdx(size_t idx) const;
+
+    int actionIndexToRowIndex(size_t idx) const;
 };
 }

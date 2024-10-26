@@ -26,8 +26,53 @@ using namespace mu::notation;
 using namespace muse;
 
 UndoRedoHistoryModel::UndoRedoHistoryModel(QObject* parent)
-    : QObject(parent), Injectable(iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), Injectable(iocCtxForQmlObject(this))
 {
+}
+
+void UndoRedoHistoryModel::load()
+{
+    emit currentActionIndexChanged();
+}
+
+QVariant UndoRedoHistoryModel::data(const QModelIndex& index, int role) const
+{
+    int row = index.row();
+    if (row < 0 || row >= rowCount()) {
+        return {};
+    }
+
+    size_t actionIndex = rowIndexToActionIndex(row);
+
+    switch (role) {
+    case ActionNameRole:
+        return undoRedoActionNameAtActionIdx(actionIndex);
+    default:
+        return {};
+    }
+}
+
+int UndoRedoHistoryModel::rowCount(const QModelIndex&) const
+{
+    return static_cast<int>(undoRedoActionCount());
+}
+
+QHash<int, QByteArray> UndoRedoHistoryModel::roleNames() const
+{
+    return {
+        { ActionNameRole, "actionName" },
+    };
+}
+
+int UndoRedoHistoryModel::currentActionRowIndex() const
+{
+    return actionIndexToRowIndex(undoRedoActionCurrentIdx());
+}
+
+INotationUndoStackPtr UndoRedoHistoryModel::undoStack() const
+{
+    INotationPtr notation = context()->currentNotation();
+    return notation ? notation->undoStack() : nullptr;
 }
 
 size_t UndoRedoHistoryModel::undoRedoActionCount() const
@@ -48,7 +93,7 @@ size_t UndoRedoHistoryModel::undoRedoActionCurrentIdx() const
     return muse::nidx;
 }
 
-const QString UndoRedoHistoryModel::undoRedoActionNameAtIdx(size_t idx) const
+QString UndoRedoHistoryModel::undoRedoActionNameAtActionIdx(size_t idx) const
 {
     if (auto stack = undoStack()) {
         return stack->undoRedoActionNameAtIdx(idx).qTranslated();
@@ -57,8 +102,20 @@ const QString UndoRedoHistoryModel::undoRedoActionNameAtIdx(size_t idx) const
     return {};
 }
 
-INotationUndoStackPtr UndoRedoHistoryModel::undoStack() const
+int UndoRedoHistoryModel::actionIndexToRowIndex(size_t idx) const
 {
-    INotationPtr notation = context()->currentNotation();
-    return notation ? notation->undoStack() : nullptr;
+    if (idx == muse::nidx || idx >= undoRedoActionCount()) {
+        return -1;
+    }
+
+    return static_cast<int>(undoRedoActionCount() - 1 - idx);
+}
+
+int UndoRedoHistoryModel::rowIndexToActionIndex(int row) const
+{
+    if (row < 0 || row >= rowCount()) {
+        return -1;
+    }
+
+    return undoRedoActionCount() - 1 - static_cast<size_t>(row);
 }
