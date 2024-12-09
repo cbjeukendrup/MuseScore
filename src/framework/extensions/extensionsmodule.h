@@ -29,12 +29,13 @@
 namespace muse::extensions {
 class ExtensionsProvider;
 class ExtensionsActionController;
+class ExtensionsUiActions;
 class ExtensionsConfiguration;
 class ExtensionsExecPointsRegister;
+
 class ExtensionsModule : public modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void registerResources() override;
@@ -45,11 +46,12 @@ public:
     void onDelayedInit() override;
 
 private:
-
     std::shared_ptr<ExtensionsConfiguration> m_configuration;
     std::shared_ptr<ExtensionsProvider> m_provider;
     std::shared_ptr<ExtensionsActionController> m_actionController;
+    std::shared_ptr<ExtensionsUiActions> m_uiActions;
     std::shared_ptr<ExtensionsExecPointsRegister> m_execPointsRegister;
+
     bool m_extensionsLoaded = false;
 };
 }

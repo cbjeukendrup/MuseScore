@@ -37,7 +37,10 @@ public:
     ExtensionsUiActions(const modularity::ContextPtr& iocCtx)
         : Injectable(iocCtx) {}
 
+    void init();
+
     const ui::UiActionList& actionsList() const override;
+    async::Channel<ui::UiActionList> actionsChanged() const override;
 
     bool actionEnabled(const ui::UiAction& action) const override;
     async::Channel<actions::ActionCodeList> actionEnabledChanged() const override;
@@ -46,7 +49,10 @@ public:
     async::Channel<actions::ActionCodeList> actionCheckedChanged() const override;
 
 private:
+    void updateActions();
+
     mutable ui::UiActionList m_actions;
+    async::Channel<ui::UiActionList> m_actionsChanged;
 };
 }
 

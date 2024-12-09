@@ -51,8 +51,6 @@ private:
 
     void onExtensionTriggered(const UriQuery& uri);
     void openUri(const UriQuery& uri, bool isSingle = true);
-
-    std::shared_ptr<ExtensionsUiActions> m_uiActions;
 };
 }
 

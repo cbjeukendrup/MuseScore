@@ -30,6 +30,7 @@
 #include "internal/extensionsprovider.h"
 #include "internal/extensionsconfiguration.h"
 #include "internal/extensionsactioncontroller.h"
+#include "internal/extensionsuiactions.h"
 #include "internal/extensioninstaller.h"
 #include "internal/extensionsexecpointsregister.h"
 
@@ -47,8 +48,6 @@
 #ifdef MUSE_MODULE_DIAGNOSTICS
 #include "diagnostics/idiagnosticspathsregister.h"
 #endif
-
-#include "log.h"
 
 using namespace muse::extensions;
 using namespace muse::modularity;
@@ -68,6 +67,7 @@ void ExtensionsModule::registerExports()
     m_configuration = std::make_shared<ExtensionsConfiguration>(iocContext());
     m_provider = std::make_shared<ExtensionsProvider>(iocContext());
     m_actionController = std::make_shared<ExtensionsActionController>(iocContext());
+    m_uiActions = std::make_shared<ExtensionsUiActions>(iocContext());
     m_execPointsRegister = std::make_shared<ExtensionsExecPointsRegister>();
 
     ioc()->registerExport<IExtensionsProvider>(moduleName(), m_provider);
@@ -99,6 +99,11 @@ void ExtensionsModule::resolveImports()
         ir->registerQmlUri(Uri("muse://extensions/apidump"), "Muse/Extensions/ExtensionsApiDumpDialog.qml");
     }
 
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
+
     m_execPointsRegister->reg(moduleName(), { EXEC_DISABLED, TranslatableString("extensions", "Disabled") });
     m_execPointsRegister->reg(moduleName(), { EXEC_MANUALLY, TranslatableString("extensions", "Manually") });
 }
@@ -116,6 +121,7 @@ void ExtensionsModule::onInit(const IApplication::RunMode& mode)
 
     m_configuration->init();
     m_actionController->init();
+    m_uiActions->init();
 
     if (mode == IApplication::RunMode::ConsoleApp) {
         m_provider->reloadExtensions();

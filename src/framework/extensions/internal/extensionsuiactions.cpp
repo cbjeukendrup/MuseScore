@@ -42,11 +42,20 @@ static const UiActionList STATIC_ACTIONS = {
     UiAction("extensions-show-apidump",
              muse::ui::UiCtxAny,
              muse::shortcuts::CTX_ANY,
-             TranslatableString("action", "Show Api dump")
+             TranslatableString("action", "Show API dump")
              ),
 };
 
-const muse::ui::UiActionList& ExtensionsUiActions::actionsList() const
+void ExtensionsUiActions::init()
+{
+    updateActions();
+
+    provider()->manifestListChanged().onNotify(this, [this](){
+        updateActions();
+    });
+}
+
+void ExtensionsUiActions::updateActions()
 {
     UiActionList result;
     ManifestList manifests = provider()->manifestList();
@@ -68,9 +77,19 @@ const muse::ui::UiActionList& ExtensionsUiActions::actionsList() const
 
     result.insert(result.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
 
-    m_actions = result;
+    m_actions = std::move(result);
 
+    m_actionsChanged.send(m_actions);
+}
+
+const muse::ui::UiActionList& ExtensionsUiActions::actionsList() const
+{
     return m_actions;
+}
+
+async::Channel<UiActionList> ExtensionsUiActions::actionsChanged() const
+{
+    return m_actionsChanged;
 }
 
 bool ExtensionsUiActions::actionEnabled(const UiAction&) const

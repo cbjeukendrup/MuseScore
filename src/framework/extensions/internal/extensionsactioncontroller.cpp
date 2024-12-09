@@ -23,8 +23,6 @@
 
 #include "translation.h"
 
-#include "extensionsuiactions.h"
-
 #include "log.h"
 
 using namespace muse::extensions;
@@ -33,8 +31,6 @@ static const muse::UriQuery SHOW_APIDUMP_URI("muse://extensions/apidump?sync=fal
 
 void ExtensionsActionController::init()
 {
-    m_uiActions = std::make_shared<ExtensionsUiActions>(iocContext());
-
     provider()->manifestListChanged().onNotify(this, [this](){
         registerExtensions();
     });
@@ -54,8 +50,6 @@ void ExtensionsActionController::registerExtensions()
     }
 
     dispatcher()->reg(this, "extensions-show-apidump", [this]() { openUri(SHOW_APIDUMP_URI); });
-
-    uiActionsRegister()->reg(m_uiActions);
 }
 
 void ExtensionsActionController::onExtensionTriggered(const UriQuery& q)

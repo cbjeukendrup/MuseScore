@@ -198,7 +198,7 @@ MenuItem* AbstractMenuModel::makeMenu(const TranslatableString& title, const Men
 MenuItem* AbstractMenuModel::makeMenuItem(const ActionCode& actionCode, const TranslatableString& title)
 {
     const UiAction& action = uiActionsRegister()->action(actionCode);
-    if (!action.isValid()) {
+    IF_ASSERT_FAILED(action.isValid()) {
         LOGW() << "not found action: " << actionCode;
         return nullptr;
     }

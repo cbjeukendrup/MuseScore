@@ -134,6 +134,11 @@ Item {
             function update() {
                 for (var i in subitems) {
                     let item = subitems[i]
+                    if (!item) {
+                        console.trace()
+                        console.log("")
+                    }
+
                     let isMenu = Boolean(item.subitems) && item.subitems.length > 0
 
                     if (isMenu) {
