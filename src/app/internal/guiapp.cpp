@@ -50,35 +50,50 @@ void GuiApp::perform()
     m_globalModule.registerUiTypes();
 
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start registerResources " << m->moduleName();
         m->setApplication(shared_from_this());
         m->registerResources();
+        LOGI() << "finish registerResources " << m->moduleName();
     }
 
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start registerExports " << m->moduleName();
         m->registerExports();
+        LOGI() << "finish registerExports " << m->moduleName();
     }
 
+    LOGI() << "start resolveImports and registerApi global";
     m_globalModule.resolveImports();
     m_globalModule.registerApi();
+    LOGI() << "finish resolveImports and registerApi global";
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start resolveImports and registerApi " << m->moduleName();
         m->registerUiTypes();
         m->resolveImports();
         m->registerApi();
+        LOGI() << "finish resolveImports and registerApi " << m->moduleName();
     }
 
     // ====================================================
     // Setup modules: apply the command line options
     // ====================================================
+    LOGI() << "start applyCommandLineOptions";
     applyCommandLineOptions(options);
+    LOGI() << "finish applyCommandLineOptions";
 
     // ====================================================
     // Setup modules: onPreInit
     // ====================================================
+    LOGI() << "start onPreInit global";
     m_globalModule.onPreInit(runMode);
+    LOGI() << "finish onPreInit global";
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start onPreInit " << m->moduleName();
         m->onPreInit(runMode);
+        LOGI() << "finish onPreInit " << m->moduleName();
     }
 
+    LOGI() << "start SplashScreen";
     SplashScreen* splashScreen = nullptr;
     if (multiInstancesProvider()->isMainInstance()) {
         splashScreen = new SplashScreen(SplashScreen::Default);
@@ -100,30 +115,43 @@ void GuiApp::perform()
     if (splashScreen) {
         splashScreen->show();
     }
+    LOGI() << "finish SplashScreen";
 
     // ====================================================
     // Setup modules: onInit
     // ====================================================
+    LOGI() << "start onInit global";
     m_globalModule.onInit(runMode);
+    LOGI() << "finish onInit global";
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start onInit " << m->moduleName();
         m->onInit(runMode);
+        LOGI() << "finish onInit " << m->moduleName();
     }
 
     // ====================================================
     // Setup modules: onAllInited
     // ====================================================
+    LOGI() << "start onAllInited global";
     m_globalModule.onAllInited(runMode);
+    LOGI() << "finish onAllInited global";
     for (modularity::IModuleSetup* m : m_modules) {
+        LOGI() << "start onAllInited " << m->moduleName();
         m->onAllInited(runMode);
+        LOGI() << "finish onAllInited " << m->moduleName();
     }
 
     // ====================================================
     // Setup modules: onStartApp (on next event loop)
     // ====================================================
     QMetaObject::invokeMethod(qApp, [this]() {
+        LOGI() << "start onStartApp global";
         m_globalModule.onStartApp();
+        LOGI() << "finish onStartApp global";
         for (modularity::IModuleSetup* m : m_modules) {
+            LOGI() << "start onStartApp " << m->moduleName();
             m->onStartApp();
+            LOGI() << "finish onStartApp " << m->moduleName();
         }
     }, Qt::QueuedConnection);
 

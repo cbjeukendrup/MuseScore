@@ -133,9 +133,13 @@ void VSTModule::registerUiTypes()
 
 void VSTModule::onInit(const IApplication::RunMode&)
 {
+    LOGI() << "vst configuration";
     m_configuration->init();
+    LOGI() << "vst actions controller";
     m_actionsController->init();
+    LOGI() << "vst plugin modules repository";
     m_pluginModulesRepo->init();
+    LOGI() << "setupUsedView";
     m_actionsController->setupUsedView();
 }
 
