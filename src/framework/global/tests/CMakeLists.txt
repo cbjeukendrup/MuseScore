@@ -57,7 +57,8 @@ set(MODULE_TEST_SRC
 
 include(SetupGTest)
 
-target_sources(muse_global_tests
-  PRIVATE
-    rpcqueue_tests.cpp
-)
+# IOS_CONFIG_BUG
+if(IOS)
+    set_target_properties(muse_global_tests PROPERTIES
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.Humble-Earth-Productions-Inc.MuseScore")
+endif(IOS)

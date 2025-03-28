@@ -24,29 +24,52 @@
 #include <QUrl>
 #include <QStandardPaths>
 
+#include <TargetConditionals.h>
+
+// NSWorkspace does not exist on iOS, if we need these calls for regular app use,
+// we will come up with something equivalent. Until then, we're stubbing them out.
+#if TARGET_OS_IOS
+#include <UIKit/UIKit.h>
+#else
 #include <Cocoa/Cocoa.h>
+#endif
 
 #include "types/uri.h"
 
 #include "log.h"
 
+#include <sstream>
+
 using namespace muse;
 using namespace muse::async;
+using namespace kors::logger;
 
 bool MacOSInteractiveHelper::revealInFinder(const io::path_t& filePath)
 {
+#if TARGET_OS_IOS
+    std::stringstream aStream;
+    aStream << __PRETTY_FUNCTION__ << " is not implemented, trying to open filePath: " << filePath.c_str();
+    LogMsg(std::string("Unimplemented"), aStream.str(), Color::Magenta);
+    return false;
+#else
     NSURL* fileUrl = QUrl::fromLocalFile(filePath.toQString()).toNSURL();
-
     [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileUrl]];
-
     return true;
+#endif
 }
 
 Ret MacOSInteractiveHelper::isAppExists(const std::string& appIdentifier)
 {
+#if TARGET_OS_IOS
+    std::stringstream aStream;
+    aStream << __PRETTY_FUNCTION__ << " is not implemented, appIdentifier: " << appIdentifier;
+    LogMsg(std::string("Unimplemented"), aStream.str(), Color::Magenta);
+    return false;
+#else
     NSWorkspace* workspace = [NSWorkspace sharedWorkspace];
     NSURL* appURL = [workspace URLForApplicationWithBundleIdentifier:@(appIdentifier.c_str())];
     return appURL != nil;
+#endif
 }
 
 Ret MacOSInteractiveHelper::canOpenApp(const UriQuery& uri)
@@ -56,6 +79,11 @@ Ret MacOSInteractiveHelper::canOpenApp(const UriQuery& uri)
         return make_ret(Ret::Code::InternalError, std::string("Invalid UTF-8 string passed as URI"));
     }
 
+#if TARGET_OS_IOS
+    std::stringstream aStream;
+    aStream << __PRETTY_FUNCTION__ << " is not implemented, uri: " << uri.toString().c_str();
+    return make_ret(Ret::Code::NotImplemented, aStream.str());
+#else
     NSURL* nsUrl = [NSURL URLWithString:nsUrlString];
     if (nsUrl == nil) {
         return make_ret(Ret::Code::InternalError, std::string("Invalid URI"));
@@ -63,10 +91,18 @@ Ret MacOSInteractiveHelper::canOpenApp(const UriQuery& uri)
 
     NSURL* appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:nsUrl];
     return appURL != nil;
+#endif
 }
 
 async::Promise<Ret> MacOSInteractiveHelper::openApp(const UriQuery& uri)
 {
+#if TARGET_OS_IOS
+    return Promise<Ret>([uri](auto /*resolve*/, auto reject) {
+        std::stringstream aStream;
+        aStream << __PRETTY_FUNCTION__ << " is not implemented, uri: " << uri.toString();
+        return reject(int(Ret::Code::NotImplemented), aStream.str());
+    });
+#else
     return Promise<Ret>([uri](auto resolve, auto reject) {
         NSString* nsUrlString = [NSString stringWithUTF8String:uri.toString().c_str()];
         if (nsUrlString == nil) {
@@ -95,4 +131,5 @@ async::Promise<Ret> MacOSInteractiveHelper::openApp(const UriQuery& uri)
 
         return Promise<Ret>::Result::unchecked();
     });
+#endif
 }
