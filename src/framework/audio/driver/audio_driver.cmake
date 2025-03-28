@@ -57,17 +57,31 @@ elseif(OS_IS_LIN OR OS_IS_FBSD)
         )
     endif()
 elseif(OS_IS_MAC)
-    set(AUDIO_DRIVER_SRC
-        ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.mm
-        ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.h
-    )
+    if(IOS)
+        set(DRIVER_SRC
+            ${CMAKE_CURRENT_LIST_DIR}/platform/ios/iosaudiodriver.mm
+            ${CMAKE_CURRENT_LIST_DIR}/platform/ios/iosaudiodriver.h
+        )
 
-    set_source_files_properties(
-        ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.mm
-        PROPERTIES
-        SKIP_UNITY_BUILD_INCLUSION ON
-        SKIP_PRECOMPILE_HEADERS ON
-    )
+        set_source_files_properties(
+            ${CMAKE_CURRENT_LIST_DIR}/platform/ios/iosaudiodriver.mm
+            PROPERTIES
+            SKIP_UNITY_BUILD_INCLUSION ON
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    else()
+        set(AUDIO_DRIVER_SRC
+            ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.mm
+            ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.h
+        )
+
+        set_source_files_properties(
+            ${CMAKE_CURRENT_LIST_DIR}/platform/osx/osxaudiodriver.mm
+            PROPERTIES
+            SKIP_UNITY_BUILD_INCLUSION ON
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    endif()
 elseif(OS_IS_WASM)
     set(AUDIO_DRIVER_SRC
         ${CMAKE_CURRENT_LIST_DIR}/platform/web/webaudiodriver.cpp

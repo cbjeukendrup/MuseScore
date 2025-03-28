@@ -1846,7 +1846,7 @@ void TDraw::draw(const Harmony* item, Painter* painter)
         if (const TextSegment* ts = dynamic_cast<const TextSegment*>(renderItem)) {
             Font f(ts->font());
             f.setPointSizeF(f.pointSizeF() * MScore::pixelRatio);
-#ifndef Q_OS_MACOS
+#if !(defined(Q_OS_MACOS) || defined(Q_OS_IOS))
             TextBase::drawTextWorkaround(painter, f, ts->pos(), ts->text());
 #else
             painter->setFont(f);
