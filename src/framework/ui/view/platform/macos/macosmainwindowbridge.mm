@@ -21,11 +21,17 @@
  */
 #include "macosmainwindowbridge.h"
 
+// IOS_CONFIG_BUG
+#if TARGET_OS_IOS
+#include <UIKit/UIKit.h>
+#else
 #include <Cocoa/Cocoa.h>
+#endif
 #include <QWindow>
 
 using namespace muse::ui;
 
+#if !TARGET_OS_IOS
 static NSWindow* nsWindowForQWindow(QWindow* qWindow)
 {
     if (!qWindow) {
@@ -36,6 +42,8 @@ static NSWindow* nsWindowForQWindow(QWindow* qWindow)
     NSWindow* nsWindow = [nsView window];
     return nsWindow;
 }
+
+#endif
 
 MacOSMainWindowBridge::MacOSMainWindowBridge(QObject* parent)
     : MainWindowBridge(parent)
@@ -55,6 +63,10 @@ void MacOSMainWindowBridge::init()
 
 bool MacOSMainWindowBridge::fileModified() const
 {
+#if TARGET_OS_IOS
+    // fixme: We will need to accurately report file modification.
+    return false;
+#else
     //! NOTE QWindow misses an API for this, so we'll do it ourselves.
     NSWindow* nsWindow = nsWindowForQWindow(m_window);
     if (!nsWindow) {
@@ -62,10 +74,12 @@ bool MacOSMainWindowBridge::fileModified() const
     }
 
     return [nsWindow isDocumentEdited];
+#endif
 }
 
 void MacOSMainWindowBridge::setFileModified(bool modified)
 {
+#if !TARGET_OS_IOS
     NSWindow* nsWindow = nsWindowForQWindow(m_window);
     if (!nsWindow) {
         return;
@@ -77,4 +91,5 @@ void MacOSMainWindowBridge::setFileModified(bool modified)
 
     [nsWindow setDocumentEdited:modified];
     emit fileModifiedChanged();
+#endif
 }

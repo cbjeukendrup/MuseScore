@@ -107,6 +107,18 @@ if (OS_IS_FBSD)
     set(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT OFF)
 endif()
 
+if (IOS)
+    set(MUSE_MODULE_EXTENSIONS OFF)
+
+    # print not available for iOS and Wasm, we might need it for PDF export someday
+    set(MUE_BUILD_PRINT_MODULE OFF)
+
+    set(QT_ADD_LINGUISTTOOLS OFF)
+
+    set(QT_QPROCESS_SUPPORTED OFF)
+endif()
+
+
 ###########################################
 # CONFIGURE: Web App
 ###########################################
@@ -329,6 +341,9 @@ set(MUSE_APP_REVISION ${MUSESCORE_REVISION})
 set(MUSE_APP_BUILD_NUMBER ${CMAKE_BUILD_NUMBER})
 set(MUSE_APP_INSTALL_PREFIX "\"${CMAKE_INSTALL_PREFIX}\"")
 set(MUSE_APP_INSTALL_NAME "\"${Mscore_INSTALL_NAME}\"")
+
+# IOS_CONFIG_BUG
+    message(STATUS "Including ${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake")
 
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake)
 

@@ -26,7 +26,7 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
 include(GetPlatformInfo)
 
-if (OS_IS_MAC)
+if (OS_IS_MACOS) # Not iOS
     set(PLATFORM_SRC
         ${CMAKE_CURRENT_LIST_DIR}/internal/platform/macos/macosrecentfilescontroller.mm
         ${CMAKE_CURRENT_LIST_DIR}/internal/platform/macos/macosrecentfilescontroller.h
