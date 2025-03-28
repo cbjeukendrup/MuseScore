@@ -75,6 +75,10 @@ using namespace muse::audio::fx;
 #include "internal/platform/osx/osxaudiodriver.h"
 #endif
 
+#ifdef Q_OS_IOS
+#include "internal/platform/ios/iosaudiodriver.h"
+#endif
+
 #ifdef Q_OS_WASM
 #include "internal/platform/web/webaudiodriver.h"
 #endif
@@ -134,6 +138,10 @@ void AudioModule::registerExports()
 
 #ifdef Q_OS_MACOS
     m_audioDriver = std::shared_ptr<IAudioDriver>(new OSXAudioDriver());
+#endif
+
+#ifdef Q_OS_IOS
+    m_audioDriver = std::shared_ptr<IAudioDriver>(new IOSAudioDriver());
 #endif
 
 #ifdef Q_OS_WASM

@@ -176,7 +176,7 @@ void GuiApp::perform()
 
 #if defined(Q_OS_WIN)
     const QString mainQmlFile = "/platform/win/Main.qml";
-#elif defined(Q_OS_MACOS)
+#elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     const QString mainQmlFile = "/platform/mac/Main.qml";
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
     const QString mainQmlFile = "/platform/linux/Main.qml";

@@ -18,6 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# IOS_CONFIG_BUG
+# We removed LinguistTools from this list, as it's not available on iOS.
+# We removed PrintSupport because there's no real printing from iOS. Perhaps at some
+# point when we will want to print to PDF, we may need it then.
+
 set(qt_components
     Core
     Gui
@@ -30,8 +35,6 @@ set(qt_components
     QuickWidgets
     Xml
     Svg
-    PrintSupport
-    LinguistTools
 
     Core5Compat
 )
@@ -48,10 +51,20 @@ set(QT_LIBRARIES
     Qt::QuickWidgets
     Qt::Xml
     Qt::Svg
-    Qt::PrintSupport
 
     Qt::Core5Compat
 )
+
+if (NOT IOS)
+    list(APPEND qt_components
+        LinguistTools
+        PrintSupport
+    )
+
+    list(APPEND QT_LIBRARIES
+        Qt::PrintSupport
+    )
+endif()
 
 if(NOT OS_IS_WASM)
     list(APPEND qt_components Concurrent)

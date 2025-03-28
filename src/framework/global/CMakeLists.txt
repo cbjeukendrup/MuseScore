@@ -221,8 +221,15 @@ else()
             SKIP_UNITY_BUILD_INCLUSION ON
             SKIP_PRECOMPILE_HEADERS ON
         )
-        find_library(AppKit NAMES AppKit)
-        list(APPEND MODULE_LINK ${AppKit})
+
+		# IOS_CONFIG_BUG
+		if(IOS)
+				find_library(UIKit NAMES UIKit)
+				list(APPEND MODULE_LINK ${UIKit})
+		else(IOS)
+				find_library(AppKit NAMES AppKit)
+				list(APPEND MODULE_LINK ${AppKit})
+		endif(IOS)
     elseif(OS_IS_WIN)
         set(MODULE_SRC ${MODULE_SRC}
             ${CMAKE_CURRENT_LIST_DIR}/internal/platform/win/wininteractivehelper.cpp

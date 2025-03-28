@@ -162,9 +162,16 @@ if (QT_SUPPORT)
 endif()
 
 if (OS_IS_MAC)
+
+# IOS_CONFIG_BUG
+if(IOS)
+    find_library(UIKit NAMES UIKit)
+    set(MODULE_LINK ${MODULE_LINK} ${UIKit})
+else(IOS)
     find_library(AppKit NAMES AppKit)
     set(MODULE_LINK ${MODULE_LINK} ${AppKit})
-endif()
+endif(IOS)
+endif(OS_IS_MAC)
 
 set(MODULE_LINK ${MODULE_LINK}
     muse::tours

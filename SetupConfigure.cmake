@@ -230,6 +230,15 @@ if(BUILD_CONFIGURATION MATCHES "UTEST")
 endif()
 
 ###########################################
+# iOS
+###########################################
+# IOS_CONFIG_BUG
+if(IOS)
+    set(MUSE_MODULE_EXTENSIONS OFF)
+    set(MUE_BUILD_PRINT_MODULE OFF)
+endif(IOS)
+
+###########################################
 # Subsystem
 ###########################################
 
@@ -281,6 +290,9 @@ set(MUSE_APP_REVISION ${MUSESCORE_REVISION})
 set(MUSE_APP_BUILD_NUMBER ${CMAKE_BUILD_NUMBER})
 set(MUSE_APP_INSTALL_PREFIX "\"${CMAKE_INSTALL_PREFIX}\"")
 set(MUSE_APP_INSTALL_NAME "\"${Mscore_INSTALL_NAME}\"")
+
+# IOS_CONFIG_BUG
+    message(STATUS "Including ${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake")
 
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake)
 

@@ -156,6 +156,9 @@ Qt::KeyboardModifiers BaseApplication::keyboardModifiers() const
 
 void BaseApplication::restart()
 {
+#if TARGET_OS_IOS
+    return;
+#else
 #ifndef NO_QT_SUPPORT
     QString program = qApp->arguments()[0];
 
@@ -168,6 +171,7 @@ void BaseApplication::restart()
 
 #else
     NOT_SUPPORTED;
+#endif
 #endif
 }
 

@@ -36,12 +36,20 @@ static QStringList toQList(const std::vector<std::string>& args)
 
 int Process::execute(const std::string& program, const std::vector<std::string>& args)
 {
+#if TARGET_OS_IOS
+    return -1;
+#else
     int ret = QProcess::execute(QString::fromStdString(program), toQList(args));
     return ret;
+#endif
 }
 
 bool Process::startDetached(const std::string& program, const std::vector<std::string>& args)
 {
+#if TARGET_OS_IOS
+    return -1;
+#else
     bool ok = QProcess::startDetached(QString::fromStdString(program), toQList(args));
     return ok;
+#endif
 }

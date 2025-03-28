@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+if (NOT IOS)
+
 declare_module(muse_extensions)
 set(MODULE_ALIAS muse::extensions)
 
@@ -89,3 +91,5 @@ if (QT_SUPPORT)
 endif()
 
 setup_module()
+
+endif(NOT IOS)
