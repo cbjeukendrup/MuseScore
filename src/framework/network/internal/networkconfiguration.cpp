@@ -51,8 +51,10 @@ QString NetworkConfiguration::makeUserAgent(const std::string& tplName) const
     QString osName;
 #if defined(Q_OS_WIN)
     osName = "Windows";
-#elif defined (Q_OS_MACOS)
+#elif defined(Q_OS_MACOS)
     osName = "Mac";
+#elif defined(Q_OS_IOS)
+    osName = "iOS";
 #else
     osName = "Linux";
 #endif

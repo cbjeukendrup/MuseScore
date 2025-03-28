@@ -23,7 +23,12 @@
 #include "macosplatformtheme.h"
 #include "log.h"
 
+// IOS_CONFIG_BUG
+#if TARGET_OS_IOS
+#include <UIKit/UIKit.h>
+#else
 #include <Cocoa/Cocoa.h>
+#endif
 #include <QApplication>
 #include <QPalette>
 #include <QWindow>
@@ -35,6 +40,7 @@ id<NSObject> darkModeObserverToken = nil;
 
 void MacOSPlatformTheme::startListening()
 {
+#if !TARGET_OS_IOS
     if (!darkModeObserverToken) {
         darkModeObserverToken = [[NSDistributedNotificationCenter defaultCenter]
                                  addObserverForName:@"AppleInterfaceThemeChangedNotification"
@@ -44,14 +50,17 @@ void MacOSPlatformTheme::startListening()
                                      m_platformThemeChanged.notify();
                                  }];
     }
+#endif
 }
 
 void MacOSPlatformTheme::stopListening()
 {
+#if !TARGET_OS_IOS
     if (darkModeObserverToken) {
         [[NSDistributedNotificationCenter defaultCenter] removeObserver:darkModeObserverToken];
         darkModeObserverToken = nil;
     }
+#endif
 }
 
 bool MacOSPlatformTheme::isFollowSystemThemeAvailable() const
@@ -78,6 +87,7 @@ Notification MacOSPlatformTheme::platformThemeChanged() const
 
 void MacOSPlatformTheme::applyPlatformStyleOnAppForTheme(const ThemeCode& themeCode)
 {
+#if !TARGET_OS_IOS
     // The system will turn these appearance names into their high contrast
     // counterparts automatically if system high contrast is enabled
     if (isDarkTheme(themeCode)) {
@@ -85,6 +95,7 @@ void MacOSPlatformTheme::applyPlatformStyleOnAppForTheme(const ThemeCode& themeC
     } else {
         [NSApp setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
     }
+#endif
 }
 
 void MacOSPlatformTheme::applyPlatformStyleOnWindowForTheme(QWindow* window, const ThemeCode&)
@@ -93,6 +104,7 @@ void MacOSPlatformTheme::applyPlatformStyleOnWindowForTheme(QWindow* window, con
         return;
     }
 
+#if !TARGET_OS_IOS
     QColor backgroundColor = QApplication::palette().window().color();
     NSView* nsView = (__bridge NSView*)reinterpret_cast<void*>(window->winId());
     NSWindow* nsWindow = [nsView window];
@@ -103,4 +115,5 @@ void MacOSPlatformTheme::applyPlatformStyleOnWindowForTheme(QWindow* window, con
                                       blue:backgroundColor.blue() / 255.0
                                       alpha:backgroundColor.alpha() / 255.0]];
     }
+#endif
 }

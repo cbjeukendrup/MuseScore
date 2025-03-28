@@ -163,7 +163,14 @@ fn__set_default(INSTALL_PATH "install") # relative to BUILD_PATH
 if(WIN32)
     fn__set_default(MSCORE_EXECUTABLE "bin/MuseScore4.exe")
 elseif(APPLE)
-    fn__set_default(MSCORE_EXECUTABLE "mscore.app/Contents/MacOS/mscore")
+
+    # IOS_CONFIG_BUG
+    # This works.
+    if(QT_COMPILER MATCHES "ios")
+        fn__set_default(MSCORE_EXECUTABLE "mscore.app/Contents/mscore")
+    else(QT_COMPILER MATCHES "ios")
+        fn__set_default(MSCORE_EXECUTABLE "mscore.app/Contents/MacOS/mscore")
+    endif(QT_COMPILER MATCHES "ios")
 else()
     fn__set_default(MSCORE_EXECUTABLE "bin/mscore")
 endif()
