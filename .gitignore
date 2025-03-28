@@ -6,6 +6,7 @@
 .directory
 .idea
 .vscode/
+arch.c
 /builds
 build
 /build_overrides.cmake
