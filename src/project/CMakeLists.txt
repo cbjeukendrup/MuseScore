@@ -91,7 +91,7 @@ target_sources(project PRIVATE
     internal/projectrwregister.h
 )
 
-if (OS_IS_MAC)
+if (OS_IS_MACOS) # Not iOS
     target_sources(project PRIVATE
         internal/platform/macos/macosrecentfilescontroller.mm
         internal/platform/macos/macosrecentfilescontroller.h

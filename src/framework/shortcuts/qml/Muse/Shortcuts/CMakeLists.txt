@@ -33,7 +33,7 @@ qt_add_qml_module(muse_shortcuts_qml
 
 fixup_qml_module_dependencies(muse_shortcuts_qml)
 
-if (OS_IS_MAC)
+if (OS_IS_MACOS) # Not iOS
     find_library(CARBON_LIBRARY Carbon)
 
     target_sources(muse_shortcuts_qml PRIVATE

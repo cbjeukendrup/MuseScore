@@ -53,8 +53,13 @@ echo "CRASH_REPORT_URL: $CRASH_REPORT_URL"
 
 MUSESCORE_REVISION=$(git rev-parse --short=7 HEAD)
 
+# IOS_CONFIG_BUG
+# On an M1 machine, we still think we ought to build for x86_64 for
+# the simulator, will the change below turn it off?
+#CMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+
 MUSESCORE_MACOS_DEPS_PATH="$HOME/musescore_deps_macos" \
-CMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+CMAKE_OSX_ARCHITECTURES="arm64" \
 MUSESCORE_INSTALL_DIR="../applebuild" \
 MUSE_APP_BUILD_MODE=$MUSE_APP_BUILD_MODE \
 MUSESCORE_BUILD_NUMBER=$BUILD_NUMBER \

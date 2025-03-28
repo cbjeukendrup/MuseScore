@@ -324,7 +324,7 @@ QString AccessibleItemInterface::text(QAccessible::Text textType) const
             return ann;
         }
         QString name = m_object->item()->accessibleName();
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_APPLE
         // VoiceOver doesn't speak descriptions so add it to name instead.
         QString desc = description();
         if (!desc.isEmpty()) {
@@ -341,8 +341,8 @@ QString AccessibleItemInterface::text(QAccessible::Text textType) const
         }
         return name;
     }
-#if !defined(Q_OS_MACOS) // Give description separately to name.
-#if defined(Q_OS_WINDOWS)
+#ifndef Q_OS_APPLE // Give description separately to name.
+#ifdef Q_OS_WINDOWS
     // Narrator doesn't read descriptions but it does read accelerators.
     // NVDA reads both so it should be safe to give just an accelerator.
     case QAccessible::Accelerator: {

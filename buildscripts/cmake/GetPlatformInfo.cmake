@@ -42,6 +42,9 @@ endif()
 
 # we only have binary blobs compatible with x86_64, aarch64, and armv7l
 
+# IOS_CONFIG_BUG
+# This "program" used to always print the last error 'unknown' no matter what,
+# which leads to the system falling back to x86_64. So we fixed it.
 set(archdetect_c_code "
     #if defined(__arm__) || defined(__TARGET_ARCH_ARM) || defined(_M_ARM) || defined(_M_ARM64) || defined(__aarch64__) || defined(__ARM64__)
         #if defined(__aarch64__) || defined(__ARM64__) || defined(_M_ARM64)
@@ -53,8 +56,9 @@ set(archdetect_c_code "
         #error cmake_ARCH x86_64
     #elif defined(__EMSCRIPTEN__)
         #error cmake_ARCH wasm
+    #else
+        #error cmake_ARCH unknown
     #endif
-    #error cmake_ARCH unknown
     ")
 
 if(CMAKE_C_COMPILER_LOADED)
@@ -69,6 +73,8 @@ endif()
 
 file(WRITE "${CMAKE_BINARY_DIR}/arch.${TA_EXTENSION}" "${archdetect_c_code}")
 
+#message(STATUS "Running test app: ${CMAKE_BINARY_DIR}/arch.${TA_EXTENSION}")
+
 try_run(
     run_result_unused
     compile_result_unused
@@ -78,9 +84,19 @@ try_run(
     CMAKE_FLAGS ${TA_CMAKE_FLAGS}
 )
 
+#message (STATUS "COMPILE_OUTPUT_VARIABLE: ARCH=${ARCH}")
+#message (STATUS "CMAKE_FLAGS: TA_CMAKE_FLAGS=${TA_CMAKE_FLAGS}")
+
 string(REGEX MATCH "cmake_ARCH ([a-zA-Z0-9_]+)" ARCH "${ARCH}")
 
 string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")
+
+# IOS_CONFIG_BUG
+# The above applet gets run with the compiler being told which CPU to use, so it always
+# indicates that both x86_64 and aarm64 are available. The two run in parallel, so the
+# answer we get depends on a race condition. Since we're on an M1, we spike the CPU:
+set(ARCH "aarch64")
+
 message(STATUS "Detected CPU Architecture: ${ARCH}")
 
 if(${ARCH} MATCHES "armv7l")

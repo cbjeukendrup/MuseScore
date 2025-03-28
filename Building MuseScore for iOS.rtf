@@ -1,0 +1,1570 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 .AppleSystemUIFontMonospaced-Regular;
+\f3\fnil\fcharset0 Menlo-Bold;\f4\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red24\green26\blue30;\red244\green246\blue249;\red0\green0\blue0;
+\red0\green0\blue0;\red255\green255\blue255;\red155\green35\blue147;\red255\green255\blue255;\red0\green0\blue0;
+\red28\green0\blue207;\red196\green26\blue22;\red38\green38\blue38;\red234\green234\blue234;\red11\green12\blue12;
+\red220\green224\blue226;\red255\green255\blue255;\red31\green31\blue36;\red0\green0\blue0;\red0\green0\blue0;
+\red208\green191\blue105;\red100\green56\blue32;\red28\green70\blue74;\red252\green106\blue93;\red0\green0\blue0;
+\red255\green255\blue255;\red246\green247\blue249;\red93\green108\blue121;\red0\green0\blue0;\red240\green241\blue242;
+}
+{\*\expandedcolortbl;;\cssrgb\c12157\c13725\c15686;\cssrgb\c96471\c97255\c98039;\csgray\c0;
+\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c100000\c0;\csgenericrgb\c60759\c13753\c57628;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c0\c0\c0\c85000;
+\csgenericrgb\c11000\c0\c81000;\csgenericrgb\c77000\c10200\c8600;\cssrgb\c20000\c20000\c20000;\cssrgb\c93333\c93333\c93333;\cssrgb\c4706\c5098\c5490;
+\cssrgb\c89020\c90196\c90980;\csgenericrgb\c100000\c100000\c100000\c85000;\csgenericrgb\c12054\c12284\c14131;\cssrgb\c0\c0\c0\c84706\cname labelColor;\csgray\c0\c0;
+\csgenericrgb\c81498\c74939\c41233;\csgenericrgb\c39147\c22031\c12446;\csgenericrgb\c10981\c27276\c28869;\csgenericrgb\c98912\c41558\c36568;\cssrgb\c0\c1\c1;
+\cssrgb\c100000\c100000\c99971\c0;\cssrgb\c97255\c97647\c98039;\csgenericrgb\c36526\c42188\c47515;\csgenericrgb\c0\c0\c0;\cssrgb\c95294\c95686\c96078;
+}
+\margl1440\margr1440\vieww15680\viewh15880\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Looking at building MS for iOS:\
+\
+As of 12/2024:\
+OS: Sequoia 15.3\
+Xcode: 16.2\
+Mac mini M1 16GB\
+\
+Since the setup.sh uses wget to download a packaged Qt-for-Mac, we will need to do something similar for iOS. Given the Qt-for-Mac version is hosted by the MS people, they probably wouldn\'92t have an iOS version, so we are not going to count on that. There are third-party command line installers for Qt versions, such as aqt:\
+\
+https://github.com/miurahr/aqtinstall\
+\
+Forgot to do this first:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 \cb3 \expnd0\expndtw0\kerning0
+cd ~/Qt\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \
+It needs python3 3.9, we have 3.9.6. I don\'92t think we updated python3 from building MS or A4, so it may be the default on Sequoia 15.3 It installs with pip, so let\'92s give it a go:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 \cb3 \expnd0\expndtw0\kerning0
+pip3 install -U pip\
+pip3 install aqtinstall\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs27\fsmilli13600 \cf2 \
+
+\f0\fs24 This will list the qt for iOS and desktop versions available on the Qt server:\
+
+\f2\fs27\fsmilli13600 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 python3 -m aqt list-qt mac ios\
+python3 -m aqt list-qt mac desktop\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs27\fsmilli13600 \cf2 \
+
+\f0\fs24 The architectures available can be queried:\
+
+\f2\fs27\fsmilli13600 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 python3 -m aqt list-qt mac ios --arch 6.2.4\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs27\fsmilli13600 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \'85but this returns only \'91ios\'92 (same for 6.9.0). (And the Mac side gives \'91clang_64\'92, which could be either or both, I guess.) Hmm, we just might wind up having to build our own Qt for iOS in order to get the ARM simulator, since the default build (from Qt Creator, anyway) seems to make an x86_64 simulator executable. Let\'92s see what we actually get.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf2 \cb3 And we can query modules as well, since MS needed some specific ones, 
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 qt5compat, qtnetworkauth, 
+\f0\fs24 and the MS docs say Qt state machines, \cf0 \strike \strikec0 \CocoaLigature1 but they don\'92t show up for either Mac or iOS. We listed the modules for windows, and they don\'92t include the state machines, either, so maybe that was just for a particular install platform or perhaps an older version of Qt.\strike0\striked0  Turns out that it\'92s called qtscxml.\cf2 \cb3 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 python3 -m aqt list-qt mac ios \'97long-modules 6.2.4 ios\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 It looks like aqt also uses the 7z zip system, since the QT server seems to favor it. We have to specify our 7zz tool so that the decompression works on our end. This will install in ./Qt/6.2.4/ios:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 python3 -m aqt install-qt mac ios 6.2.4 -E 7zz\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs27\fsmilli13600 \cf2 \
+
+\f0\fs24 Install the modules as well:\
+
+\f2\fs27\fsmilli13600 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 python3 -m aqt install-qt mac ios 6.2.4 -E 7zz -m qt5compat qtnetworkauth \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 qtscxml\cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf2 ====\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf2 \cb3 So, trying something dumb: Just switch Qt over to iOS and see what happens.\
+\
+Ok, so we have Qt for iOS, and it looks like cmake will do all of the building of Qt as it builds MS. So we create another MS directory for an iOS build. Unzip MuseScore-master.zip and make ~/Code/MuseScore-iOS from the folder it creates.\
+\
+Copy the build_overrides.cmake file in, and change it to point at Qt/6.2.4/ios. Then do the script install parts by hand, skipping the Qt install, since we just did it, and the VST3 install, since that would use the same one.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 cd ~/Code/MuseScore-iOS\
+touch ~/.github_env\
+export GITHUB_ENV=~/.github_env\
+\pard\tx593\pardeftab593\partightenfactor0
+\cf5 \cb6 \CocoaLigature1 echo "VST3_SDK_PATH=/Users/tom/vst/VST3_SDK" >> $GITHUB_ENV\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f3\b\fs24 \cf7 \cb8 export
+\f1\b0 \cf9  QT_SHORT_VERSION=\cf10 6.2.4\cf9 \
+
+\f3\b \cf7 export
+\f1\b0 \cf9  QT_PATH=$HOME/Qt/$QT_SHORT_VERSION/\
+
+\f3\b \cf7 export
+\f1\b0 \cf9  PATH=$PATH:$QT_PATH/ios/bin\
+
+\f3\b \cf7 echo
+\f1\b0 \cf9  \cf11 "PATH=\cf9 $PATH\cf11 "\cf9  >> $GITHUB_ENV\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\fs22 \cf5 \cb6 \
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f0\fs24 \cf5 There is no way this will work:\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1\fs22 \cf5 \
+./build.cmake\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\
+Well, it got a little ways then can\'92t find Qt6CoreToolsConfig.make, which appears to be mac-only. Hmm. This is a bit of a hack:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 export Qt6CoreTools_DIR=$QT_PATH/macos/lib/cmake/Qt6CoreTools\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1\fs22 \cf5 \cb6 \kerning1\expnd0\expndtw0 ./build.cmake\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 CMake Error at /opt/homebrew/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:233 (message):\
+  Could NOT find GLESv2 (missing: GLESv2_INCLUDE_DIR GLESv2_LIBRARY\
+  HAVE_GLESv2 HAVE_GLESv2)\
+\pard\tx593\pardeftab593\partightenfactor0
+\cf5 \cb6 \CocoaLigature1 \
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f0\fs24 \cf5 And it failed, as expected. It is looking for things in Qt6Gui, but OpenGLES 2 is definitely supported in iOS, there\'92s a framework in the SDK - why would this fail? Unless it\'92s trying to run an app to check, which of course is running on the Mac\'85\
+Some things are fishy, such as this line picking up Mac includes instead of iOS:\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1\fs22 \cf5 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 -- Found Backtrace: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/include\cf5 \cb6 \CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\
+====\
+\
+Building Qt 6.2.4 for iOS:\
+\
+Qt uses configure wrapped around cmake. The installer above (aqt) installed everything as libXXX.a in the 6.2.4/iOS/lib folder, so we may not need to build Qt at all, just figure out how to link MS source with it. So we don\'92t need to do that.\
+\
+cmake properly supports out-of-source builds, so we didn\'92t need a separate MuseScore-iOS directory after all. The build would fail in the same way as with the separate source directory, so this doesn\'92t solve anything but is neater. And when you don\'92t know what you\'92re doing, at least do it neatly.\
+\
+Just for funsies, we downloaded the cmake gui from here:\
+\
+https://cmake.org/download/\
+\
+And this revealed that the Mac mini under Sequoia has dog-slow ethernet. The MBP under Monterey on wifi screams along at full speed. Yay.\
+\
+====\
+\
+Looking at the cmake system for MS, we see that it uses SetupQt6 in MS/buildscripts/cmake. That has the list of components, and it looks like only LinguistTools is not present in the iOS side. We are failing much earlier than that, in the Gui component. If sometime we need the LinguistTools to build, we can just stub out the calls for now.\
+\
+Modded FindGLESv2.cmake to include checking for iOS set 
+\f1 \cf9 \cb8 \kerning1\expnd0\expndtw0 GLESv2_FOUND ON
+\f0 \cf2 \cb3 \expnd0\expndtw0\kerning0
+, because otherwise it does indeed try to compile a little program to run, and not only is the Mac not an iOS platform, but of course, it doesn\'92t have OpenGLES2. - And that didn\'92t work because IOS isn\'92t set. That there might cause a bit of consternation, where do we turn it on?\
+\
+https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html\
+\
+We will want to trigger build.cmake with the extra command line args for cmake:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 cd ~/Code/MuseScore-iOS\
+cmake -P build.cmake -G Xcode  -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Debug -DQt6Core_DIR=~/Qt/6.2.4/iOS/lib/cmake/Qt6Core
+\f4\fs26 \cf12 \cb13 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \
+Why doesn\'92t it pick up the Qt dir properly? Is it because we're trying to build using Xcode as well as iOS? -- Building with 'Unix Makefiles' as the generator gives the same problems finding the Qt dirs. And we have confirmed that the build type, Debug vs RelWithDebInfo makes no difference as well. Using CMAKE_PREIX_PATH only gets us a small step further, where does the Mac version pick this up? <== We spelled it wrong...\
+\
+We detect the CPU architecture, this may or may not affect things if we're building for iOS using Xcode.\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1 \cf14 \cb1 --trace-source=SetupQt6.cmake\
+-DCMAKE_PREFIX_PATH=
+\fs22 \cf4 \kerning1\expnd0\expndtw0 \CocoaLigature0 Users/tom/Qt/6.2.4/iOS/lib/\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf14 \cb15 \expnd0\expndtw0\kerning0
+\CocoaLigature1 --debug-find
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 On the mac side, SetupQt6.cmake finds the Qt core dir here, without needing \cf14 \expnd0\expndtw0\kerning0
+\CocoaLigature1 CMAKE_PREFIX_PATH. iOS has the same hierarchy, but doesn't find it\cf4 \kerning1\expnd0\expndtw0 \CocoaLigature0 :\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 -- Qt6Core_DIR: /Users/tom/Qt/6.2.4/macos/lib/cmake/Qt6Core\
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf14 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf14 We tried adding this to CMakeLists.txt, since \cf9 \cb8 \kerning1\expnd0\expndtw0 CMAKE_PREFIX_PATH is blank when we're looking for QTCore:\cf14 \cb1 \expnd0\expndtw0\kerning0
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1 \cf9 \cb8 \kerning1\expnd0\expndtw0 variable_watch(CMAKE_PREFIX_PATH)\cf14 \cb1 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf2 \cb3 \
+We added this to the find_package() call since the root path is the ios sdk (no idea why) but we're configuring Qt:\
+ 
+\f1 \cf9 \cb8 \kerning1\expnd0\expndtw0     find_package(Qt6$\{_component\} REQUIRED NO_CMAKE_FIND_ROOT_PATH)\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf9 Adding some more things to the command line makes cmake behave a little more predictably in its search algorithm:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \CocoaLigature0 cmake -P build.cmake -G Xcode  -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_PREIX_PATH=/Usars/tom/Qt/6.2.4/ios --trace-source=SetupQt6.cmake --debug-find -DQT_DISABLE_NO_DEFAULT_PATH_IN_QT_PACKAGES=ON -DCMAKE_FIND_ROOT_PATH_BOTH=ON -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH\
+\
+This time we stalled out looking for Qt6CoreToolsConfig.cmake, which only exists on Mac.
+\fs24 \cf9 \cb8 \CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\
+====\
+\
+This looks like it could be a gold mine of info on cmake for iOS:\
+\
+https://www.jviotti.com/2022/12/21/building-objective-c-ios-apps-with-cmake.html\
+\
+====\
+\
+Some relevant info, as of 12/2024:\
+
+\f2\fs27\fsmilli13600 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 python3 -m aqt list-qt mac ios --long-modules 6.2.4 ios\
+\
+   Module Name                Display Name             Release Date   Download Size   Installed Size\
+====================================================================================================\
+qt3d                Qt 3D Module for iOS               2022-03-14     230.8M          2.1G          \
+qt5compat           Qt 5 Compatibility Modulefor iOS   2022-03-14     8.2M            65.6M         \
+qtcharts            Qt Charts for iOS                  2022-03-14     57.6M           491.7M        \
+qtconnectivity      Qt Connectivity for iOS            2022-03-14     10.9M           79.7M         \
+qtdatavis3d         Qt Data Visualization for iOS      2022-03-14     24.8M           217.4M        \
+qtimageformats      Qt Image Formats for iOS           2022-03-14     6.2M            40.2M         \
+qtlottie            Qt Lottie Animation for iOS        2022-03-14     8.1M            65.1M         \
+qtmultimedia        Qt Multimedia for iOS              2022-03-14     21.7M           157.9M        \
+qtnetworkauth       Qt Network Authorization for iOS   2022-03-14     3.1M            23.2M         \
+qtpositioning       Qt Positioning for iOS             2022-03-14     14.2M           106.7M        \
+qtquick3d           Qt Quick 3D for iOS                2022-03-14     128.5M          1.0G          \
+qtquicktimeline     Qt Quick Timeline for iOS          2022-03-14     3.4M            26.7M         \
+qtremoteobjects     Qt Remote Objects for iOS          2022-03-14     13.3M           101.4M        \
+qtscxml             Qt State Machine for iOS           2022-03-14     18.4M           143.4M        \
+qtsensors           Qt Sensors for iOS                 2022-03-14     10.3M           107.8M        \
+qtserialbus         Qt SerialBus for iOS               2022-03-14     6.8M            54.0M         \
+qtshadertools       Qt Shader Tools for iOS            2022-03-14     39.6M           334.4M        \
+qtvirtualkeyboard   Qt Virtual Keyboard for iOS        2022-03-14     22.7M           167.4M        \
+qtwebchannel        Qt WebChannel for iOS              2022-03-14     2.9M            20.7M         \
+qtwebsockets        Qt WebSockets for iOS              2022-03-14     4.7M            36.4M         \
+qtwebview           Qt WebView for iOS                 2022-03-14     3.9M            30.4M         \
+\
+\
+python3 -m aqt list-qt mac desktop --long-modules 6.2.4 clang_64\
+\
+   Module Name                      Display Name                   Release Date   Download Size   Installed Size\
+================================================================================================================\
+debug_info          Desktop Clang 64-bit Debug Information Files   2022-03-14     851.7M          5.1G          \
+qt3d                Qt 3D Module for macOS                         2022-03-14     3.8M            26.6M         \
+qt5compat           Qt 5 Compatibility Module for macOS            2022-03-14     620.9K          2.9M          \
+qtcharts            Qt Charts for macOS                            2022-03-14     903.6K          6.4M          \
+qtconnectivity      Qt Connectivity for macOS                      2022-03-14     412.0K          2.2M          \
+qtdatavis3d         Qt Data Visualization for macOS                2022-03-14     706.3K          4.3M          \
+qtimageformats      Qt Image Formats for macOS                     2022-03-14     645.8K          2.8M          \
+qtlottie            Qt Lottie Animation for macOS                  2022-03-14     166.4K          939.4K        \
+qtmultimedia        Qt Multimedia for macOS                        2022-03-14     584.8K          3.8M          \
+qtnetworkauth       Qt Network Authorization for macOS             2022-03-14     97.1K           559.4K        \
+qtpositioning       Qt Positioning for macOS                       2022-03-14     439.7K          2.8M          \
+qtquick3d           Qt Quick 3D for macOS                          2022-03-14     3.1M            17.4M         \
+qtquicktimeline     Qt Quick Timeline for macOS                    2022-03-14     53.9K           519.0K        \
+qtremoteobjects     Qt Remote Objects for macOS                    2022-03-14     553.8K          3.0M          \
+qtscxml             Qt State Machine for macOS                     2022-03-14     575.6K          4.0M          \
+qtsensors           Qt Sensors for macOS                           2022-03-14     198.1K          1.9M          \
+qtserialbus         Qt SerialBus for macOS                         2022-03-14     241.9K          1.7M          \
+qtserialport        Qt SerialPort for macOS                        2022-03-14     56.4K           345.2K        \
+qtshadertools       Qt Shader Tools for macOS                      2022-03-14     1.8M            8.0M          \
+qtvirtualkeyboard   Qt Virtual Keyboard for macOS                  2022-03-14     2.1M            9.6M          \
+qtwebchannel        Qt WebChannel for macOS                        2022-03-14     132.1K          793.6K        \
+qtwebengine         Qt WebEngine for macOS                         2022-03-14     98.5M           354.8M        \
+qtwebsockets        Qt WebSockets for macOS                        2022-03-14     123.1K          760.2K        \
+qtwebview           Qt WebView for macOS                           2022-03-14     83.1K           1.1M    \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+========\
+\
+Ok, reboot. The build isn't going to work from here because we probably don't have the configuration step doing the right thing, and trying to hack the build part by hooking in Mac-side code is definitely not the way forward. So back to the configuration step in setup.sh.\
+\
+====\
+\
+The setup.sh script gets some MS dependencies, these are named for the Mac into ~/
+\f1 \cf16 \cb17 \CocoaLigature1 musescore_deps_macos.
+\f0 \cf4 \cb1 \CocoaLigature0  We need to take a look at them and see what if anything needs to be changed for iOS. This seems to be the various pieces for libsndfile. These libraries are obviously built for the Mac, but there are cmake files in there so we can probably put together a CMakeLists.txt for them for iOS. Then we need to create a separate musescore_deps_ios directory because this appears to be an in-place build.\
+\
+We may need to look at each of these libraries' project hosts and see how to build them for iOS. Or figure it out. \cf5 \strike \strikec5 We might start with Opus, since we already have an iOS build for it\cf4 \strike0\striked0  - no, that was for Android. The musescore_deps_mac directory only has headers, not source, for the different deps. We need to find where and how MS builds these deps.\
+\
+libFLAC - no ready ios build, but cmake is common:\
+	https://github.com/janbar/flac-cmake\
+\
+libFLAC++ - is this just a libFLAC with C++ linkage?\
+\
+libogg - there appears to be no ready-make ios ogg library, but there are cmake scripts\
+	https://github.com/Iunusov/OGG-Vorbis-CMAKE\
+\
+libopus - there appears to be more than one set of cmake-based ios build scripts:\
+	https://github.com/pokey909/opus-cmake\
+	https://github.com/chrisballinger/Opus-iOS (not cmake, but might be useful)\
+\
+libsndfile - this has licensing issues, it's LGPL, which essentially requires an LGPL license or some convoluted arrangement of object files\
+	https://stackoverflow.com/questions/4939268/can-the-libsndfile-library-be-used-on-the-iphone-ios\
+...though we may be ok, there appears to be a modern way to create a shared library (framework) for iOS apps:\
+	https://github.com/libsndfile/libsndfile/pull/941\
+	https://github.com/libsndfile/libsndfile/tree/master\
+\
+libvorbis - see libogg\
+\
+libvorbisenc - again, no ios but cmake is available, this  includes vorbisenc\
+	https://github.com/xiph/vorbis\
+\
+libvorbisfile - here is a relatively recent vorbis build with cmake that includes vorbisfile\
+	https://github.com/andrewrk/libvorbis\
+\
+We almost certainly will need these libraries in order to compile and link. Take a look at the Mac side to find out. Maybe some of them aren't used.\
+\
+It looks like the build system copies the source for FLAC and opus into the build folder and generates the cmake files as needed. The iOS build doesn't get that far yet of course, but we may not need to do anything special to get these built. \
+\
+Libogg isn't there, though, but it seems that the only time it comes up in the build is in Opusenc, a single file ogg_packer.c, so it may not be needed for the Mac build at all. \
+\
+The string 'vorbis' doesn't even appear in the build log, but it shows up in the A4 build (and app credits). OTOH, there is a FindVorbisAndOgg.cmake in the Mac build. On the third hand, its output isn't in either the MS log nor the A4 log, so perhaps this cmake file isn't even being used. So we may be off the hook for ogg and vorbis as well.\
+\
+Sndfile is considered an optional package, and the Mac build picks up the brew-installed version. If it's being used for Mac file I/O, though, we may need to do the full build for that. The string libsndfile.dylib only shows up in the Conan build files for Audacity 3.x, nowhere else. (The xcbuild file for Audacity 3.x appears to link with libsndfile (it also links with Carbon!) but A4 doesn't.) So libsndfile may not actually be needed, either.\
+\
+Summing up, FLAC and opus are built by the cmake system and the others may not even be needed for the Mac side, which hints that the dependencies for the iOS side may be in the clear.\
+\
+====\
+\
+Starting at CMakeLists.txt at the top level, we have some flags, such as OS_IS_MAC, that are set up for us. Using the most basic build command, we can detect the following that seem to be iOS-specific:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_PREFIX_PATH=/Users/tom/Qt/6.2.4/ios/lib/ --debug-find\
+cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS --debug-find\
+\
+-- CMAKE_SYSTEM=iOS\
+-- CMAKE_SYSTEM_INFO_FILE=Platform/iOS\
+-- CMAKE_SYSTEM_NAME=iOS\
+-- CMAKE_SYSTEM_NAME=iOS\
+-- IOS=1\
+\
+These are interesting:\
+\
+-- CMAKE_C_XCODE_ARCHS=arm64\
+-- CMAKE_FIND_ROOT_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk\
+-- CMAKE_HOST_APPLE=1\
+-- CMAKE_MATCH_0=/iPhoneOS\
+-- CMAKE_MODULE_PATH=/Users/tom/Code/MuseScore-iOS;/Users/tom/Code/MuseScore-iOS/buildscripts;/Users/tom/Code/MuseScore-iOS/buildscripts/cmake\
+-- CMAKE_OSX_ARCHITECTURES=\
+-- CMAKE_OSX_SYSROOT=iphoneos\
+-- CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/usr/lib;/lib;/lib32;/lib64;/usr/lib;/usr/lib32;/usr/lib64\
+-- CMAKE_PLATFORM_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/Library/Frameworks;/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks;/System/Library/Frameworks\
+-- CMAKE_PREFIX_PATH=/Users/tom/Qt/6.2.4/ios\
+-- CMAKE_XCODE_ARCHS=arm64\
+-- PROJECT_BINARY_DIR=/Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo\
+-- SET_CMAKE_XCODE_ARCHS=set(CMAKE_XCODE_ARCHS "arm64")\
+-- _CMAKE_INSTALL_DIR=/opt/homebrew\
+-- _CMAKE_OSX_SYSROOT_DEFAULT=iphoneos\
+-- _CMAKE_OSX_SYSROOT_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk\
+-- _INCLUDED_SYSTEM_INFO_FILE=/opt/homebrew/share/cmake/Modules/Platform/iOS.cmake\
+\
+We printed these manually:\
+\
+-- CMAKE_PREFIX_PATH=/Users/tom/Qt/6.2.4/ios\
+-- QTDIR: \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 As expected, build_overrides.cmake has not been picked up yet, that is probably only paid attention to for the build step, not the config step.\
+\
+It appears that 
+\f1\fs22 CMAKE_PREFIX_PATH
+\f0\fs24  is essentially useless as it is being completely ignored, despite what the error messages suggest. So regardless of typos, we've been going up a box canyon.\
+\
+...and it appears that cmake specifically ignores the PATHS option when compiling for iOS (why?). Anyway, forcing it to look might help.\
+\
+https://stackoverflow.com/questions/65494246/cmakes-find-package-ignores-the-paths-option-when-building-for-ios\
+\
+-D
+\f2\fs26 \cf14 \cb15 \expnd0\expndtw0\kerning0
+\CocoaLigature1 CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
+\f0\fs24 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+Adding the above got us a bunch further, to the point of trying to find Qt6CoreToolsConfig.cmake, which only exists on Mac. Somehow that's in 
+\f1 \cf9 \cb8 \CocoaLigature1 Qt6CoreDependencies.cmake
+\f0 , which should be at ~/Qt/6.2.4/ios/lib/cmake/Qt6Core. Inside that, it seems to require Qt6CoreTools. A check with the Duck shows that few if any people out there build Qt for iOS using cmake (I'm not sure the Qt team even does, though I expect that they would) and so this may need to be fixed.\
+\
+Turning off QT6CoreTools lets us get further, until we hit 
+\f1\fs22 \cf4 \cb1 \CocoaLigature0 Qt6WidgetsToolsConfig.cmake
+\f0\fs24 \cf9 \cb8 \CocoaLigature1  which is also Mac-only and we should probably turn that off as well. Is there some config file somewhere where we can turn on/off the parts of Qt we do/don't need?\
+\
+And when is SetupConfigure.cmake actually used? From the name, one would think it would be part of the configuration setup process, but --?\
+\
+We are using IOS_CONFIG_BUG to indicate where we needed to make changes to the build files for iOS. And in Qt6QmlFindQmlscInternal.cmake there is even a comment that indicates that Qt for ios does not, in fact, build with cmake:\
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1 \cf9 # FIXME: Make this work with cross-builds\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf9 \
+
+\f0 We walled off a number of packages:\
+\
+Qt6CoreTools in Qt6CoreDependencies.cmake\
+Qt6WidgetsTools in Qt6WidgetsDependencies.cmake\
+Qt6QMLTools in Qt6QMLDependencies.cmake\
+Qt6ScxmlTools in Qt6ScxmlDependencies.cmake\
+\
+package 
+\f1 Qt6QmlCompilerPlus
+\f0  in Qt6QMLFindQmlscInternal.cmake\
+\
+...and EGL is already commented out in .../src/app/CmakeLists.txt. -- this wasn't the problem.\
+\
+Turned off MUE_RUN_LRELEASE in the main CMakeLists.txt\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf4 \cb1 \CocoaLigature0 Could not find a package configuration file\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 Stalled out at KDQtInstallPaths.cmake, with a query for Qt6::qmake, which only exists on Mac. Forcing that one to Qt::qmake -- didn't help, it depends on Qt6CoreTools. KDDockWidgets doesn't exist for iOS, if its use is more than incidental for MS, we might be stuck at this point. Source for MS contains references to KDDockWidgets in src/framework/dockwindow/internal. This may be a showstopper.\
+\
+Trying to wall it off in src/framework/docwindow/CMakeLists.txt to see what breaks.\
+\
+It wants to use Carbon, whoa. There are supposed to be some non-UI 64-bit Carbon calls still available, but they'd have to be truly esoteric to matter to an app today. Walled that off in src/framework/shortcuts/CMakeLists.txt. Oops, it also wants AppKit, changing that to UIKit in src/framework/ui/CMakeLists.txt and in src/framework/global/CMakeLists.txt. We are going to hit this again if we ever get as far as compiling  macospopupviewclosecontroller.mm.\
+\
+Then we hit AUTOMOC. We turned it off for ios, along with AUTOUIC and AUTORCC, in buildscripts/cmake/SetupQt6.cmake.\
+\
+Then a wild error:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 $<TARGET_OBJECTS:rcc_object_fonts_FinaleMaestro>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 The evaluation of the TARGET_OBJECTS generator expression is only suitable\
+  for consumption by CMake\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 This doesn't even appear on the Mac side, there is nothing like an error with FinaleMaestro and TARGET_OBJECTS doesn't appear. We made it past that by putting that angled var into a local var and passing that to the function (two args need it) and it seemed happy. There are also some hints here, this may be a syntax problem that may be caused by compatibility with an older cmake version (we didn't use this):\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \
+https://github.com/microsoft/mimalloc/issues/95\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+The fix is in Qt6CoreMacros.cmake. And we made it to the build step!\
+\
+====\
+\
+Need to set up the IPHONEOS_DEPLOYMENT_TARGET properly, it's set up for Mac in Setup.sh - that didn't work even with a clean build. Hmm.\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f3\b \cf7 \cb8 \CocoaLigature1 export
+\f1\b0 \cf9  MACOSX_DEPLOYMENT_TARGET=\cf10 12.0\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf4 \cb1 \CocoaLigature0 But the config step generated an xcodeproj file, so let's take a look there. Changed the ios version to 15 (minimum available on Xcode 16.2) and build failed immediately:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\b\fs22 \cf18 \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+\cf18 Showing Recent Issues\
+
+\f1\b0 Run script build phase 'Generate src/engraving/CMakeFiles/big_resources_fonts_Petaluma' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked.\
+\
+PhaseScriptExecution Generate\\ src/engraving/qrc_fonts_Petalumatmp.cpp /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/build/MuseScore.build/Debug-iphonesimulator/big_resources_fonts_Petaluma.build/Script-F952DDBD126D84D490199DB7.sh (in target 'big_resources_fonts_Petaluma' from project 'MuseScore')\
+    cd /Users/tom/Code/MuseScore-iOS\
+    /bin/sh -c /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/build/MuseScore.build/Debug-iphonesimulator/big_resources_fonts_Petaluma.build/Script-F952DDBD126D84D490199DB7.sh\
+\
+/Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/build/MuseScore.build/Debug-iphonesimulator/big_resources_fonts_Petaluma.build/Script-F952DDBD126D84D490199DB7.sh: line 5: Qt6::rcc: command not found\
+Command PhaseScriptExecution failed with a nonzero exit code\
+\
+/Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/build/MuseScore.build/Debug-iphonesimulator/big_resources_fonts_Petaluma.build/Script-F952DDBD126D84D490199DB7.sh: line 5: Qt6::rcc: command not found\
+\
+Command PhaseScriptExecution failed with a nonzero exit code\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf18 Well, we turned off AUTORCC earlier, and we don't have the Qt6 tools in general available to us, so no surprise that the font build failed. It may be necessary to do the font build on the Mac side with the Mac tools, then just pull the built fonts into the iOS build. That will take some tinkering.\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf18 Anyway, we fixed 
+\f1 \cf9 \cb8 MACOSX_DEPLOYMENT_TARGET
+\f0 \cf18 \cb1  in buildscripts/cmake/SetupBuildEnvironment.cmake, going back to building from the command line instead of using the xcodeproj. Now it needs a 
+\f1\fs22 \cf4 \CocoaLigature0 PRODUCT_BUNDLE_IDENTIFIER
+\f0\fs24 \cf18 \CocoaLigature1  for the targets. That and all the other iOS info.plist stuff needs to be set up in src/app/CMakeLists.txt around line 276, or in SetupBuildEnvironment.cmake around line 65.\'a0\
+\
+====\
+\
+Setting up OSX/IOS specific stuff, we put the IOS for setting the target properties in SetupBuildEnvironment.cmake, but the build conks out because the 'MuseScoreStudio' target doesn't exist yet. so we do it instead in src/app/CMakeLists.txt around line 276 or so. That gets us much further, but build/src/Info.plist isn't found. We already had the info.plist processing for iOS set up, didn't need the extra stuff.\
+\
+So we now fail because the xcodeproj targets don't have a bundle identifier. That works on the Mac side, where does it get picked up? Putting a hardwired bundle identifier in src/framework/global/tests/CMakeLists.txt, but using a reference to $\{MACOSX_BUNDLE_GUI_IDENTIFIER\} doesn't work because it's blank. Building for iOS uses the Xcode generator, building for MacOS uses the Unix Makefiles generator, so the Mac side doesn't need this set for utility targets. Perhaps there is some way to tell cmake to only build target 'MuseScoreStudio' instead of trying to build everything. The command line arg --target does not work.\
+\
+We created 
+\f1 \cf9 \cb8 XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER
+\f0 \cf18 \cb1  for src/framework/global/tests, but the next step probably made that moot.\
+\
+Let's try turning off 
+\f1 \cf5 \cb19 MUSE_ENABLE_UNIT_TESTS
+\f0 \cf18 \cb1  and seeing if that cuts down on the amount of things to build. -- That made a big difference, we are now getting a lack of developer team error for the main target, and no others.\
+\
+At this point, our build command line is:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \CocoaLigature0 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf18 \CocoaLigature1 \
+We have turned on automatic signing, added development team, and added team ID in src/app/CMakeLists.txt. \
+\
+Looks like it's trying to find a provisioning profile that matches '
+\f1\fs22 \cf4 \CocoaLigature0 org.musescore.MuseScore
+\f0\fs24 \cf18 \CocoaLigature1 ' rather than our app ID. We will set it to ours once we figure out how, but the MS people will need a proper provisioning profile if they don't already have one. It looks like this was set in version.cmake. Changing it to us - that didn't get us anywhere, we need to create a product ID for MuseScore, I'd guess.\
+\
+====\
+\
+Maybe we've been going about this the wrong way. We're changing the target OS to iOS and changing the build generator to Xcode all at once. Perhaps what we ought to try is to instead build the Mac OS version using the Xcode generator. Alternately, we could try to build for iOS with only Unix makefiles, but there are no clear examples of how to use the unix makefile generator for iOS, everything seems to depend on Xcode for more than just the tools. I'm not sure how the Mac side does it, probably custom scripts that use Xcode's tools anyway, but it doesn't seem to sign the executable, which is kind of a big deal. We are also rather suspicious that Qt doesn't build for iOS via the unix makefile generator in the first place, since there are comments about someday getting cross compilation to work. So building for the Mac with the Xcode generator it is.\
+\
+Ok, as mentioned in the Building Musescore file, letting cmake build the Mac side using the Xcode generator results in an app that won't launch - conceivably it's hitting something to do with codesigning for a local launch (?). But, opening the Xcode project and building from there results in a runnable MuseScore - yay! So we have a path of using cmake to create an xcodeproj which builds an app in Xcode successfully.\
+\
+Since the build for the iOS side using Xcode to build the xcodeproj fails on the fonts, we tried something to get the resource generator to run again.\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+\cf2 \expnd0\expndtw0\kerning0
+So it looks like the rcc tool might just be the same as needed for the Mac side, along with a bunch of other things. It lives in 6.2.4 ==> macos ==> libexec. We copied 14 things from the Mac side over to the iOS side to see if we can tickle the xcodeproj-based build to get a little further.\
+\
+cmake_automoc_parser\
+lprodump\
+lrelease-pro\
+lupdate-pro\
+moc\
+qlair\
+qmicachegen \
+qmlimportscanner\
+qmltyperegistrar\
+qtattributionsscanner\
+qvkgen\
+rcc\
+tracegen\
+uic\
+\
+...and that didn't help, the build still doesn't find the Qt6:rcc tool. Going back to \cf4 \kerning1\expnd0\expndtw0 \CocoaLigature0 buildscripts/cmake/SetupQt6.cmake, let's try turning on AUTORCC, AUTOMOC, and AUTOUIC and doing a clean build with the Mac-side tools in place for iOS.\cf18 \CocoaLigature1 \
+\
+That conked out because we have no Qt tools. So we copied Qt6CoreTools into lib/cmake from the Mac side, turned the tools back on in \cf9 \cb8 Qt6CoreDependencies.cmake. We will probably need to turn the others back on and copy them over if this works. Nope - the libexec folder gets blown away and recreated, so we need to back up and figure out how to ensure that all the various pieces for that get done.\
+\
+====\
+\
+We have now successfully cloned the git repository as  ~/Code/MuseScoreGit.\
+\
+====\
+\
+Since opening the xcodeproj and building from there results in a useable MS for Mac, let's prod around that a bit. It looks like the Qt modules are linked in as frameworks, which could probably work on iOS if we wanted it to. The main caveat is that iOS can't have plugins due to the resulting static link, but that is not critical, we could always include a stock set of 'plug-ins' which are actually compiled in.\
+\
+Comparing with the build-from-git version of the iOS side, the following frameworks do not have a corresponding libQt6_foo_.a:\
+\
+QtQuick			- in qtdeclarative\
+QtQuickControls2	- in qtquickcontrols2\
+QtQuickTemplates2	- in qtquicktemplates2\
+QtQuickWidgets		- in qtquickwidget\
+QtSvg 			- in qtsvg\
+\
+So we will probably need to add the last four to the ./init-repository modules list -- but they don't exist. So let's punt and plan to find out if the iOS version can link given the available libraries.\
+\
+====\
+\
+Examining the xcodeproj for the Mac side, since we link with a bunch of Qt frameworks, this means we aren't building Qt from xcode (or anywhere else, it seems) and are just linking. We did a build-from-git for Qt 6.2.4 for Mac (and iOS). If we can work out how to make the xcodeproj for Mac link with our built-from-git Qt, that might give us some hints on what we need to do for iOS. Still not sure how the font tools (and other tools) would work, perhaps the iOS xcodeproj needs to depend on a built target in the Mac xcodeproj.\
+\
+Turned off \cf4 \cb1 \CocoaLigature0 AUTORCC, AUTOMOC, and AUTOUICand turned the tools back off in \cf9 \cb8 \CocoaLigature1 Qt6CoreDependencies.cmake\cf4 \cb1 \CocoaLigature0  so we can get the xcodeproj to be created. Found a hint in the Mac side: Qt6::rcc is a placeholder for 
+\f1 \cf16 \cb17 \CocoaLigature1 /Users/tom/Qt/\cf20 6.2.4\cf16 /macos/libexec/rcc
+\f0 \cf4 \cb1 \CocoaLigature0  and so somewhere in the build scripts, we need to set that up. It may be AUTORCC that does it, or AUTORCC may just use it. 
+\f1\fs22 IMPORTED_LOCATION
+\f0\fs24  is supposed to specify where the _qt_imported_location is, but it doesn't work.\cf9 \cb8 \CocoaLigature1 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \CocoaLigature0 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DIMPORT_PREFIX=
+\fs24 \cf16 \cb17 \CocoaLigature1 /Users/tom/Qt/\cf20 6.2.4\cf16 /macos/libexec/\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf5 \cb19 We stalled out trying to find moc again. So we did this:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf16 \cb17 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf4 \cb1 \CocoaLigature0 cd /Users/tom/Qt/6.2.4/ios/libexec/\
+ln -s /Users/tom/Qt/6.2.4/macos/libexec/moc\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 and it found moc, then stopped for rcc. Trying the same for that and uic as well. It worked, so we short-circuited the entire libexec directory:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cd /Users/tom/Qt/6.2.4/ios/\
+mv libexec libexec.hide\
+ln -s /Users/tom/Qt/6.2.4/macos/libexec\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+...and we got much further, looking for 
+\f1\fs22 /Users/tom/Qt/6.2.4/ios/bin/androiddeployqt
+\f0\fs24 . We may be on to something here.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cd /Users/tom/Qt/6.2.4/ios/\
+mv bin bin.hide\
+ln -s /Users/tom/Qt/6.2.4/macos/bin\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+That completed and generated a new xcodeproj. That xcodeproj has proper paths for Qt6::rcc and friends.\
+\
+Build gets past the fonts (yay!) and then hits a Cocoa.h include, walling that off and stubbing out the calls in 
+\f1 \cf11 \cb8 \CocoaLigature1 macosinteractivehelper.m
+\f0 \cf4 \cb1 \CocoaLigature0 .\
+\
+That helped, we halted trying to compile printing code. We turned off the printing subdirectory in src/CMakeLists.txt and created a new xcodeproj.\
+\
+Got farther, needed to mod code in macosinteractivehelper.m but hit Qt6::uic not existing. It is in macos/libexec, but it didn't get converted to a proper tool path. Clearing out the cmake build folder and starting from there, but that still didn't create the proper tool path, hmm... This is a guess:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/\cb19 macos\cb1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+No help there. Popping open the muse_ui target in the xcodeproj hints that we may need to eventually make iOS counterparts to 
+\f1 \cf9 \cb8 \CocoaLigature1 internal/platform/macos/macosplatformtheme.mm/h
+\f0 \cf4 \cb1 \CocoaLigature0  and 
+\f1 \cf9 \cb8 \CocoaLigature1 view/platform/macos/macosmainwindowbridge.mm/h
+\f0 \cf4 \cb1 \CocoaLigature0  as in CMakeLists.txt, but that's not the problem.\
+\
+So we did something dumb and just zapped Qt6::uic with 
+\f1 \cf9 \cb8 \CocoaLigature1 /Users/tom/Qt/\cf10 6.2.4\cf9 /macos/libexec/uic
+\f0 \cf4 \cb1 \CocoaLigature0  in the target scripts. Yes, this would get blown away on the next clean build. But, we got past the issue and hit mac-only code in macosplatformtheme.mm, as expected. Let's wall off the mac parts of those files and go from there for now, we will do the right thing later so we don't have to re-zap the scripts again. OK, we got past those then hit an undefined macro called 
+\f1 \cf9 \cb8 \CocoaLigature1 ALLOWED_APIS 
+\f0 which is only used in
+\f1  graphicsapiprovider.cpp.
+\f0 \cf4 \cb1 \CocoaLigature0  So we set it up based on 
+\f1 \cf21 \cb8 \CocoaLigature1 Q_OS_IOS
+\f0 \cf4 \cb1 \CocoaLigature0  and muse_ui builds successfully. Moving on...\
+\
+Hit some more mac code in 
+\f1 \cf22 \cb8 \CocoaLigature1 MacOSPopupViewCloseController.mm
+\f0 \cf4 \cb1 \CocoaLigature0 , taking care of that...\
+\
+Hit another QProcess not defined in 
+\f1 \cf22 \cb8 \CocoaLigature1 MultiInstancesProvider.cpp
+\f0 \cf4 \cb1 \CocoaLigature0  and if that's for plug-ins, it would never work on iOS anyway. Anything about multiple instances on iOS is probably a bridge too far. Looks like it is, QProcess is a class "used to start external programs and communicate with them".\
+\
+-- maybe check things in Qt6CoreToolsAdditionalTargetInfo.cmake? - uic isn't in there, but it is in the macos side Qt6WidgetsToolsAdditionalTargetInfo.cmake -- note "WidgetsTools", not "CoreTools", as iOS doesn't have loadable widgets that run code. Maybe we can fix things. Turns out iOS doesn't have the WidgetsTools dir at all, let's turn the widgets tools back on in Qt6WidgetsDependencies.cmake and try a symbolic link, though I suspect this is asking for trouble:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cd /Users/tom/Qt/6.2.4/ios/lib/cmake\
+ln -s /Users/tom/Qt/6.2.4/macos/lib/cmake/Qt6WidgetsTools\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+Blowing everything away, we get muse_ui building without zapping anything! Whew... \
+\
+Trying ALL_BUILD to see how far we get - we stop at 
+\f1 \cf22 \cb8 \CocoaLigature1 MultiInstancesProvider.cpp
+\f0 \cf4 \cb1 \CocoaLigature0  once again. Walled that off and fixed coremidioutputport.cpp to get the time correctly for iOS. - eventually we need to define iOS versions of 
+\f1 \cf11 \cb8 \CocoaLigature1 internal/platform/osx/coremidioutport.h
+\f0 \cf4 \cb1 \CocoaLigature0  and 
+\f1 \cf11 \cb8 \CocoaLigature1 internal/platform/osx/coremidiinport.h
+\f0 \cf4 \cb1 \CocoaLigature0  and mod midimodule.cpp to load the right ones, for now we hack the mac versions as always. And that is happy.\
+\
+Conking out at QProcess usage in extapiv1.cpp. Probably won't be able to get any such thing to work, we will need to take out the muse_extensions target. We turned off the entire contents of src/framework/extensions/CMakeLists.txt. Need also to modify 
+\f1\fs22 src/app/CMakeLists.txt
+\f0\fs24  so it doesn't see muse::extensions. Had to turn it off all the way upstairs in SetupConfigure.cmake, but that file doesn't seem to be used. Cleaning and rebuilding from the configure line, with 
+\f1 \cf9 \cb8 \CocoaLigature1 MUSE_MODULE_EXTENSIONS
+\f0 \cf4 \cb1 \CocoaLigature0  turned off from the command line:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf9 \cb8 \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf4 \cb1 \CocoaLigature0 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/macos -D
+\fs24 \cf9 \cb8 \CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF
+\fs22 \cf4 \cb1 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+The next thing we hit was dockwindow. We turned that off at the top before. That had problems with Qt6::qmake, which we might have taken care of with pointing at the Mac tools, so let's turn it back on in src/framework/docwindow/CMakeLists.txt. We walled it off properly in KDQtInstallPaths.cmake and things got further.\
+\
+Now we stop at osxaudiodriver.mm. There are platform files in src/framework/audio/internal/platform/osx. We will need to create some for iOS, and include the header in audiomodule.cpp, as well as update muse_audio/CMakeLists.txt. We need to create our own MUSE_MODULE_AUDIO_IOS flag.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/macos -D
+\fs24 \cf9 \cb8 \CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF -D
+\f0 \cf4 \cb1 \CocoaLigature0 MUSE_MODULE_AUDIO_IOS=1
+\f1\fs22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+Hmm, that got to the engraving target, with an error, but we should have failed to build the iosaudiodriver.mm, since we didn't finish it. Hmm...\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf18 \CocoaLigature1 Unable to open temporary file $local_target_filename for reading: Unknown error
+\f0\fs24 \cf4 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\
+There is a string in each of the shell scripts in the engraving target, 
+\f1 \cf23 \cb17 \CocoaLigature1 "\\$local_target_filename"
+\f0 \cf4 \cb1 \CocoaLigature0  that should have been replaced. The mac side has this as 
+\f1 \cf16 \cb17 \CocoaLigature1 /Users/tom/Code/MuseScore/builds/Mac-Qt6\cf20 .2.4\cf16 -macos-Xcode-RelWithDebInfo/build/rcc_object_fonts_Tabulature.build/Debug/Objects-normal/arm64/qrc_fonts_Tabulaturetmp.o
+\f0 \cf4 \cb1 \CocoaLigature0  . This was a change we did for dealing with that wild error from above, probably got the syntax wrong, so let's fix the syntax in QtCoreMacros.cmake.\
+\
+We might have that fixed, now we run into the expected iosaudiodriver issues. \
+\
+Fixed those, on to macosappmenumodelhook.mm. \
+\
+Fixed that, back to the engraving fonts, with a new error "
+\f1\fs22 \cf18 \CocoaLigature1 No data signature found"
+\f0\fs24 \cf4 \CocoaLigature0 , there is a bug in Qt6::rcc that was addressed to deal with one instance of this error message. It's an internal bug in rcc, so either we need to apply a code patch and build rcc (!) which may not fix the problem, or there is a suggestion to do away with using resources_big, whatever that is. Might be in .../ios/mkspecs/features/resources.prf, the contents of which a cryptic. Maybe adding -U
+\f1 \cf9 \cb8 \CocoaLigature1 MODULE_BIG_QRC
+\f0 \cf4 \cb1 \CocoaLigature0  to the command line might turn off big resources. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/macos -D
+\fs24 \cf9 \cb8 \CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF -D
+\f0 \cf4 \cb1 \CocoaLigature0 MUSE_MODULE_AUDIO_IOS=1 -U
+\f1 \cf9 \cb8 \CocoaLigature1 MODULE_BIG_QRC
+\fs22 \cf4 \cb1 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+That didn't help, though we did tinker more with the macro scripts to be sure we're using them the same as on the Mac side. Ok, we may need to get a more modern version of the rcc tool and zap it in to see if the problem is the indicated one. See "Building Qt6 from git.rtf", then:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \
+cd /Users/tom/Qt/6.2.4/macos/libexec/\
+mv rcc rcc.hide\
+ln -s ~/Code/qt6_latest/qt6-build/qtbase/libexec/rcc\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 And we still get "
+\f1\fs22 \cf18 \CocoaLigature1 No data signature found"
+\f0\fs24 \cf4 \CocoaLigature0 , wild. Which means the problem isn't the internal rcc bug, there's something wrong with the input files or the rcc command itself. We were considering just pulling the prebuilt fonts from the Mac side, maybe we have to figure that out. But why do the same source files build on the Mac side and not the iOS side, even with the same tools?\
+\
+MacOS:\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf24 \cb25 \CocoaLigature1 /Users/tom/Qt/6.2.4/macos/libexec/rcc --name fonts_Bravura --pass 2 --temp /Users/tom/Code/MuseScore/builds/Mac-Qt6.2.4-macos-Xcode-RelWithDebInfo/build/rcc_object_fonts_Bravura.build/RelWithDebInfo/Objects-normal/arm64/qrc_fonts_Bravuratmp.o --output /Users/tom/Code/MuseScore/builds/Mac-Qt6.2.4-macos-Xcode-RelWithDebInfo/src/engraving/qrc_fonts_Bravura.o /Users/tom/Code/MuseScore/src/engraving/data/fonts/fonts_Bravura.qrc
+\f0 \cf4 \cb1 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\
+iOS:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 /Users/tom/Qt/6.2.4/macos/libexec/rcc --name fonts_Bravura --pass 2 --temp /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/src/engraving/qrc_fonts_Bravuratmp.o --output /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/src/engraving/qrc_fonts_Bravura.o /Users/tom/Code/MuseScore-iOS/src/engraving/data/fonts/fonts_Bravura.qrc
+\fs22 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 Hmm, the Mac side uses a .o in the build objects folder, while the iOS side picks up the uncompiled cpp. Trying this:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs24 /Users/tom/Qt/6.2.4/macos/libexec/rcc --name fonts_Bravura --pass 2 --temp /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/\cf24 \cb25 \CocoaLigature1 build/rcc_object_fonts_Bravura.build/Debug-iphonesimulator/Objects-normal/arm64\cf4 \cb1 \CocoaLigature0 /qrc_fonts_Bravuratmp.o --output /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/src/engraving/qrc_fonts_Bravura.o /Users/tom/Code/MuseScore-iOS/src/engraving/data/fonts/fonts_Bravura.qrc
+\fs22 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 ...and it worked, so the problem is the temp file location, which needs to be the font's build dir. And it needs to be a .o file. So we utterly hacked QtCoreMacros.cmake and if it works, we need to figure out how cmake defines the arm64 directory.\
+\
+And we got a whole bunch further, conking out on Cocoa.h in macosrecentfilescontroller.cpp. Had to hack that one (TARGET_OS_IOS doesn't exist?) and we got to the linking stage.\
+\
+Linker is looking for 'print'. Trying to turn off all printing, something still wants to print. Walled off the module declarations in its CMakeText.txt.\
+\
+And we got to the linking stage! Somehow the 
+\f1\fs22 \cf18 \CocoaLigature1 /Users/tom/Qt/6.2.4/ios/lib
+\f0\fs24 \cf4 \CocoaLigature0  object files were built for devices, not the simulator. We installed that with agt, was it already built? Looks like that's the case. And it looks like the defaults for the cmake build tools are using the device as well. So just try telling xcode to build for "Any iOS Device". And Xcode hangs trying to GatherProvisioningInputs, and we can't cancel the build. MuseScoreStudio target has a bogus signing team, switched that to HE. And Xcode hangs trying to close the project because the build is stuck...\
+\
+CMAKE_OSX_SYSROOT or perhaps XCODE_IOS_PLATFORM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/macos -D
+\fs24 \cf9 \cb8 \CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF -D
+\f0 \cf4 \cb1 \CocoaLigature0 MUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator\
+\
+Weird - that not only generated an xcodeproj but it actually started the build as a unix files process. Let's let it grind and see where it conks out -- at the fonts again. Looks like we need to figure out that path in QtCoreMacros.cmake. Again, the system doesn't differentiate between host and target CPU types, so we're using the host CPU type for the macro. This will need to be smarter so we can in theory build for devices and simulator on both ARM and Intel.\
+\
+The cmake build failed at linking like before, with the Qt lib being built for devices. Specifying the simulator on the command line resulted in an xcodeproj file where the big fonts (Bravura) are now 1-pass instead of 2-pass --? Xcode project builds and fails at linking for the same reason. Oddly, this xcodeproj cannot switch over to building for devices...\
+\
+The xcodeproj sets Base SDK for the MS target to 'iphonesimulator', which isn't valid. We needed to manually set it to 'iOS', now we can set the build target to 'Any iOS Device' and see when we fail. It's still confused, as now we fail in engraving trying to link the Bravura font which got compiled for the simulator. And why the heck do we have dozens of duplicate libraries? Are they built for different processors? Maybe if we specify the sysroot as xcodebuild -showsdks shows:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf5 \cb19 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Qt/6.2.4/macos -D\CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF -D\CocoaLigature0 MUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf4 \cb1 \
+Opened the xcodeproj and the build stopped at the fonts again, this time because RelWithDebInfo-iphonesimulator18.2 doesn't exist. We put in symlinks to RelWithDebInfo-iphonesimulator (which does exist) and things got further. It looks like there is no cmake param with the exact string 'iphonesimulator', so where this comes from is a mystery.\
+\
+So the Qt in ~/Qt/6.2.4/ios was built for a device, we can't link with it with the project set for the simulator, and we (probably) don't have things set up for the fonts to build for a device. And we don't have a device running iOS 18 anyway. So we need to go back to the qt-from-git and try to get it to build for the simulator, and link with that instead.\
+\
+Looks like we did successfully build the qt-from-git side as the simulator. This command can tell what platform a library was built for:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 otool -l /Users/tom/Code/qt6/qt6-build-ios-simulator-arm/qtbase/lib/libQt6Core_debug.a | grep -i platform\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+MacOS is 1, iOS device is 2, iOS simulator is 7 (defined in /usr/include/mach-o/loader.h).\
+\
+Ok, so let's make the qt-from-git dirs have the same structure as ~/qt/6.2.4 by setting up some symbolic links. Then we can change the command line to try to use that one instead of ~/Qt/6.2.4\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cd ~/Code/qt6\
+ln -s qt6-build-mac-arm64/ macos\
+ln -s qt6-build-ios-simulator-arm/ ios
+\f0\fs24 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf5 \cb19 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/
+\fs22 \cf4 \cb1 Code/qt6
+\fs24 \cf5 \cb19 /macos -D\CocoaLigature1 MUSE_MODULE_EXTENSIONS=OFF -D\CocoaLigature0 MUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 
+\fs22 \cf4 \cb1 -DQt6Core_DIR=
+\fs24 \cf5 \cb19 /Users/tom/
+\fs22 \cf4 \cb1 Code/qt6/ios/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=
+\fs24 \cf5 \cb19 /Users/tom/
+\fs22 \cf4 \cb1 Code/qt6/ios/lib/
+\fs24 \cf5 \cb19 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf5 ...but we still fail to build because of this, not sure where it's coming from:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 Using Qt version 6.2.4 in /Users/tom/Qt/6.2.4/ios/lib
+\f0\fs24 \cf5 \cb19 \
+\
+prolly build_overrides.cmake, but changing that makes us unable to find Qt at all. Maybe a PATH issue? - not that. It appears to be set up in the mac shell script in buildscripts/ci/macos/setup.sh, but we didn't actually run that, we just ran the commands by hand from a terminal. The vars it eported, such as 
+\f1 \cf9 \cb8 \CocoaLigature1 QT_PATH
+\f0 \cf5 \cb19 \CocoaLigature0 , don't seem to be set in a random terminal session. Perhaps it's all in the build.cmake script itself.\
+\
+Ok, the problem is that there is no qmake executable in ~/Code/qt6... and this trips up build.cmake at line 99. We were right to make the change for locating Qt in build_overrides.cmake, \cf0 \cb1 \strike \strikec0 \CocoaLigature1 it's just that the Qt-from-git doesn't seem to have a qmake\cf5 \cb19 \strike0\striked0 \CocoaLigature0 . Yes, it does, it's just that we can't freaking type a path without making mistakes...\
+\
+Let's try to hand in QT_LOCATION and friends since we don't have qmake to ask.\
+\
+QtAutoDetect.cmake line 209 is where the presumption of platform and architecture is.\
+\
+Looks like the "program" in GetPlatformInfo.cmake was buggy and led to a fallback of presuming an x86_64 processor. We fixed it. Now it detects the correct aarch64 CPU.\
+\
+-- Clobbered by a typo again. We had the whole thing set up correctly using build_overrides.cmake, but the path to Qt had a typo so we could never find qmake. Sheesh. Now we find qmake and friends and fail trying to find Qt6HostInfoConfig.cmake, which is the first package. That was because we had the wrong place for 
+\f1\fs22 \cf4 \cb1 CMAKE_PREFIX_PATH
+\f0\fs24 \cf5 \cb19 , fixing that and changing build_overrides.cmake to point at 
+\f1 \cf9 \cb8 \CocoaLigature1 set(ENV\{QTDIR\} "$ENV\{HOME\}/Code/qt6/ios/qtbase")
+\f0 \cf5 \cb19 \CocoaLigature0 : \
+\
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/macos -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/ios/qtbase/lib/:/Users/tom/Code/qt6/ios/qtbase/lib/cmake\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf5 \cb19 That needs the ios bin pointed at the macos bin:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 \
+cd /Users/tom/Code/qt6/ios/qtbase\
+mv bin bin.hide\
+ln -s /Users/tom/Code/qt6/macos/qtbase/bin\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf5 \cb19 \
+We're not finding the config cmake files, tinkering with 
+\f1\fs22 \cf4 \cb1 QT_HOST_PATH
+\f0\fs24 \cf5 \cb19  and using 
+\f1\fs22 \cf4 \cb1 --trace-source=SetupQt6.cmake --debug-find
+\f0\fs24 \cf5 \cb19  to try to figure things out:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/macos/qtbase -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/ios/qtbase/lib/:/Users/tom/Code/qt6/ios/qtbase/lib/cmake --trace-source=SetupQt6.cmake --debug-find
+\f0\fs24 \cf5 \cb19 \
+\
+That got further, but stalled out looking for 
+\f1\fs22 \cf4 \cb1 QtFindWrapHelper.cmake, 
+\f0\fs24 \cf5 \cb19 maybe we're diving too deep on the host path, try something upstairs such as ~/Code/qt6/qtbase:\
+\
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/qtbase -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/ios/qtbase/lib/:/Users/tom/Code/qt6/ios/qtbase/lib/cmake --trace-source=SetupQt6.cmake --debug-find
+\f0\fs24 \cf5 \cb19 \
+\
+Nevermind, that didn't help. Let's tack that path onto the prefix path instead:\
+\
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/macos/qtbase -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/ios/qtbase/lib/:/Users/tom/Code/qt6/ios/qtbase/lib/cmake:/Users/tom/Code/qt6/qtbase/cmake --trace-source=SetupQt6.cmake --trace-source=QtFindWrapHelper.cmake --debug-find 
+\f0\fs24 \cf5 \cb19 \
+\
+Trying removing the lib specifics:\
+\
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/macos/qtbase -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/qtbase/cmake:/Users/tom/Code/qt6/ios/qtbase:/Users/tom/Code/qt6/macos/qtbase:/Users/tom/Code/qt6/qtbase --trace-source=SetupQt6.cmake:QtFindWrapHelper.cmake --debug-find 
+\f0\fs24 \cf5 \cb19 \
+\
+There's a lot going on with the prefix path, and it changes depending on which Qt version you are trying to use:\
+\
+https://stackoverflow.com/questions/71086422/cmake-cannot-find-packages-within-qt6-installation\
+\
+Why the heck can't we find 
+\f1\fs22 \cf4 \cb1 QtFindWrapHelper.cmake
+\f0\fs24 \cf5 \cb19  ? It's in ~/Code/qt6/qtbase/cmake, let's try CMAKE_INCLUDE_PATH:\
+\
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH -DMUSE_ENABLE_UNIT_TESTS=0 -DQT_HOST_PATH=/Users/tom/Code/qt6/macos/qtbase -DMUSE_MODULE_EXTENSIONS=OFF -DMUSE_MODULE_AUDIO_IOS=1 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2 -DQt6Core_DIR=/Users/tom/Code/qt6/ios/qtbase/lib/cmake/Qt6Core -DCMAKE_PREFIX_PATH=/Users/tom/Code/qt6/qtbase/cmake:/Users/tom/Code/qt6/ios/qtbase:/Users/tom/Code/qt6/macos/qtbase:/Users/tom/Code/qt6/qtbase -DCMAKE_INCLUDE_PATH=/Users/tom/Code/qt6/qtbase/cmake --trace-source=SetupQt6.cmake:QtFindWrapHelper.cmake --debug-find 
+\f0\fs24 \cf5 \cb19 \
+\
+That didn't help, either. However, hardwiring the damn path to 
+\f1 \cf9 \cb8 \CocoaLigature1 /Users/tom/Code/qt6/qtbase/cmake/QtFindWrapHelper.cmake
+\f0 \cf5 \cb19 \CocoaLigature0  in FindWrapPCRE2.cmake allowed it to go further. Clearly 
+\f1 \cf9 \cb8 \CocoaLigature1 QtFindWrapHelper.cmake
+\f0 \cf5 \cb19 \CocoaLigature0  needs to somehow include the include path setup.\
+\
+Now we're not finding 
+\f1\fs22 \cf4 \cb1 Qt6Quick
+\f0\fs24 \cf5 \cb19  - and there sure isn't, it does appear in qt6_latest and the other installed Qt dirs, but not in ~/Code/qt6. Hmm, we may need to go back to the qt6-from-git build and add qtquick to the init-repository line. That won't work, we used the same module subset in qt6_latest as in qt6, but somehow qt6_latest built it and qt6 didn't --? So perhaps the latest qt version (as opposed to 6.2.4) builds QtQuick? Or is it a mac build? -- Yup, qt6_latest/qt6-build is a mac build as are the other build locations that have qt6quick.\
+\
+From the above digging QtQuick on iOS appears to be part of qtdeclarative. I think. So we took these out from SetupQt6.cmake because iOS doesn't have them:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf9 \cb8 \CocoaLigature1 #    Quick\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf9 #    QuickControls2\
+#    QuickTemplates2\
+#    QuickWidgets\
+#    Svg\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 \cf5 \cb19 \CocoaLigature0 \
+And we got further, though this probably means linking is doomed. And FindWrapPNG.cmake doesn't have the necessary include directories, either. Hacking that... As well as for 
+\f1\fs22 \cf4 \cb1 FindWrapFreetype.cmake and FindWrapHarfBuzz.cmake.
+\f0\fs24 \cf5 \cb19  \
+\
+Looks like we need to find the changes we did to the qt build scripts in ~/Qt/6.2.4 and apply them to ~/Code/qt6/qtbase/src/corelib, this gets the fonts building again like above:\
+\
+Qt6CoreMacros.cmake\
+\
+Now we stop because target kddockwidgets links to Qt6::Quick, which doesn't exist. Turned it off in \cf4 \cb1 src/framework/docwindow/CMakeLists.txt.\
+\
+And now we get a xcodeproj. Trying to build hits a failed include for QQuickItem in the pch, but the docs suggest that QQuickItem should exist for iOS. Weird - there is a QT6Quick and friends in ~/Qt/6.2.4/ios/lib/cmake, but otherwise only in a mac build. Perhaps if we rebuild qt after adding the 
+\f1\fs22 qtquick3d
+\f0\fs24  and 
+\f1\fs22 qtquicktimeline
+\f0\fs24  modules, we might see Qt6Quick in an iOS build?\
+\
+We're going to re-clone into qt6_complete, init the repository for everything so we get all possible qt modules, do a full mac build, then do a full ios simulator build. Hold on to your heatsinks...\
+\
+Both initializing and building  for everything as well as initialziing only 
+\f1 \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qtbase,qt5compat,qtnetworkauth,qtscxml,qtdeclarative,
+\fs22 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 qtquick3d,qtquicktimeline,qtshadertools
+\f0\fs24  leads to a link failure. The hint is that we might not be linking in OpenGL for whatever reason.\
+\
+https://savannah.gnu.org/bugs/?47886\
+https://doc.qt.io/qt-6/qtopengl-index.html\
+\cf5 \cb19 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6/macos \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+-DCMAKE_OSX_SYSROOT=iphonesimulator18.2\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf5 \cb19 \
+Oh, right - we need to copy the cherrypicked code from ~/Code/qt6/qtbase/cmake/FindWrapOpenGL.cmake to the other FindWrapOpenGL.cmake files (we already did Qt6CoreMacros.cmake). Then clean, reconfigure, build.\
+\
+... and we need to comment out the usage of std::unary_function here. When you build the whole universe, you see all the problems:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 /Users/tom/Code/qt6_complete/qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm
+\f0\fs24 \cf0 \cb26 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \cb19 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+====\
+\
+Cmake files in the qt dir that need to be updated with our changes before Qt will build:\
+\
+FindWrapOpenGL.cmake\
+Qt6CoreMacros.cmake\
+\
+Code fixes:\
+\
+Comment out use of std__unary_function:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf4 \cb1 /Users/tom/Code/qt6_complete/qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm
+\f0\fs24 \cf0 \cb26 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \cb19 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+Replace 
+\f1 \cf27 \cb8 \CocoaLigature1 kIOMasterPortDefault
+\f0 \cf5 \cb19 \CocoaLigature0  with 
+\f1 \cf9 \cb8 \CocoaLigature1 kIOMainPortDefault
+\f0 \cf5 \cb19 \CocoaLigature0  on line 2993:\
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb26 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qglobal.cpp\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb19 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 ====\
+\
+Cmake files in the MS dir that need to be updated with our changes before MS will build. Note that these get wiped each Qt build, so we have to update them before trying to build MS:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb1 <qt_dir>/qtbase/cmake/FindWrapFreetype.cmake\
+<qt_dir>/qtbase/cmake/FindWrapHarfBuzz.cmake\cf5 \cb19 \
+\cf4 \cb1 <qt_dir>/qtbase/cmake/\cf5 \cb19 FindWrapPCRE2.cmake\
+\cf4 \cb1 <qt_dir>/qtbase/cmake/\cf5 \cb19 FindWrapPNG.cmake\
+\
+\cf4 \cb1 <qt_dir>/qtbase/src/corelib/Qt6CoreMacros.cmake\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \cb19 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb1 <qt_dir>/qt6-build/qtbase/lib/cmake/Qt6Core/Qt6CoreMacros.cmake\
+<qt_dir>/qt6-build-ios-simulator-arm/qtbase/lib/cmake/Qt6Core/Qt6CoreMacros.cmake\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \cb19 \
+====\
+\
+Some handy tools:\
+\
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb26 \expnd0\expndtw0\kerning0
+\CocoaLigature1 Looking for the most recent files that end with .txt (that is, CMakeLists.txt for example:)\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf14 \cb15 find /Users/tom/Code/qt6 -type f -name '*.txt' -exec stat -f "%m %N" "\{\}" \\; | sort -nr | head\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \cb26 This does the same, but for cmake files:\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs26 \cf14 \cb15 \
+find /Users/tom/Code/qt6 -type f -name '*.cmake' -exec stat -f "%m %N" "\{\}" \\; | sort -nr | head
+\f0\fs24 \cf5 \cb19 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+====\
+\
+And after all of the cpu melting for the all-modules Qt builds for mac and ios, it appears that we do indeed have QtQuick and friends. Need to try that with qt6_partial as well. Now that we have all that, it's time to try MS linking with the simulator version of qt again.\
+\
+Change build_overrides.cmake to point to ~
+\f1 \cf9 \cb8 \CocoaLigature1 /Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase:
+\f0 \cf5 \cb19 \CocoaLigature0 \
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1 \cf9 \cb8 \CocoaLigature1 set(ENV\{QTDIR\} "$ENV\{HOME\}/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase")\
+set(QTDIR "$ENV\{HOME\}/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase")\
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0 \cf9 Set this up so we can find qmake and friends:\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1 \cf9 \
+cd ~/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase\
+mv bin bin.hide\
+ln -s ~/Code/qt6_complete/qt6-build/qtbase/bin\
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf5 \cb19 \CocoaLigature0 \
+Then update FindWrap_xxxx.cmake so we can find the modules again.\
+\
+Then turn of kddockwidgets in \cf4 \cb1 src/framework/docwindow/CMakeLists.txt. -- but it's already conditional --? Turn it back on? Even on, we still fail.\cf5 \cb19 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1 \cf5 cd ~/Code/MuseScore-iOS\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs22 \cf4 \cb1 \
+cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+-DCMAKE_OSX_SYSROOT=iphonesimulator18.2\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 Even though we conked out at dockwindow, we got an xcodeproj. Building that, it hit the "unable to open temp file" issue in the Bravura font and buddies again.\
+\
+First pass at generating Bravura puts the temp file here:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf5 \CocoaLigature1 /Users/tom/Code/MuseScore-iOS/builds/Mac-Qtqt6-build-ios-simulator-arm-qtbase-Xcode-RelWithDebInfo/build/rcc_object_fonts_Bravura.build/Debug-iphonesimulator/Objects-normal/arm64/qrc_fonts_Bravuratmp.o\
+
+\f0\fs24 \
+While the second pass looks for the temp file here:\
+
+\f1\fs22 \
+/Users/tom/Code/MuseScore-iOS/builds/Mac-Qtqt6-build-ios-simulator-arm-qtbase-Xcode-RelWithDebInfo/src/engraving/../../build/rcc_object_fonts_Bravura.build/RelWithDebInfo-iphonesimulator/Objects-normal/arm64/qrc_fonts_Bravuratmp.o\
+
+\f0 \
+
+\fs24 Looks like we hit that because we're mixing Debug with RelWithDebInfo build types. Hmm. Maybe we can just force it by creating symbolic links in 
+\f1\fs22 rcc_object_fonts_Bravura.build/
+\f0\fs24  so 
+\f1\fs22 RelWithDebInfo-iphonesimulator
+\f0\fs24  points at 
+\f1\fs22 Debug-iphonesimulator.
+\f0\fs24  Tried it for Bravura, looks like it will work for getting the build to keep going, applying to all.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf5 \CocoaLigature0 cd \CocoaLigature1 /Users/tom/Code/MuseScore-iOS/builds/Mac-Qtqt6-build-ios-simulator-arm-qtbase-Xcode-RelWithDebInfo/build/\CocoaLigature0 rcc_object_fonts_Bravura.build\
+rm -rf RelWithDebInfo-iphonesimulator/\
+ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Campania.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Edwin.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_FinaleBroadway.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_FinaleMaestro.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_FreeSans.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_FreeSerif.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Gootville.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Leland.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_MScore.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_MuseJazz.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Petaluma.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+cd ../rcc_object_fonts_Tabulature.build/; rm -rf RelWithDebInfo-iphonesimulator/; ln -s Debug-iphonesimulator/ RelWithDebInfo-iphonesimulator\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 That worked, and we hit a different linking problem. Progress!\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+\cf18 \CocoaLigature1 building for 'iOS-simulator', but linking in dylib (/opt/homebrew/Cellar/libsndfile/1.2.2/lib/libsndfile.1.0.37.dylib) built for 'macOS'\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf18 We need to build a libsndfile for iOS and substitute it in the MuseScoreStudio target "Other Linker Flags" in the Debug build type since that's where cmake specifies the link file list. It wants /opt/homebrew/lib/libsndfile.1.0.37.dylib.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\fs22 \cf18 \
+====\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\fs24 \cf18 Now that we successfully build libsndfile.a for iOS, we're including it in the target with Debug build type at its as-built location:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\fs22 \cf18 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs24 \cf4 \CocoaLigature0 /Users/tom/Code/libsndfile/CMakeBuild-iOS-sim18.2/Debug-iphonesimulator/libsndfile.a\
+\
+Coolness, we got to the linking stage and libsndfile.a linked (though we built it for simulator18.2, when we're trying to build MS for 18.0, so we need to go revisit that). Anyway, we hit tons of missing symbols, looks like lots of them are Qt. Let's look at the link list:\
+\
+/Users/tom/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase/src/gui/CMakeFiles/Gui_resources_1.dir/.rcc/qrc_qpdf.cpp.o\
+\
+otool -l and nm give expected info such as Platform 7, but the symbols don't appear in the link failure output. How about this one:\
+\
+/Users/tom/Code/qt6_complete/qt6-build-ios-simulator-arm/qtdeclarative/src/quick/CMakeFiles/Quick_resources_1.dir/.rcc/qrc_qmake_QtQuick.cpp.o\
+\
+Added some frameworks to clear some of the simpler link issues, such as UIKit, IOKit, and CoreVideo.\
+\
+Looking for 
+\f1 \cf9 \cb8 \CocoaLigature1 VoiceTypes::staticMetaObject
+\f0 \cf4 \cb1 \CocoaLigature0  which is in the Mac side generated moc_voicetypes.cpp, but not anywhere in MS-iOS. The file unity_0_cxx.d object file refers to it, which matches the linker output. When we last left our hero, moc was turned on and pointing at the mac version of the tool. -- Nope, they were still turned off in SetupQt6.cmake. Looks like we need to turn them on and rerun build.cmake. Maybe we can fix the 18.0 vs. 18.2 issue at the same time.\
+\
+Hmm, conked out in the converter target building 
+\f1\fs22 unity_0_cxx.o
+\f0\fs24  because it's trying to include this which doesn't exist:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 /Users/tom/Code/MuseScore-iOS/builds/Mac-Qtqt6-build-ios-simulator-arm-qtbase-Xcode-RelWithDebInfo/src/converter/converter_autogen/mocs_compilation.cpp
+\f0\fs24 \
+\
+And it looks like it's making for x86_64. Maybe it's doing both. We marked CMakeLists.txt to indicate when the converter subdirectory was added, and reran - but this time it made it to the linking stage --? And now the above 'missing' file exists --? Ok...\
+\
+
+\f1\fs22 ld: symbol(s) not found for architecture x86_64\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \
+Opened the xcodeproj, added the three frameworks, swapped the libsndfile.a, and the link errors dropped from over 1400 to about a hundred: There's no vtable for mu::print::PrintModule, which means it wasn't ever implemented but was declared, a bunch of ogg calls, and a bunch of vorbis calls.\
+\
+We already had turned off the print module in its CMakeLists.txt. Its headers are included in src/app/appfactory.cpp, but unlike many other modules, there is no preprocessor setting to turn it off. Eventually we will want to print to PDF, but this could get in the way now. If we wall it off, we will probably fail to compile something. Hmm, that seems to have taken care of the linking with mu::print::PrintModule, on to ogg and vorbis.\
+\
+And a couple of info.plist warnings which will need fixing:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf18 \CocoaLigature1 warning: The application supports opening files, but doesn't declare whether it supports opening them in place. You can add an LSSupportsOpeningDocumentsInPlace entry or an UISupportsDocumentBrowser entry to your Info.plist to declare support. (in target 'MuseScoreStudio' from project 'MuseScore')\
+\
+/Users/tom/Code/MuseScore-iOS/builds/Mac-Qtqt6-build-ios-simulator-arm-qtbase-Xcode-RelWithDebInfo/MuseScore.xcodeproj: warning: User-supplied CFBundleIdentifier value 'com.humbleearthproductions.musescore' in the Info.plist must be the same as the PRODUCT_BUNDLE_IDENTIFIER build setting value 'com.Humble-Earth-Productions-Inc.MuseScore'. (in target 'MuseScoreStudio' from project 'MuseScore')
+\f0\fs24 \cf4 \CocoaLigature0 \
+\
+Poking around info.plist.in, it looks like we needed to change NSPrincipalClass to UIApplication. Added 
+\f1\fs22 \cf18 \CocoaLigature1 LSSupportsOpeningDocumentsInPlace=true
+\f0\fs24 \cf4 \CocoaLigature0  just after LSRequiresCarbon=true (!). The CFBundleIdentifier is based on 
+\f1 \cf9 \cb8 \CocoaLigature1 MACOSX_BUNDLE_GUI_IDENTIFIER
+\f0 \cf4 \cb1 \CocoaLigature0  which is actually 
+\f1 \cf9 \cb8 \CocoaLigature1 MUSE_APP_GUI_IDENTIFIER
+\f0 \cf4 \cb1 \CocoaLigature0  in the top CMakeLists.txt which is set up in the top level version.cmake, which is what it already ought to be, hmm. It was in src/app/CMakeLists.txt, fixed it. That's probably also where we should take care of the code signing identity.\
+\
+We found iOS projects for ogg and vorbis, so let's put the .a files in and see what we get. They built here:\
+\
+
+\f1\fs22 \cf18 \CocoaLigature1 /Users/tom/Library/Developer/Xcode/DerivedData/Ogg-cboclklvdlzaunbgculeuamsmmhh/Build/Products/Debug-iphonesimulator/libogg.a
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf18 /Users/tom/Library/Developer/Xcode/DerivedData/Vorbis-dzshawcfultnrpbfobmbylzrvnou/Build/Products/Debug-iphonesimulator/libvorbis.a
+\f0\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+\cf4 \CocoaLigature0 \
+And at long last MuseScore for iOS build has succeeded. There's almost no chance it will actually launch, of course. But this is huge (03/13/25).\
+\
+====\
+\
+Launching MuseScoreStudio on iPhone 16 Pro 18.2 on the simulator:\
+\
+We don't have a valid CFBundleVersion, so it won't install. Slapped in "4.5", and we install and start to launch, then eventually abort:\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf28 \cb8 \CocoaLigature1 QML debugging is enabled. Only use this in a safe environment.\
+[1;32m16:27:29.685 | INFO  | main_thread     | AppFactory::newGuiApp | Muse Sampler is not a debuggable binary. Skipping adding.[0m\
+Assertion failed: (p), function registerExport, file modulesioc.h, line 77.
+\f0 \cf4 \cb1 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+\
+Backtrace:\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf28 \cb8 \CocoaLigature1 * thread #1, stop reason = signal SIGABRT\
+    frame #0: 0x000000010a674874\
+    frame #1: 0x000000010a5f22ec\
+    frame #2: 0x00000001801704ec\
+    frame #3: 0x000000018016f934\
+  * frame #4: 0x0000000105837afc MuseScore`void kors::modularity::ModulesIoC::registerExport<muse::IApplication>(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::shared_ptr<muse::IApplication>) (.cold.1) at modulesioc.h:77:13 [opt]\
+    frame #5: 0x00000001048a4be4 MuseScore`void kors::modularity::ModulesIoC::registerExport<muse::audio::IAudioDriver>(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::shared_ptr<muse::audio::IAudioDriver>) [inlined] std::__1::shared_ptr<muse::audio::IAudioDriver>::operator bool[abi:ne180100](this=<unavailable>) const at shared_ptr.h:0 [opt]\
+    frame #6: 0x00000001048a4be0 MuseScore`void kors::modularity::ModulesIoC::registerExport<muse::audio::IAudioDriver>(this=<unavailable>, module=<unavailable>, p=<unavailable>) at modulesioc.h:77:13 [opt]\
+    frame #7: 0x00000001048a4600 MuseScore`muse::audio::AudioModule::registerExports(this=0x0000600003b28ee0) at audiomodule.cpp:152:12 [opt]\
+    frame #8: 0x0000000102d10e7c MuseScore`mu::app::GuiApp::perform(this=0x000000010b40fc68) at guiapp.cpp:58:12 [opt]\
+    frame #9: 0x0000000102d23c7c MuseScore`main(argc=<unavailable>, argv=0x0000600000004860) at main.cpp:201:10 [opt]\
+    frame #10: 0x00000001056208cc MuseScore`user_main_trampoline() at qioseventdispatcher.mm:273:20\
+    frame #11: 0x0000000105620548 MuseScore`+[QIOSApplicationStateTracker applicationDidFinishLaunching:](self=0x00000001071fdc30, _cmd="applicationDidFinishLaunching:", notification=0x0000600000269360) at qioseventdispatcher.mm:373:9\
+    frame #12: 0x00000001803eb800\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
+
+\f0 \cf4 \cb1 \CocoaLigature0 \
+...\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf28 \cb8 \CocoaLigature1     frame #52: 0x0000000185b35bd4\
+    frame #53: 0x000000010561fcc4 MuseScore`qt_main_wrapper(argc=1, argv=0x000000016d120b10) at qioseventdispatcher.mm:242:16\
+    frame #54: 0x000000010a789410 dyld_sim`start_sim + 20\
+    frame #55: 0x000000010a4c2b4c dyld`start + 6000
+\f0 \cf4 \cb1 \CocoaLigature0 \
+\
+Some kind of allocation failure or exception when trying to load the IAudioDriver. Turns out we never actually instantiated IOSAudioDriver. Turned that on and we got much further. Looks like we bailed out because we can't load something just after we display the splash screen. The app bundle doesn't appear to have any resources in it, and we're looking for 
+\f1 \cf28 \cb8 \CocoaLigature1 "qrc:/qml/platform/mac/Main.qml"
+\f0 \cf4 \cb1 \CocoaLigature0  but the Mac version also seems to have no resources as well, just one ginormous executable.\
+\
+Let's launch the Mac version - it failed looking for 
+\f1 \cf28 \cb8 \CocoaLigature1 libFLAC.12.dylib
+\f0 \cf4 \cb1 \CocoaLigature0  which it looked for all over the place. Guess we must have launched it over on the MBP. But it's specifically looking for 12, while 14 is there as well as the expected symbolic link from libFLAC.dylib, what the heck? Let's try something dumb and relaunch:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 cd /opt/homebrew/Cellar/flac/1.5.0/lib
+\f0\fs24 \
+
+\f1\fs22 ln -s libFLAC.14.dylib libFLAC.12.dylib
+\f0\fs24 \
+\
+And it launched! Wild. Looks like it does some UI things on a background thread, that's naughty. They would probably appreciate it if I fixed those. Looks like both the Mac and iOS Qt builds are semi-optimized because of the RelWithDebInfo build and so we can't be sure we can inspect objects. Great. But we can confirm that the MacOS version does indeed have all of its resources compiled in, it's 182 MB, while the iOS version is 124 MB so we are probably missing things.\
+\
+Other tweaks:\
+\
+Looking through all of the places that check Q_OS_MACOS, many of them can just do the same thing for IOS. Some should be customized someday, including \
+\
+interactive.cpp		-- calls MacOSInteractiveHelper\
+systeminfo.cpp 		-- needs a ProductType::iOS\
+macosshortcutsinstancemodel.mm 	-- this uses Carbon, of all things, to get the keyboard identities, modernize it and make an iOS version called from shortcutsconfiguration.cpp and shortcutsmodule.cpp.\
+\
+If the issue with Main.qml is on line 22 as indicated, the problem is that QtQuick 2.15 (or better?) isn't found. Swapping some things around in Main.qml, we can indeed find 
+\f1 \cf16 \cb17 \CocoaLigature1 import MuseScore.AppShell \cf20 1.0
+\f0 \cf4 \cb1 \CocoaLigature0  so the problem is with bringing in the Qt parts. \
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf8 \cb17 \CocoaLigature1 /Users/tom/Library/Developer/CoreSimulator/Devices/60DFDEE4-CE23-472F-80AA-33A28AF51B2C/data/Containers/Data/Application/0B782042-BD05-452B-8C52-2BE3CF8E99D3/Library/Application Support/MuseScore/MuseScore4Development/logs/MuseScore_250313_215904.log
+\f0 \cf4 \cb1 \CocoaLigature0 \
+\
+So we found a bunch of qml in <build>/qtbase/qml/ so we added the files to the project by reference, then created a Copy Bundle Resources build phase and put everything in it, then filtered for "qtdir" and removed those, since the copy would wind up clobbering that item over and over as the packager puts everything at the top level of the bundle.\
+\
+That helped, but we still have multiple versions of lots of the Qt qml files. There appear to be Basic, Fusion, Imagine, Material, and Universal versions in appropriate directories. The Mac version appears to use Fusion, so we will remove the copy phase commands for the others. If there is something that doesn't appear in Fusion, we will use Basic. The other three don't appear at all in the Mac build.\
+\
+StackView.qml, SwipeView.qml is in Basic.\
+\
+Desaturate.qml, OpacityMast.qml, RectangularGlow.qml, appears in Qt5Compat and QtQuick3D, not sure which to pick, so we will hold off on that decision for the moment. How about we arbitrarily pick Qt5Compat.\
+\
+FileDialog.qml, FileDialogDelegate.qml, FolderBreadcrumbBar.qml, FontDialog.qml, have one at the top as well, chose that one over Fusion.\
+\
+And we blew away all plugins.qmltypes.\
+\
+...and a complete build from within the xcodeproj rewrote the xcodeproj, so all the work we just did is gone. We needed to create scripts for them, anyway. Script needs to:\
+- copy the entire dir to somewhere it's convenient for the xcodeproj,\
+- delete everything that 'qtdir'  and plugins.qmltypes as the last path element, \
+- copy StackView.qml, SwipeView.qml somwhere, \
+- remove everything in Basic, Imagine, Material, and Universal in the path, \
+- remove FileDialog.qml, FileDialogDelegate.qml, FolderBreadcrumbBar.qml, FontDialog.qml with Fusion in the path, \
+- remove Desaturate.qml, OpacityMast.qml, RectangularGlow.qml with QtQuick3D in the path. \
+\
+Then add everything in the resulting folder to the Copy Bundle Resources build phase.\
+\
+We ought to someday figure out what to feed cmake so it sets up the xcodeproj to bring in the ogg, vorbis, and libsndfile libraries from a known location.\
+\
+====\
+\
+Current build procedure:\
+Build qt_complete.\
+Run cmake to generate xcodeproj. \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1 \cf5 \cb19 cd ~/Code/MuseScore-iOS\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \
+cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+-DCMAKE_OSX_SYSROOT=iphonesimulator18.2\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f0 \
+Open xcodeproj:\
+\
+In MuseScoreStudio target, Signing and Capabilties tab set the development team to Humble Earth.\
+In MuseScoreStudio target, Build Settings, Other Linker Paths, add IOKit and CoreVideo frameworks.\
+Run the font-fixing script.\
+QML:\
+	- Run copy_qml.sh\
+	- In Build Phases, add a Copy Bundle Resources phase, click "Others..." and point it at the above qml dir, do not copy, make buildable\
+	- Select the qml folder and add it to the MSS target, we should see ~207 items in the Copy Bundle Resources phase\
+Libraries:\
+	- Build ogg, vorbis, and libsndfile in that order.\
+	- Copy the lib.a files into ~/Code/MuseScore-iOS/iOS libs/sim18.2-arm/\
+	- Add the libs to the project, as references-in-place, added to the MuseScoreStudio target\
+	- in Build Phases, in the Link Binary with Libraries phase, check that the three lib.a files are in the list.\
+	- Remove libsndfile.dylib from the Other Linker Flags (it's for mac only)\
+Set bundle version to 4.5 in the MSS info.plist. - fixed this in src/app/CmakeLists.txt, it was 
+\f1 \cf9 \cb8 \CocoaLigature1 MACOSX_BUNDLE_BUNDLE_VERSION
+\f0 \cf4 \cb1 \CocoaLigature0 \
+\
+And it won't attach to the process running in the simulator, weird. Looks like that is also a Hiesenbug that occasionally strikes others all across Xcode versions and nobody has it figured out (not even Quinn the Eskimo). And once it's busted, it stays busted - some have reported getting it to go away with a clean build (didn't work for MS), others have restarted their machines (same), which all seems like a rain dance. We may need to re-install the entire xcode suite, just to complete the rain dance trifecta. And we also reset the simulator device and relaunched the simulator for good measure.\
+\
+Hmm, launching Temperaments \cf0 \strike \strikec0 \CocoaLigature1 takes way too long\cf4 \strike0\striked0 \CocoaLigature0  fails as well. This is actually good news, as it implies that the tools are broken and not the app.\
+\
+Switched to a different sim device and used the odd suggestion of using Release and not debugging, which is backwards but others have found success there. It did actually launch and connect, but quit without crashing. \cf0 \strike \strikec0 \CocoaLigature1 Or maybe we didn't attach at al\cf4 \strike0\striked0 \CocoaLigature0 l, but we at least have debug console output. And that indicates that we did launch and connect, but still failed to load the qml resources/system, erring out in the same place at Main.qml, despite the pile of qml resource files we copied in. I'd guess we need to figure out how to get those resources into the Qt resource system properly.\
+\
+It looks like 
+\f1 \cf0 \cb29 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt_add_qml_module
+\f0 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0  is the way to add qml to a project, but neither the Mac nor iOS source trees for MS have it anywhere, which means that it's done some other way. The Mac side xcodeproj can do it, but the iOS side clearly doesn't so we have to find out what's different.\
+\
+'qmldir' exists in two more files on the Mac side than the iOS side: qrc_extensions.cpp and extensions.qrc, and the number of strings found in those two adds up to the difference in number as well.\
+\
+====\
+\
+The Mac side cmake-driven build from the command line completed and the xcodeproj worked, the iOS side did not and the xcodeproj doesn't. Let's try getting the iOS side to build from the command line first, because if there are resources that the iOS side would have picked up but didn't get finished, then the iOS xcodeproj clearly will be missing some pieces.\
+\
+Looks like iOS is trying to link for x86, it complained about finding arm64 instead for a number of libs. These include interesting calls like '
+\f1\fs22 qRegisterResourceData
+\f0\fs24 '. OTOH, if the build is trying to do both processors, then of course it will fail, so we need to get it to do only the host - "Build Active Architecture Only" in Xcode terms, which is 'yes' there. For target '
+\f1\fs22 iex_ove
+\f0\fs24 ' as an example, it is definitely building for both processors then combining the libs into a single .a with code for both processors.\
+\
+Looks like we can set 
+\f1 \cf16 \cb17 \CocoaLigature1 CMAKE_OSX_ARCHITECTURES
+\f0 \cf4 \cb1 \CocoaLigature0  in the build.sh script. - Not really, it gets overridden in GetPlatformInfo.cmake.\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1 \cf16 \cb17 \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf5 \cb19 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+-DPLATFORM=ARM64 \\\
+-D\cf9 \cb8 CMAKE_OSX_ARCHITECTURES=\cf5 "arm64" \\\cb19 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphonesimulator18.2\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 The Mac linker command line includes all the Qt frameworks including QtQuick. The iOS version only includes the directories to look in (-L) and otherwise links in the file qrc_qmake_QtQuick.cpp.o directly, not sure if that's anything like the same thing. Shouldn't it be something like libqtquick2plugin_debug.a - which it does list, but without the .a part.\
+\
+Random: The initial screen presumed size might be set up in from a code template in qqmlsettings.cpp. Not sure if there is some way to check if we're running on an iPad (or get raw screen dimensions) from there. We will likely want to force landscape for phone-sized devices, tho.\
+\
+All the duplicate link warnings are exactly that: A bunch of files that are listed full-path verbatim, twice. Where that comes from is obscure.\
+\
+Libsndfile gets set up in buildscripts/cmake/SetupSndFile.cmake. This is not at all ready for cross-compilation, it will always try to pick up the system's libsndfile.a.\
+\
+We may have taken care of adding CoreVideo and IOKit libs in the top CmakeLists.txt - nope, needed target_link_libraries. Added it in src/app/CMakeLists.txt, which is more appropriate anyway. Weird, it worked for CoreVideo, but not for IOKit? We might want to do this in frameworks/ui/CMakeLists.txt instead.\
+\
+KDQtInstallPaths.cmake might be where the Qt parts are supposed to be, we turned it off for iOS. So we turned it back on and then had to wall off the target listing message, why that fails on iOS and is OK on Mac, is a mystery.\
+\
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f1 \cf9 \cb8 \CocoaLigature1 MACOSX_BUNDLE_BUNDLE_VERSION
+\f0 \cf4 \cb1 \CocoaLigature0  didn't work. - it was stomped by a blank 
+\f1 \cf9 \cb8 \CocoaLigature1 CMAKE_BUILD_NUMBER
+\f0 \cf4 \cb1 \CocoaLigature0 , might have it fixed now. Yep.\
+\
+Architecture detection in GetPlatformInfo.cmake sees both architectures, and the two tests are run in parallel, so which one wins is a race condition. Yay. We have spiked the processor type to aarch64. - but we are still building for x86_64...\
+\
+We might have gotten things linking with Qt in /src/app/CMakeLists.txt, because a statically linked app needs to be told to link to its sources specifically. Anyway, that added a few more things to the build, which ran into a problem not being able to find 
+\f1\fs22 global/internal/baseapplication.h
+\f0\fs24  while building a console app (?) so we added target_include_directories() to src/CMakeLists.txt. For whatever weird reason, we had to add a bunch of header dirs that we didn't need before - adding link libraries shouldn't be adding source, unless there's a depemdemcu analysis going on.\
+\
+====\
+\
+Putting everything into a branch called iOS on our own fork of MS from late December, 3/28/2025:\
+\
+In the C++ source, we see checks for both Q_OS_MACOS and Q_OS_MAC (such as in appshellmodule.cpp)- which one is real? Are they both? When are they set under an iOS build? It's pretty clear that at least Q_OS_IOS is set when building for iOS. Sometimes we use TARGET_OS_IOS, and we ought to be consistent. \
+\
+Not sure any of the noise we added to KDQtInstallPaths.cmake was necessary (or did anything).\
+\
+kddockwidgets' config.cpp  around line 271 has a MacOS test that the comment indicates is backwards.\
+\
+in baseapplication.cpp, should ::restart indicate that it's not supported?\
+\
+Do we need to create a new app type to go along with ProductType::MacOS and friends in systeminfo.cpp?\
+\
+We set up XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER in global/tests/CMakeLists.txt - this seems the wrong place to do this.\
+\
+Anyway, checked it all in to the iOS branch so we can tinker with it on other machines and have a backup.}

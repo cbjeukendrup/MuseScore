@@ -69,7 +69,12 @@
 #  Ignored unless KDDockWidgets_DEVELOPER_MODE=True
 #  Default=true
 
+# IOS_CONFIG_BUG
+if(IOS)
+cmake_minimum_required(VERSION 3.16)
+else(IOS)
 cmake_minimum_required(VERSION 3.12)
+endif(IOS)
 
 # Allow using a non-KDAB install location.
 set(KDAB_INSTALL True CACHE INTERNAL "Install to default KDAB Location")

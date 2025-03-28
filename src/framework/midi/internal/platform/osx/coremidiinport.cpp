@@ -21,7 +21,11 @@
  */
 #include "coremidiinport.h"
 
+#if TARGET_OS_IOS
+#include <CoreVideo/CVHostTime.h>
+#else
 #include <CoreAudio/HostTime.h>
+#endif
 #include <CoreServices/CoreServices.h>
 #include <CoreMIDI/CoreMIDI.h>
 

@@ -70,6 +70,10 @@ else()
     find_package(SndFile)
 
     if (SNDFILE_FOUND)
+    # IOS_CONFIG_BUG
+    # Fixme: When building for iOS, we hit this one, which has instead found the library
+    # for the host Mac. This needs to be aware of cross-compiling someday.
+        message(STATUS "find_package(SndFile) succeeded.")
         set(SNDFILE_LIB ${SNDFILE_LIBRARY})
         set(SNDFILE_INCDIR ${SNDFILE_INCLUDE_DIR})
     else()
@@ -94,6 +98,7 @@ else()
         )
 
         if (LIBSNDFILE_LIBRARY)
+            message(STATUS "find_package(SndFile) failed, had to dig for it.")
             set(SNDFILE_LIB ${LIBSNDFILE_LIBRARY})
             set(SNDFILE_INCDIR ${LIBSNDFILE_INCLUDE_DIR})
         endif()
