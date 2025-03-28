@@ -40,6 +40,54 @@ set(MUSE_FRAMEWORK_PATH ${CMAKE_CURRENT_LIST_DIR})
 set(MUSE_FRAMEWORK_SRC_PATH ${CMAKE_CURRENT_LIST_DIR}/src/framework)
 
 ###########################################
+# See what has been set up so far
+###########################################
+
+function(dump_all_cmake_vars)
+    message(STATUS "---- All cmake vars: ----")
+    get_cmake_property(variable_names VARIABLES)
+    list(SORT variable_names)
+    foreach (variable_name ${variable_names})
+        message(STATUS "${variable_name}=${${variable_name}}")
+    endforeach ()
+    message(STATUS "---- End of all cmake vars ----")
+endfunction()
+
+###########################################
+# iOS specific setup.
+###########################################
+# IOS_CONFIG_BUG
+# This works.
+if(IOS)
+    message(STATUS "iOS build engaged, captain.")
+    
+    dump_all_cmake_vars()
+
+    # variable_watch(CMAKE_PREFIX_PATH)
+    
+    message (STATUS "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
+    message (STATUS "ENV{QTDIR}=$ENV{QTDIR}")
+    
+    set(CMAKE_OBJC_STANDARD 99)
+    add_compile_options(
+      -fobjc-arc
+      -fobjc-weak
+      -fno-common
+      -fstrict-aliasing
+      -fpascal-strings
+      -fmodules)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      add_compile_definitions(DEBUG=1)
+    else()
+      add_compile_definitions(NS_BLOCK_ASSERTIONS=1)
+      add_compile_options(-fasm-blocks -Os)
+    endif()
+    
+    # -allowProvisioningUpdates
+    
+endif()
+
+###########################################
 # Setup option and build settings
 ###########################################
 include(GetPaths)
@@ -175,6 +223,7 @@ set(QT_NO_PRIVATE_MODULE_WARNING ON)
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()
+    message(STATUS "Including ${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.cmake")
     include(SetupConfigure)
 endif()
 
@@ -192,6 +241,10 @@ if (MUSE_COMPILE_USE_COMPILER_CACHE)
     include(SetupCompilerCache)
 endif(MUSE_COMPILE_USE_COMPILER_CACHE)
 
+if(IOS)
+#    message(STATUS "    CMake vars after SetupBuildEnvironment.cmake:")
+#    dump_all_cmake_vars()
+endif(IOS)
 
 ###########################################
 # Setup external dependencies

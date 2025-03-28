@@ -47,7 +47,7 @@ void SystemInfo::init()
     ProductType productType = ProductType::Unknown;
 #if defined(Q_OS_WIN)
     productType = ProductType::Windows;
-#elif defined(Q_OS_MACOS)
+#elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     productType = ProductType::MacOS;
 #elif defined(Q_OS_LINUX)
     productType = ProductType::Linux;

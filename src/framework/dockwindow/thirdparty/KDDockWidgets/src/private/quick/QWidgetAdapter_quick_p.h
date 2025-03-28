@@ -274,7 +274,7 @@ private:
 
 inline qreal logicalDpiFactor(const QQuickItem *item)
 {
-#ifndef Q_OS_MACOS
+#if !(defined(Q_OS_MACOS) || defined(Q_OS_IOS))
     if (QQuickWindow *window = item->window()) {
         if (QScreen *s = window->screen()) {
             return s->logicalDotsPerInch() / 96.0;

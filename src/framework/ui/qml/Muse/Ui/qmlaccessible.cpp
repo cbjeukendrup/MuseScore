@@ -590,7 +590,7 @@ void AccessibleItem::setText(const QString& text)
 
     m_text = text;
 
-#if defined(Q_OS_MACOS)
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     //! NOTE: For VoiceOver, text must also be in value
     setValue(text);
 #endif

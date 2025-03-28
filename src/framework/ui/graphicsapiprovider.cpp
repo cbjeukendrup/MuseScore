@@ -49,6 +49,15 @@ static const std::vector<GraphicsApi > ALLOWED_APIS = {
 };
 #endif
 
+// IOS_CONFIG_BUG
+#ifdef Q_OS_IOS
+static const std::vector<GraphicsApi > ALLOWED_APIS = {
+    GraphicsApi::Metal,
+    GraphicsApi::OpenGL,
+    GraphicsApi::Software
+};
+#endif
+
 #ifdef Q_OS_LINUX
 static const std::vector<GraphicsApi > ALLOWED_APIS = {
     GraphicsApi::OpenGL,

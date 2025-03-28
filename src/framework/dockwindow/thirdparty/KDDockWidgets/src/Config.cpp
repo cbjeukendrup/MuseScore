@@ -268,7 +268,7 @@ void Config::Private::fixFlags()
         // We're either using native or client decorations, let's use native.
         m_flags = m_flags & ~Flag_AeroSnapWithClientDecos;
     }
-#elif defined(Q_OS_MACOS)
+#elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     // Not supported on macOS:
     m_flags = m_flags & ~Flag_AeroSnapWithClientDecos;
 #else
@@ -286,7 +286,7 @@ void Config::Private::fixFlags()
     }
 #endif
 
-#if (!defined(Q_OS_WIN) && !defined(Q_OS_MACOS))
+#if (!defined(Q_OS_WIN) && !defined(Q_OS_MACOS) && !defined(Q_OS_IOS))
     // QtQuick doesn't support AeroSnap yet. Some problem with the native events not being received...
     m_flags = m_flags & ~Flag_AeroSnapWithClientDecos;
 #endif

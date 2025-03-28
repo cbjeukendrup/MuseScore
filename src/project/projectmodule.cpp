@@ -39,7 +39,7 @@
 #include "internal/notationwritersregister.h"
 #include "internal/projectrwregister.h"
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #include "internal/platform/macos/macosrecentfilescontroller.h"
 #elif defined (Q_OS_WIN)
 #include "internal/platform/windows/windowsrecentfilescontroller.h"
@@ -68,7 +68,7 @@ void ProjectModule::registerExports()
     m_projectAutoSaver = std::make_shared<ProjectAutoSaver>(iocContext());
     m_engravingPluginAPIHelper = std::make_shared<EngravingPluginAPIHelper>(iocContext());
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     m_recentFilesController = std::make_shared<MacOSRecentFilesController>();
 #elif defined(Q_OS_WIN)
     m_recentFilesController = std::make_shared<WindowsRecentFilesController>();

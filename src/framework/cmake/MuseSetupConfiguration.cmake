@@ -66,6 +66,8 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/MuseFetchDependencies.cmake)
 
+message(STATUS "Processing ${CMAKE_CURRENT_LIST_DIR}/muse_framework_config.h.in")
+message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/muse_framework_config.h.in muse_framework_config.h )
 
 include(MuseCreateModule)

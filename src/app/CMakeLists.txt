@@ -67,7 +67,14 @@ elseif(OS_IS_MAC)
     set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSE_APP_TITLE})
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSE_APP_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MUSE_APP_VERSION})
-    set(MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_BUILD_NUMBER})
+
+    if (IOS)
+        # CMAKE_BUILD_NUMBER is blank, use MUSE_APP_VERSION
+        set(MACOSX_BUNDLE_BUNDLE_VERSION ${MUSE_APP_VERSION})
+    else(IOS)
+        set(MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_BUILD_NUMBER})
+    endif(IOS)
+    
     set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 1999-2026 MuseScore Limited. Published under the GNU General Public License version 3.")
 
     set(CMAKE_INSTALL_RPATH ${QT_INSTALL_LIBS})
@@ -75,7 +82,11 @@ elseif(OS_IS_MAC)
         list(PREPEND CMAKE_INSTALL_RPATH "${MUE_COMPILE_MACOS_PRECOMPILED_DEPS_PATH}/lib")
     endif()
 
-    message("MACOSX_BUNDLE_VERSION: ${MACOSX_BUNDLE_LONG_VERSION_STRING}.${MACOSX_BUNDLE_BUNDLE_VERSION}")
+    if (IOS)
+        message("MACOSX_BUNDLE_BUNDLE_VERSION: ${MACOSX_BUNDLE_BUNDLE_VERSION}")
+    else(IOS)
+        message("MACOSX_BUNDLE_VERSION: ${MACOSX_BUNDLE_LONG_VERSION_STRING}.${MACOSX_BUNDLE_BUNDLE_VERSION}")
+    endif(IOS)
 
 elseif(OS_IS_WASM)
 
@@ -250,13 +261,39 @@ if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
 endif()
 
 if (OS_IS_MAC)
-    include(${PROJECT_SOURCE_DIR}/share/icons/SetupIconComposerIcon.cmake)
-    target_setup_iconcomposer_icon(MuseScoreStudio "${PROJECT_SOURCE_DIR}/share/icons/AppIcon/AppIcon.icon")
+    # IOS_CONFIG_BUG
+    if (IOS)
+        set_target_properties(MuseScoreStudio PROPERTIES
+            MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}"
+            MACOSX_BUNDLE_GUI_IDENTIFIER "com.Humble-Earth-Productions-Inc.MuseScore"
+            OUTPUT_NAME "${PROJECT_NAME}"
+            XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 1,2
+            XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 18.2
 
-    set_target_properties(MuseScoreStudio PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/macOS/Info.plist.in
-        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
-    )
+            XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+            
+            XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Development"
+            XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "V9R6W356UT"
+            XCODE_ATTRIBUTE_CODE_SIGN_STYLE Automatic
+            )
+
+        if(PROJECT_VERSION)
+            set_target_properties(MuseScoreStudio PROPERTIES
+                MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
+        endif()
+
+        set_target_properties(MuseScoreStudio PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/iOS/Info.plist.in
+            XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER})
+
+    else(IOS)
+        include(${PROJECT_SOURCE_DIR}/share/icons/SetupIconComposerIcon.cmake)
+        target_setup_iconcomposer_icon(MuseScoreStudio "${PROJECT_SOURCE_DIR}/share/icons/AppIcon/AppIcon.icon")
+
+        set_target_properties(MuseScoreStudio PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/macOS/Info.plist.in
+            XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER})
+    endif(IOS)
 endif (OS_IS_MAC)
 
 if (CC_IS_MINGW)
@@ -304,6 +341,14 @@ if (CC_IS_EMCC)
     target_link_options(MuseScoreStudio PRIVATE ${EXPORTED_FUNCTIONS})
 endif()
 
+# IOS_CONFIG_BUG
+if(IOS)
+    # This might be how to get frameworks in the link list.
+    find_library(IOKit_Framework NAMES IOKit)
+    find_library(CoreVideo NAMES CoreVideo)
+
+    target_link_libraries(MuseScoreStudio PRIVATE ${IOKit_Framework} ${CoreVideo})
+endif()
 
 ###########################################
 # INSTALL

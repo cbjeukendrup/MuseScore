@@ -22,7 +22,13 @@
 
 #include "macosappmenumodelhook.h"
 
+#include <TargetConditionals.h>
+
+#if TARGET_OS_IOS
+#include <Foundation/Foundation.h>
+#else
 #include <Cocoa/Cocoa.h>
+#endif
 
 using namespace mu::appshell;
 

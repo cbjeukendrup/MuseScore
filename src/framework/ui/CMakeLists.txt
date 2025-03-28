@@ -150,8 +150,14 @@ if (MUSE_QT_SUPPORT)
 endif()
 
 if (OS_IS_MAC)
-    find_library(AppKit NAMES AppKit)
-    target_link_libraries(muse_ui PRIVATE ${AppKit})
+    # IOS_CONFIG_BUG
+    if(IOS)
+        find_library(UIKit NAMES UIKit)
+        target_link_libraries(muse_ui PRIVATE ${UIKit})
+    else()
+        find_library(AppKit NAMES AppKit)
+        target_link_libraries(muse_ui PRIVATE ${AppKit})
+    endif()
 endif()
 
 if (MUSE_MODULE_UI_TESTS)

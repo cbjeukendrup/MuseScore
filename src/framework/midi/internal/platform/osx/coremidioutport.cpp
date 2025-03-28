@@ -21,7 +21,11 @@
  */
 #include "coremidioutport.h"
 
+#if TARGET_OS_IOS
+#include <CoreVideo/CVHostTime.h>
+#else
 #include <CoreAudio/HostTime.h>
+#endif
 #include <CoreServices/CoreServices.h>
 #include <CoreMIDI/CoreMIDI.h>
 
@@ -284,7 +288,11 @@ Ret CoreMidiOutPort::sendEvent(const Event& e)
     }
 
     OSStatus result = noErr;
+#if TARGET_OS_IOS
+    MIDITimeStamp timeStamp = CVGetCurrentHostTime();
+#else
     MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
+#endif
 
     // Note: there could be three cases: MIDI2+MIDIEventList, MIDI1+MIDIEventList, MIDI1+MIDIPacketList.
     //       But we only maintain 2 code paths and may drop configuration()->useMIDI20Output() and MIDIPacketList later.

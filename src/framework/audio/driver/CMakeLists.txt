@@ -82,17 +82,31 @@ elseif(OS_IS_LIN OR OS_IS_FBSD)
         target_link_libraries(muse_audio_driver PRIVATE ${JACK_LIBRARIES} pthread)
     endif()
 elseif(OS_IS_MAC)
-    target_sources(muse_audio_driver PRIVATE
-        platform/osx/osxaudiodriver.mm
-        platform/osx/osxaudiodriver.h
-    )
+    if (IOS)
+        target_sources(muse_audio_driver PRIVATE
+            platform/ios/iosaudiodriver.mm
+            platform/ios/iosaudiodriver.h
+        )
 
-    set_source_files_properties(
-        platform/osx/osxaudiodriver.mm
-        PROPERTIES
-        SKIP_UNITY_BUILD_INCLUSION ON
-        SKIP_PRECOMPILE_HEADERS ON
-    )
+        set_source_files_properties(
+            platform/ios/iosaudiodriver.mm
+            PROPERTIES
+            SKIP_UNITY_BUILD_INCLUSION ON
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    else()
+        target_sources(muse_audio_driver PRIVATE
+            platform/osx/osxaudiodriver.mm
+            platform/osx/osxaudiodriver.h
+        )
+
+        set_source_files_properties(
+            platform/osx/osxaudiodriver.mm
+            PROPERTIES
+            SKIP_UNITY_BUILD_INCLUSION ON
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    endif()
 
     find_library(AudioToolbox NAMES AudioToolbox)
     find_library(CoreAudio NAMES CoreAudio)

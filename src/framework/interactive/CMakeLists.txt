@@ -48,26 +48,30 @@ if (OS_IS_WASM)
         internal/platform/web/webinteractive.cpp
         internal/platform/web/webinteractive.h
     )
-else()
-    if (OS_IS_MAC)
-        target_sources(muse_interactive PRIVATE
-            internal/platform/macos/macosinteractivehelper.mm
-            internal/platform/macos/macosinteractivehelper.h
-        )
-        set_source_files_properties(
-            internal/platform/macos/macosinteractivehelper.mm
-            PROPERTIES
-            SKIP_UNITY_BUILD_INCLUSION ON
-            SKIP_PRECOMPILE_HEADERS ON
-        )
+elseif (OS_IS_MAC)
+    target_sources(muse_interactive PRIVATE
+        internal/platform/macos/macosinteractivehelper.mm
+        internal/platform/macos/macosinteractivehelper.h
+    )
+    set_source_files_properties(
+        internal/platform/macos/macosinteractivehelper.mm
+        PROPERTIES
+        SKIP_UNITY_BUILD_INCLUSION ON
+        SKIP_PRECOMPILE_HEADERS ON
+    )
+    # IOS_CONFIG_BUG
+    if(IOS)
+        find_library(UIKit NAMES UIKit)
+        target_link_libraries(muse_global PRIVATE ${UIKit})
+    else()
         find_library(AppKit NAMES AppKit)
-        target_link_libraries(muse_interactive PRIVATE ${AppKit})
-    elseif(OS_IS_WIN)
-        target_sources(muse_interactive PRIVATE
-            internal/platform/win/wininteractivehelper.cpp
-            internal/platform/win/wininteractivehelper.h
-        )
+        target_link_libraries(muse_global PRIVATE ${AppKit})
     endif()
+elseif(OS_IS_WIN)
+    target_sources(muse_interactive PRIVATE
+        internal/platform/win/wininteractivehelper.cpp
+        internal/platform/win/wininteractivehelper.h
+    )
 endif()
 
 if (MUSE_QT_SUPPORT)
