@@ -29,7 +29,7 @@
 #include "translation.h"
 #include "log.h"
 
-typedef AudioDeviceID OSXAudioDeviceID;
+typedef muse::audio::AudioDeviceID OSXAudioDeviceID;
 
 using namespace muse;
 using namespace muse::audio;

@@ -1753,7 +1753,7 @@ void SingleDraw::draw(const Harmony* item, Painter* painter)
     for (const TextSegment* ts : item->textList()) {
         Font f(ts->font());
         f.setPointSizeF(f.pointSizeF() * MScore::pixelRatio);
-#ifndef Q_OS_MACOS
+#if !(defined(Q_OS_MACOS) || defined(Q_OS_IOS))
         TextBase::drawTextWorkaround(painter, f, ts->pos(), ts->text());
 #else
         painter->setFont(f);

@@ -60,6 +60,11 @@ set(MODULE_SRC
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 if (OS_IS_MAC)
+
+# IOS_CONFIG_BUG
+if(IOS)
+    message(STATUS "Bypassing CARBON_LIBRARY for iOS.")
+else(IOS)
     find_library(CARBON_LIBRARY Carbon)
 
     set(MODULE_SRC ${MODULE_SRC}
@@ -77,6 +82,7 @@ if (OS_IS_MAC)
     set(MODULE_INCLUDE_PRIVATE
         ${CARBON_LIBRARY}
     )
+endif(IOS)
 endif(OS_IS_MAC)
 
 list(APPEND MODULE_LINK Qt::Gui Qt::Qml)
