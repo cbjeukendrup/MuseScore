@@ -834,7 +834,7 @@ void TextFragment::draw(Painter* p, const TextBase* t) const
 {
     Font f(font(t));
     f.setPointSizeF(f.pointSizeF() * MScore::pixelRatio);
-#ifndef Q_OS_MACOS
+#if !(defined(Q_OS_MACOS) || defined(Q_OS_IOS))
     TextBase::drawTextWorkaround(p, f, pos, text);
 #else
     p->setFont(f);

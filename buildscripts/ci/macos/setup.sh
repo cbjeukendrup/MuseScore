@@ -22,7 +22,9 @@ echo "Setup macOS build environment"
 
 trap 'echo Setup failed; exit 1' ERR
 
-export MACOSX_DEPLOYMENT_TARGET=10.15
+# IOS_CONFIG_BUG
+# This gets converted into IPHONEOS_DEPLOYMENT_TARGET, so this is iOS 12.0.
+export MACOSX_DEPLOYMENT_TARGET=12.0
 
 # Install build tools
 echo "Install build tools"
