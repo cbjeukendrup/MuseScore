@@ -54,7 +54,7 @@
 #include "view/projectpropertiesmodel.h"
 #include "view/audiogenerationsettingsmodel.h"
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #include "internal/platform/macos/macosrecentfilescontroller.h"
 #elif defined (Q_OS_WIN)
 #include "internal/platform/windows/windowsrecentfilescontroller.h"
@@ -87,7 +87,7 @@ void ProjectModule::registerExports()
     m_actionsController = std::make_shared<ProjectActionsController>(iocContext());
     m_projectAutoSaver = std::make_shared<ProjectAutoSaver>();
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     m_recentFilesController = std::make_shared<MacOSRecentFilesController>();
 #elif defined(Q_OS_WIN)
     m_recentFilesController = std::make_shared<WindowsRecentFilesController>();

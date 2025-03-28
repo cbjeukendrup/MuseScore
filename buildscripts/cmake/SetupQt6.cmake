@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if (OS_IS_WASM)
+if (OS_IS_WASM OR IOS)
     set(QT_IS_STATIC ON)
 endif()
 
@@ -54,10 +54,12 @@ set(QT_LIBRARIES
 )
 
 if(NOT OS_IS_WASM)
-
     list(APPEND qt_components NetworkAuth)
     list(APPEND QT_LIBRARIES Qt::NetworkAuth)
+endif()
 
+if (NOT IOS AND NOT OS_IS_WASM)
+    # print not available for iOS and Wasm, we might need it for PDF export someday
     list(APPEND qt_components PrintSupport)
     list(APPEND QT_LIBRARIES Qt::PrintSupport)
 endif()

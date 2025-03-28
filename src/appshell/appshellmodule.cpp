@@ -158,7 +158,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<CommonAudioApiConfigurationModel>("MuseScore.Preferences", 1, 0, "CommonAudioApiConfigurationModel");
     qmlRegisterType<BraillePreferencesModel>("MuseScore.Preferences", 1, 0, "BraillePreferencesModel");
 
-#if defined(Q_OS_MACOS)
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     qmlRegisterType<AppMenuModel>("MuseScore.AppShell", 1, 0, "PlatformAppMenuModel");
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
     qmlRegisterType<AppMenuModel>("MuseScore.AppShell", 1, 0, "PlatformAppMenuModel");
@@ -211,7 +211,7 @@ void AppShellModule::onAllInited(const IApplication::RunMode& mode)
     }
 
     //! NOTE: process QEvent::FileOpen as early as possible if it was postponed
-#ifdef Q_OS_MACOS
+#ifdef Q_OS_MACOS || defined(Q_OS_IOS)
     qApp->processEvents();
 #endif
 }

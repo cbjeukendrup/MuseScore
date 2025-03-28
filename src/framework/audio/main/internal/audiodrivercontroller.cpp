@@ -44,6 +44,10 @@
 #include "audio/driver/platform/osx/osxaudiodriver.h"
 #endif
 
+#ifdef Q_OS_IOS
+#include "audio/driver/platform/ios/iosaudiodriver.h"
+#endif
+
 #ifdef Q_OS_WASM
 #include "audio/driver/platform/web/webaudiodriver.h"
 #endif
@@ -89,6 +93,10 @@ void AudioDriverController::init()
 
 #ifdef Q_OS_MACOS
     m_audioDriver = std::shared_ptr<IAudioDriver>(new OSXAudioDriver());
+#endif
+
+#ifdef Q_OS_IOS
+    m_audioDriver = std::shared_ptr<IAudioDriver>(new IOSAudioDriver());
 #endif
 
 #ifdef Q_OS_WASM
