@@ -1549,7 +1549,9 @@ Architecture detection in GetPlatformInfo.cmake sees both architectures, and the
 \
 We might have gotten things linking with Qt in /src/app/CMakeLists.txt, because a statically linked app needs to be told to link to its sources specifically. Anyway, that added a few more things to the build, which ran into a problem not being able to find 
 \f1\fs22 global/internal/baseapplication.h
-\f0\fs24  while building a console app (?) so we added target_include_directories() to src/CMakeLists.txt. For whatever weird reason, we had to add a bunch of header dirs that we didn't need before - adding link libraries shouldn't be adding source, unless there's a depemdemcu analysis going on.\
+\f0\fs24  while building a console app (?) so we added target_include_directories() to src/CMakeLists.txt. For whatever weird reason, we had to add a bunch of header dirs that we didn't need before - adding link libraries shouldn't be adding source, unless there's a dependency analysis going on.\
+\
+Why it still wants to try to build and link for x86_64 is a mystery. Linking ignores hundreds of Qt .o files because they are all built for arm, then fails to build looking for a bunch of x86_64 Qt symbols.\
 \
 ====\
 \
