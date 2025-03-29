@@ -27,6 +27,24 @@ if (MUE_CONFIGURATION_IS_APPWEB)
     add_subdirectory(web/appjs)
 endif()
 
+# IOS_CONFIG_BUG
+if(IOS)
+	message(STATUS "CMAKE_CURRENT_LIST_DIR: ${CMAKE_CURRENT_LIST_DIR}")
+	target_include_directories(MuseScoreStudio PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+	target_include_directories(MuseScoreStudio PRIVATE ${CMAKE_CURRENT_LIST_DIR}/framework)
+    target_include_directories(MuseScoreStudio PRIVATE ${CMAKE_CURRENT_LIST_DIR}/framework/global)
+    target_include_directories(MuseScoreStudio PRIVATE ${PROJECT_SOURCE_DIR})
+	target_include_directories(MuseScoreStudio PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty)
+ 
+ 
+
+	# IOS_CONFIG_BUG
+	# Why in the world should we have to include this all of a sudden?
+	message(STATUS "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
+	target_include_directories(MuseScoreStudio PRIVATE ${PROJECT_BINARY_DIR})
+
+endif()
+
 # Modules
 if (MUE_BUILD_APPSHELL_MODULE)
 
@@ -46,6 +64,7 @@ add_subdirectory(commonscene)
 add_subdirectory(context)
 
 if (MUE_BUILD_CONVERTER_MODULE)
+	message(STATUS "**** Adding subdirectory converter.")
     add_subdirectory(converter)
 endif()
 
