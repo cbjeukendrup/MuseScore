@@ -101,7 +101,7 @@ void AppShellModule::onInit(const IApplication::RunMode&)
 void AppShellModule::onAllInited(const IApplication::RunMode&)
 {
     //! NOTE: process QEvent::FileOpen as early as possible if it was postponed
-#ifdef Q_OS_MACOS || defined(Q_OS_IOS)
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     qApp->processEvents();
 #endif
 }
