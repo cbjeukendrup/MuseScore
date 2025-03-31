@@ -22,7 +22,7 @@
 
 #include "runtime.h"
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_IOS)
 #include <pthread.h>
 #endif
 #if defined(Q_OS_FREEBSD)
