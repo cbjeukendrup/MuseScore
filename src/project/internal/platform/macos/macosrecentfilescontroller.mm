@@ -19,7 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifdef Q_OS_IOS
+
+#include <targetconditionals.h>
+
+#if defined(TARGET_OS_IPHONE)
 #include <UIKit/UIKit.h>
 #else
 #include <Cocoa/Cocoa.h>

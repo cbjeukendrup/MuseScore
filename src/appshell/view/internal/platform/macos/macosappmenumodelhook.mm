@@ -20,9 +20,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <targetconditionals.h>
+
 #include "macosappmenumodelhook.h"
 
-#ifdef Q_OS_IOS
+#if defined(TARGET_OS_IPHONE)
 #include <Foundation/Foundation.h>
 #else
 #include <Cocoa/Cocoa.h>
