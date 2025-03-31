@@ -25,7 +25,7 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 import Muse.Dock 1.0
-import Muse.Extensions 1.0
+//import Muse.Extensions 1.0
 import MuseScore.AppShell 1.0
 
 import MuseScore.NotationScene 1.0
@@ -158,7 +158,7 @@ DockPage {
             }
         },
 
-        DockToolBar {
+ /*       DockToolBar {
             id: extDockToolBar
 
             objectName: root.pageModel.extensionsToolBarName()
@@ -185,7 +185,7 @@ DockPage {
                 navigationPanel.order: 4
             }
         },
-
+*/
         DockToolBar {
             id: undoRedoToolBar
 
