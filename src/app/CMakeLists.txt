@@ -352,19 +352,26 @@ target_include_directories(MuseScoreStudio PRIVATE
 # IOS_CONFIG_BUG
 if(IOS)
 
-    target_link_libraries(MuseScoreStudio INTERFACE ${LINK_LIB} )
+    message(STATUS "Adding MuseScoreStudio target_link_libraries: ${LINK_LIB}")
+    target_link_libraries(MuseScoreStudio PUBLIC ${LINK_LIB} )
 
     # This might be how to get frameworks in the link list.
     find_library(IOKit_Framework NAMES IOKit)
     find_library(CoreVideo NAMES CoreVideo)
     set(MODULE_LINK ${MODULE_LINK} ${IOKit_Framework} ${CoreVideo})
-    target_link_libraries(MuseScoreStudio INTERFACE ${MODULE_LINK} )
+    message(STATUS "Adding MuseScoreStudio target_link_libraries: ${MODULE_LINK}")
+    target_link_libraries(MuseScoreStudio PUBLIC ${MODULE_LINK} )
     
     # This might be how to get the Qt pieces into a static app.
-    target_link_libraries(MuseScoreStudio INTERFACE ${QT_LIBRARIES})
-
+    message(STATUS "Adding MuseScoreStudio target_link_libraries: ${QT_LIBRARIES}")
+    target_link_libraries(MuseScoreStudio PUBLIC ${QT_LIBRARIES})
+    
     find_package(Qt6QmlImportScanner REQUIRED)
     qt_import_qml_plugins(MuseScoreStudio PATH_TO_SCAN ${CMAKE_SOURCE_DIR})
+    
+        # We need the ogg library, perhaps this will work:
+    #set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}/libogg.a")
+    #target_link_libraries(MuseScoreStudio PUBLIC ${LIBOGG_LIBRARY})
 
 elseif (NOT CC_IS_EMSCRIPTEN)
     target_link_libraries(MuseScoreStudio PRIVATE ${LINK_LIB} ${COVERAGE_LINK_FLAGS})

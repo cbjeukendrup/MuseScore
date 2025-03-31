@@ -216,4 +216,8 @@ macro(setup_module)
         PRIVATE ${MODULE_LINK} ${COVERAGE_FLAGS}
         PUBLIC ${MODULE_LINK_PUBLIC}
     )
+
+    message(STATUS "Module ${MODULE} target_link_libraries: ${MODULE_LINK}")
+    message(STATUS "Module ${MODULE} target_link_libraries public: ${MODULE_LINK_PUBLIC}")
+
 endmacro()
