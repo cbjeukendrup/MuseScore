@@ -95,8 +95,8 @@ string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")
 # The above applet gets run with the compiler being told which CPU to use, so it always
 # indicates that both x86_64 and aarm64 are available. The two run in parallel, so the
 # answer we get depends on a race condition. Since we're on an M1, we spike the CPU:
-#set(ARCH "aarch64")
-set(ARCH "x86_64")
+set(ARCH "aarch64")
+#set(ARCH "x86_64")
 
 message(STATUS "Detected CPU Architecture: ${ARCH}")
 
