@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import Muse.Extensions 1.0
+//import Muse.Extensions 1.0
 
 FocusScope {
     id: root
@@ -173,7 +173,7 @@ FocusScope {
         }
     }
 
-    ExtensionsListPanel {
+/*    ExtensionsListPanel {
         id: pluginsPage
 
         anchors.top: topLayout.bottom
@@ -190,4 +190,5 @@ FocusScope {
 
         navigationSection: navSec
     }
+ */
 }

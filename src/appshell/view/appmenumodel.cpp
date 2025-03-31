@@ -782,6 +782,10 @@ MenuItemList AppMenuModel::makeShowItems()
 MenuItemList AppMenuModel::makePluginsItems()
 {
     MenuItemList result;
+    
+    if (!extensionsProvider()) {
+        return result;
+    }
 
     KnownCategories categories = extensionsProvider()->knownCategories();
     ManifestList enabledExtensions = extensionsProvider()->manifestList(Filter::Enabled);
