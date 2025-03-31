@@ -27,7 +27,7 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 import Muse.Dock
-import Muse.Extensions
+// import Muse.Extensions
 import MuseScore.AppShell
 
 import MuseScore.NotationScene
@@ -163,7 +163,7 @@ DockPage {
             }
         },
 
-        DockToolBar {
+ /*       DockToolBar {
             id: extDockToolBar
 
             objectName: root.pageModel.extensionsToolBarName()
@@ -190,7 +190,7 @@ DockPage {
                 navigationPanel.order: 4
             }
         },
-
+*/
         DockToolBar {
             id: undoRedoToolBar
 
