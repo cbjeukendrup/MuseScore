@@ -388,6 +388,10 @@ RetVal<ConverterController::BatchJob> ConverterController::parseBatchJob(const m
 Ret ConverterController::convertByExtension(INotationWriterPtr writer, INotationPtr notation, const muse::io::path_t& out,
                                             const muse::UriQuery& extensionUri)
 {
+    if (!extensionsProvider()) {
+        return make_ret(Err::UnknownError);
+    }
+
     //! NOTE First we do the extension, it can modify the notation (score)
     Ret ret = extensionsProvider()->perform(extensionUri);
     if (!ret) {
