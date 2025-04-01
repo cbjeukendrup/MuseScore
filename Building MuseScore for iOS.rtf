@@ -1662,4 +1662,7 @@ AND WE HAVE UI!\
 \
 ...then a timer went off and sent an event which crashed us on the greeting screen, but WE HAVE UI!\
 \
+The comparator for std::sort in dockpageview.cpp is broken, an element is less than itself, which if course fails the comparator functional checks. Fixed the pathological case where the two are the same object, and we launch without crashing.\
+\
+\
 }
