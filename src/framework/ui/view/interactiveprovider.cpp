@@ -246,11 +246,15 @@ RetVal<Val> InteractiveProvider::open(const UriQuery& q)
         break;
     case ContainerType::Undefined: {
         //! NOTE Not found default, try extension
-        extensions::Manifest ext = extensionsProvider()->manifest(q.uri());
-        if (ext.isValid()) {
-            openedRet = openExtensionDialog(q);
-        } else {
+        if (!extensionsProvider()) {
             openedRet.ret = make_ret(Ret::Code::UnknownError);
+        } else {
+            extensions::Manifest ext = extensionsProvider()->manifest(q.uri());
+            if (ext.isValid()) {
+                openedRet = openExtensionDialog(q);
+            } else {
+                openedRet.ret = make_ret(Ret::Code::UnknownError);
+            }
         }
     }
     }
