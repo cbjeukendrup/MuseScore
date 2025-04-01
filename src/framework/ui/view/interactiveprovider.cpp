@@ -228,8 +228,7 @@ Promise<Val>::BodyResolveReject InteractiveProvider::openFunc(const UriQuery& q,
             break;
         case ContainerType::Undefined: {
             //! NOTE Not found default, try extension
-            extensions::Manifest ext = extensionsProvider()->manifest(q.uri());
-            if (ext.isValid()) {
+            if (extensionsProvider() && extensionsProvider()->manifest(q.uri()).isValid()) {
                 openedRet = openExtensionDialog(q, params);
             } else {
                 openedRet.ret = make_ret(Ret::Code::UnknownError);
