@@ -21,6 +21,7 @@
  */
 #include "audiobuffer.h"
 
+#include <algorithm>
 #include <iostream>
 
 #include "log.h"
@@ -146,20 +147,38 @@ void AudioBuffer::setSource(IAudioSourcePtr source)
 
 void AudioBuffer::setMinSamplesPerChannelToReserve(const samples_t samplesPerChannel)
 {
+#if TARGET_OS_IOS
+    IF_ASSERT_FAILED(samplesPerChannel > 0) {
+        return;
+    }
+
+    m_minSamplesToReserve = std::max(samplesPerChannel, (samples_t)DEFAULT_SIZE_PER_CHANNEL);
+#else
+
     IF_ASSERT_FAILED(samplesPerChannel > 0 && samplesPerChannel < DEFAULT_SIZE_PER_CHANNEL) {
         return;
     }
 
     m_minSamplesToReserve = samplesPerChannel * m_audioChannelsCount;
+#endif
 }
 
 void AudioBuffer::setRenderStep(const samples_t renderStep)
 {
+#if TARGET_OS_IOS
+    IF_ASSERT_FAILED(renderStep > 0) {
+        return;
+    }
+
+    m_renderStep = std::max(renderStep, (samples_t)DEFAULT_SIZE_PER_CHANNEL);
+#else
+
     IF_ASSERT_FAILED(renderStep > 0 && renderStep < DEFAULT_SIZE_PER_CHANNEL) {
         return;
     }
 
     m_renderStep = renderStep;
+#endif
 }
 
 void AudioBuffer::forward()
