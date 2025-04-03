@@ -1652,7 +1652,9 @@ The config step gave us this interesting tidbit, BTW:\
 \f1\fs22 Note: Qt Quick modules not built due to not finding the qtshadertools 'qsb' tool.\
 
 \f0\fs24 \
-Looks like the Qt .o files didn't get replaced, so we deleted the CMakeCache.txt from the build dir and reran the config and build, and ninja says there's no work to do. Great. The cpp file mod date is correct, but the .o is much older. And if you issue the build commands in the proper directory, you might actually get the build to work - we now are properly compiling qaccessiblecache_mac.mm. Fixed that and 
+Looks like the Qt .o files didn't get replaced, so we deleted the CMakeCache.txt from the build dir and reran the config and build, and ninja says there's no work to do. Great. The cpp file mod date is correct, but the .o is much older. \
+\
+Bonehead attack: if you issue the build commands in the proper directory, you might actually get the build to work - we now are properly compiling qaccessiblecache_mac.mm. Fixed that and 
 \f1\fs22 qcocoanativeinterface.mm
 \f0\fs24 .\
 \
@@ -1664,5 +1666,136 @@ AND WE HAVE UI!\
 \
 The comparator for std::sort in dockpageview.cpp is broken, an element is less than itself, which if course fails the comparator functional checks. Fixed the pathological case where the two are the same object, and we launch without crashing.\
 \
+The UI even seems to work for the most part. We get a freeze when we go to the Scores and hit New Score. \cf0 \strike \strikec0 \CocoaLigature1 Could be that we haven't set up for file I/O permissions and file types yet\cf4 \strike0\striked0 \CocoaLigature0  - no, this is properly set up. Hmm, can't turn them on because Xcode shows no "General" tab, and the internet doesn't really know why. -- but we figured it out, see below.\
 \
-}
+====\
+\
+So we needed to mod Qt to make this work. We haven't checked this in to a branch anywhere yet. Files modded in qt6_complete are:\
+\
+
+\f1\fs22 qtbase/cmake/FindWrapFreetype.cmake\
+qtbase/cmake/FindWrapHarfbuzz.cmake\
+qtbase/cmake/FindWrapOpenGL.cmake\
+qtbase/cmake/FindWrapPCRE2.cmake\
+qtbase/cmake/FindWrapPNG.cmake\
+qtbase/cmake/QtSetup.cmake 		<-- just a status message\
+qtbase/src/corelib/Qt6CoreMacros.cmake\
+qtbase/src/corelib/global/qglobal.cpp\
+qtbase/src/gui/accessible/qaccessible.cpp\
+qtbase/src/gui/platform/macos/qcocoanativeinterface.mm   <-- might not need this one\
+qtmultimedia/src/multimedia/platform/darwin/camera/avfcamerautility.mm\
+
+\f0\fs24 \
+====\
+\
+The General tab vanishes in the cmake-generated projects because cmake creates an xcodeproj with SDKROOT = iphonesimulator16.2, whereas it should be iphoneos. We tried it with a number of variations and it's pretty solid that 
+\f1 CMAKE_OSX_SYSROOT
+\f0  needs to be set to iphoneos. So our current build line to generate the xcodeproj should look like this:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1 cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf5 \cb19 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphoneos	<-- this may prevent Qt from building for the simulator\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 Changing 
+\f1 CMAKE_OSX_SYSROOT
+\f0  like this will break our changes to Qt6CoreMacros.cmake for the fonts as well as ignoring the actual in-use target architecture and OS. We will have to figure that out - the Qt libraries are built specifically for x86 simulator, arm simulator, or arm device. We need to build all three and somehow teach Xcode how to pick up the proper one. The problem is that Xcode can build for any of the three, while the cmake command that creates it can only be aware of one of them at a time. Hmm.\
+\
+Eventually we need to figure out how to set up all the stuff in the General tab from CMakeLists and friends. We zapped SDKROOT in the MS xcodeproj to avoid having to regenerate the project and everything in it, and it now has a General tab. Onward...\
+\
+Useful tidbit: for setting up info.plist keys from cmake, we can use CMAKE_ followed by INFOPLIST_KEY_ followed by the raw type of the plist item. Note that string values are raw as well (INFOPLIST_KEY_LSApplicationCategoryType takes "public.app-category.music" instead of "Music") .\
+\
+====\
+\
+Trying to get a real device going:\
+\
+We are at the stage where we can at least give this a shot and get a useful indication of whether a real device will be able to run MS or not. For now, we will use separate Xcodes for device vs. simulator because that is how cmake is set up. This is not a long-term solution, it's only to see if a real device will work at all.\
+\
+So we need to build Qt statically for a device. We will use the qt6_complete that we already build for the host and create a new build folder within it for the device.\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1 \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 cd ~/Code/qt6_complete\
+mkdir qt6-build-ios-device-arm\
+cd qt6-build-ios-device-arm\
+\
+../configure \\\
+-prefix /usr/local/bin \\\
+-c++std c++17 \\\
+-static \\\
+-static-runtime \\\
+-debug \\\
+-qt-host-path /Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DQT_BUILD_TESTS=OFF \\\
+-DQT_BUILD_EXAMPLES=OFF \\\
+-DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF \\\
+-sdk iphoneos \\\
+-appstore-compliant\kerning1\expnd0\expndtw0  \\\
+\expnd0\expndtw0\kerning0
+-- \\\
+-DCMAKE_OSX_ARCHITECTURES="arm64" \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_BUILD_TYPE=Debug \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_PREFIX_PATH=/Users/tom/Code/\cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase/cmake:/Users/tom/Code/\cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /macos/qtbase:/Users/tom/Code/\cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \
+cmake --build . --parallel 8\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+Change build_overrides.cmake to point at the 
+\f1 \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6-build-ios-device-arm
+\f0 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0  directory, then \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 cd \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /Users/tom/Code/qt6_complete/qt6-build-ios-device-arm/qtbase\
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 mv bin bin.hide\
+ln -s \cf5 \cb19 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /Users/tom/Code/qt6_complete/qt6-build/qtbase\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /bin\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 \
+build MS:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1 cd ~/Code/MuseScoreGit\
+cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build/qtbase \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf5 \cb19 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphoneos\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 \
+Open xcodeproj, add the ogg and vorbis libs, set the development team, and make sure you're building for the device (if the build fails at the fonts, then it's probably set for the simulator).\
+\
+We can build and install on Slate, but we fail an assertion that samplesPerChannel is out of range (it's >> 8192). Patched around it in audioBuffer.cpp for IOS only, not sure if the size is still too large to be practical. And it launches without crashing. Woot! We can even create a new score without hanging. But we switched to "Create from template" and then back to "Choose instruments" and blammo. ContinuousPanel::setNotation() was handed a null notation pointer - but this is clearly deliberate in the code, is there a protection mode on std::shared_ptr<> type? We are assigning a shared_ptr containing nullptr to a shared_ptr that has a control block pointer of 0 - so it wasn't properly constructed as a shared_ptr? Was it never allocated? How would that happen?}
