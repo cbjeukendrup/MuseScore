@@ -211,7 +211,7 @@ void AudioEngine::updateBufferConstraints()
     } else {
         minSamplesToReserve = std::max(m_readBufferSize, m_renderConsts.minSamplesToReserveInRealtime);
     }
-
+    
     m_buffer->setMinSamplesPerChannelToReserve(minSamplesToReserve);
     m_buffer->setRenderStep(minSamplesToReserve);
 }
