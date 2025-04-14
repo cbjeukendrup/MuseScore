@@ -82,7 +82,11 @@ elseif (IOS)
     endif()
 
     if (ARCH_IS_X86_64)
-        set(LIBSNDFILE_ARCHITECTURE "x86_64")
+        if (LIBSNDFILE_TARGET_OS MATCHES "iphoneos")
+            set(LIBSNDFILE_ARCHITECTURE "arm64")
+        else()
+            set(LIBSNDFILE_ARCHITECTURE "x86_64")
+        endif()
     elseif(ARCH_IS_AARCH64)
         set(LIBSNDFILE_ARCHITECTURE "arm64")
     else()
@@ -123,7 +127,7 @@ elseif (IOS)
     endif()
     
     # ...and find_library isn't working, either. It must think the paths are relative or something.
-    set(LIBSNDFILE_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}/libsndfile.a")
+    set(LIBSNDFILE_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libsndfile.a")
 
     if (LIBSNDFILE_LIBRARY AND LIBSNDFILE_INCLUDE_DIR)
         message(STATUS "Found libsndfile in ${LIBSNDFILE_LIBRARY_SEARCH_PATH}")
@@ -134,8 +138,8 @@ elseif (IOS)
     endif()
     
     # We need the ogg library, perhaps this will work:
-    #set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}/libogg.a")
-    #target_link_libraries(MuseScoreStudio PUBLIC ${LIBOGG_LIBRARY})
+#    set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libogg.a")
+#    target_link_libraries(MuseScoreStudio PRIVATE ${LIBOGG_LIBRARY})
 
 else()
     find_package(SndFile)
