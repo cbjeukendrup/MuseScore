@@ -14,8 +14,17 @@ set (MODULE_DEF
     ${FLUIDSYNTH_DEF}
     )
 
+# IOS_CONFIG_BUG
+# This appears to be the place where we link libsndfile.a into the app, way down in
+# third-party land. As a hack, add the ogg and vorbis libs here, since we have to do
+# the libsndfile.a build outside the Xcodebuild anyway.
+if (IOS)
+	set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libogg.a")
+	set(LIBVORBIS_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libvorbis.a")
+endif (IOS)
+
 set(MODULE_LINK
-    ${SNDFILE_LIB}
+    ${SNDFILE_LIB} ${LIBOGG_LIBRARY} ${LIBVORBIS_LIBRARY}
     )
 
 set(MODULE_USE_UNITY OFF)
