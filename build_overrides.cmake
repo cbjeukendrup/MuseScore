@@ -1,7 +1,30 @@
 # set(ENV{QTDIR} "$ENV{HOME}/Qt/6.2.4/ios")
 
 #set(ENV{QTDIR} "$ENV{HOME}/Code/qt6/ios/qtbase")
-set(ENV{QTDIR} "$ENV{HOME}/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase")
+
+#message(STATUS "SCRIPT_ARGS: ${SCRIPT_ARGS}")
+
+# Go through the script args to find CMAKE_OSX_SYSROOT:
+set(i "1")
+list(LENGTH SCRIPT_ARGS nargs)
+while(i LESS "${nargs}")
+    list(GET SCRIPT_ARGS "${i}" ARG)
+    
+    if (ARG MATCHES "CMAKE_OSX_SYSROOT")
+        
+        if(ARG MATCHES "iphoneos")
+            set(ENV{QTDIR} "$ENV{HOME}/Code/qt6_complete/qt6-build-ios-device-arm/qtbase")
+        elseif(ARG MATCHES "iphonesimulator")
+            set(ENV{QTDIR} "$ENV{HOME}/Code/qt6_complete/qt6-build-ios-simulator-arm/qtbase")
+        else()
+            message(FATAL_ERROR "Unknown CMAKE_OSX_SYSROOT: ${ARG}")
+        endif()
+
+        break()
+    endif()
+    math(EXPR i "${i} + 1") # next argument
+endwhile()
+
 #set(ENV{QTDIR} "$ENV{HOME}/Code/qt6_complete/qt6-build-ios-simulator-x86_64/qtbase")
 #set(ENV{QTDIR} "$ENV{HOME}/Code/qt6_complete/qtbase")
 
