@@ -47,6 +47,7 @@ struct IOSAudioDriver::Data {
 IOSAudioDriver::IOSAudioDriver()
     : m_data(nullptr)
 {
+#if IOS_AUDIO_IMPLEMENTED
     m_data = std::make_shared<Data>();
     m_data->audioQueue = nullptr;
 
@@ -54,6 +55,7 @@ IOSAudioDriver::IOSAudioDriver()
     updateDeviceMap();
 
     m_deviceId = DEFAULT_DEVICE_ID;
+#endif
 }
 
 IOSAudioDriver::~IOSAudioDriver()
@@ -168,6 +170,9 @@ bool IOSAudioDriver::open(const Spec& spec, Spec* activeSpec)
     }
 
     LOGI() << "Connected to " << outputDevice() << " with bufferSize " << bufferSizeOut << ", sampleRate " << spec.sampleRate;
+#else
+    *activeSpec = spec;     // Fake it, caller needs to know what we can actually do...
+    return false;           // ...but we can't actually do anything.
 #endif
     return true;
 }
@@ -183,7 +188,11 @@ void IOSAudioDriver::close()
 
 bool IOSAudioDriver::isOpened() const
 {
+#if IOS_AUDIO_IMPLEMENTED
     return m_data->audioQueue != nullptr;
+#else
+    return false;
+#endif
 }
 
 const IOSAudioDriver::Spec& IOSAudioDriver::activeSpec() const
@@ -196,6 +205,7 @@ AudioDeviceList IOSAudioDriver::availableOutputDevices() const
     std::lock_guard lock(m_devicesMutex);
 
     AudioDeviceList deviceList;
+#if IOS_AUDIO_IMPLEMENTED
     deviceList.push_back({ DEFAULT_DEVICE_ID, muse::trc("audio", "System default") });
 
     for (auto& device : m_outputDevices) {
@@ -205,7 +215,7 @@ AudioDeviceList IOSAudioDriver::availableOutputDevices() const
 
         deviceList.push_back(deviceInfo);
     }
-
+#endif
     return deviceList;
 }
 
@@ -318,6 +328,10 @@ unsigned int IOSAudioDriver::outputDeviceBufferSize() const
 
 bool IOSAudioDriver::setOutputDeviceBufferSize(unsigned int bufferSize)
 {
+#if !IOS_AUDIO_IMPLEMENTED
+    return false;
+#endif
+    
     if (m_data->format.samples == bufferSize) {
         return true;
     }
@@ -488,22 +502,29 @@ muse::audio::AudioDeviceID IOSAudioDriver::defaultDeviceId() const
 
     return QString::number(IOSDeviceId).toStdString();
 #else
-    return std::string("1");       // WAG for building
+    return std::string("-1");       // WAG for building
 #endif
 }
 
 UInt32 IOSAudioDriver::IOSDeviceId() const
 {
+#if IOS_AUDIO_IMPLEMENTED
     AudioDeviceID deviceId = outputDevice();
     if (deviceId == DEFAULT_DEVICE_ID) {
         deviceId = defaultDeviceId();
     }
 
     return QString::fromStdString(deviceId).toInt();
+#else
+    return -1;
+#endif
 }
 
 bool IOSAudioDriver::selectOutputDevice(const AudioDeviceID& deviceId /*, unsigned int bufferSize*/)
 {
+#if !IOS_AUDIO_IMPLEMENTED
+    return false;
+#endif
     if (m_deviceId == deviceId) {
         return true;
     }
