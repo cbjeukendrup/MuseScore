@@ -348,10 +348,6 @@ if(IOS)
     find_library(CoreVideo NAMES CoreVideo)
 
     target_link_libraries(MuseScoreStudio PRIVATE ${IOKit_Framework} ${CoreVideo})
-
-    # We need the ogg library, perhaps this will work:
-    #set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}/libogg.a")
-    #target_link_libraries(MuseScoreStudio PUBLIC ${LIBOGG_LIBRARY})
 endif()
 
 ###########################################
