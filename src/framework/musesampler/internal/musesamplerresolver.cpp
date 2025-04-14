@@ -85,6 +85,9 @@ InstrumentInfo findInstrument(MuseSamplerLibHandlerPtr libHandler, const AudioRe
 
 void MuseSamplerResolver::init()
 {
+    LOGD() << "Instrument library path: " << configuration()->userLibraryPath();
+    LOGD() << "Instrument library fallback path: " << configuration()->fallbackLibraryPath();
+
     if (doInit(configuration()->userLibraryPath())) {
         return;
     }
@@ -179,6 +182,8 @@ AudioResourceMetaList MuseSamplerResolver::resolveResources() const
             { u"museName", internalName },
             { u"museUID", String::fromStdString(std::to_string(instrumentId)) },
         };
+        
+        LOGD() << "Found instrument: " << internalName;
 
         result.push_back(std::move(meta));
     }
