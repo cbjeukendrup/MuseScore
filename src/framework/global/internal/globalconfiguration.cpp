@@ -71,8 +71,11 @@ QString GlobalConfiguration::resolveAppDataPath() const
 #ifdef Q_OS_WIN
     QDir dir(QCoreApplication::applicationDirPath() + QString("/../"));
     return dir.absolutePath() + "/";
-#elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MACOS)
     QDir dir(QCoreApplication::applicationDirPath() + QString("/../Resources"));
+    return dir.absolutePath() + "/";
+#elif defined(Q_OS_IOS)
+    QDir dir(QCoreApplication::applicationDirPath() + QString("/ResourcesiOS"));
     return dir.absolutePath() + "/";
 #elif defined(Q_OS_WASM)
     return "/files/share";
