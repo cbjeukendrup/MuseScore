@@ -369,9 +369,6 @@ if(IOS)
     find_package(Qt6QmlImportScanner REQUIRED)
     qt_import_qml_plugins(MuseScoreStudio PATH_TO_SCAN ${CMAKE_SOURCE_DIR})
     
-        # We need the ogg library, perhaps this will work:
-    #set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}/libogg.a")
-    #target_link_libraries(MuseScoreStudio PUBLIC ${LIBOGG_LIBRARY})
 
 elseif (NOT CC_IS_EMSCRIPTEN)
     target_link_libraries(MuseScoreStudio PRIVATE ${LINK_LIB} ${COVERAGE_LINK_FLAGS})
