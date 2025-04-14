@@ -205,6 +205,8 @@ AudioResourceMetaList MuseSamplerResolver::resolveResources() const
             { u"museUID", String::fromStdString(std::to_string(instrumentId)) },
         };
 
+        LOGD() << "Found instrument: " << internalName;
+
         if (isOnline) {
             meta.attributes.insert(std::make_pair(u"isOnline", String::number(1)));
         }
