@@ -321,6 +321,7 @@ void AudioModule::setupAudioDriver(const IApplication::RunMode& mode)
 
 void AudioModule::setupAudioWorker(const IAudioDriver::Spec& activeSpec)
 {
+#if !defined(Q_OS_IOS)
     worker::AudioEngine::RenderConstraints consts;
     consts.minSamplesToReserveWhenIdle = m_configuration->minSamplesToReserve(RenderMode::IdleMode);
     consts.minSamplesToReserveInRealtime = m_configuration->minSamplesToReserve(RenderMode::RealTimeMode);
@@ -363,4 +364,5 @@ void AudioModule::setupAudioWorker(const IAudioDriver::Spec& activeSpec)
 
     msecs_t interval = m_configuration->audioWorkerInterval(activeSpec.samples, activeSpec.sampleRate);
     m_audioThread->run(workerSetup, workerLoopBody, interval);
+#endif
 }
