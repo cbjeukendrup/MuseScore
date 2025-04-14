@@ -11,6 +11,15 @@ target_include_directories(fluidsynth PUBLIC ${FLUIDSYNTH_INC})
 
 target_compile_definitions(fluidsynth PUBLIC ${FLUIDSYNTH_DEF})
 
+# IOS_CONFIG_BUG
+# This appears to be the place where we link libsndfile.a into the app, way down in
+# third-party land. As a hack, add the ogg and vorbis libs here, since we have to do
+# the libsndfile.a build outside the Xcodebuild anyway.
+if (IOS)
+        set(LIBOGG_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libogg.a")
+        set(LIBVORBIS_LIBRARY "${LIBSNDFILE_LIBRARY_SEARCH_PATH}libvorbis.a")
+endif (IOS)
+
 if (NOT MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
     target_compile_definitions(fluidsynth PRIVATE EXTERN_VORBIS_SUPPORT)
 endif()
