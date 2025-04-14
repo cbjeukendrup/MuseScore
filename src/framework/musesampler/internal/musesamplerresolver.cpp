@@ -164,6 +164,8 @@ AudioResourceMetaList MuseSamplerResolver::resolveResources() const
             { u"museName", internalName },
             { u"museUID", String::fromStdString(std::to_string(instrumentId)) },
         };
+        
+        LOGD() << "Found instrument: " << internalName;
 
         result.push_back(std::move(meta));
     }
