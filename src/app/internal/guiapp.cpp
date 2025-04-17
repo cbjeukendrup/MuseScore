@@ -148,7 +148,11 @@ void GuiApp::setup()
     }
 
     if (m_splashScreen) {
+        #if defined(Q_OS_IOS)
+        m_splashScreen->showMaximized();
+        #else
         m_splashScreen->show();
+        #endif
     }
 #endif
 
