@@ -22,6 +22,8 @@ using namespace mu;
 using namespace mu::app;
 using namespace mu::appshell;
 
+class QGuiApplicationPrivate;
+
 GuiApp::GuiApp(const CmdOptions& options, const modularity::ContextPtr& ctx)
     : muse::BaseApplication(ctx), m_options(options)
 {
@@ -100,9 +102,14 @@ void GuiApp::perform()
             splashScreen = new SplashScreen(SplashScreen::Default);
         }
     }
-
+    
+    
     if (splashScreen) {
+#if defined(Q_OS_IOS)
+        splashScreen->showMaximized();
+#else
         splashScreen->show();
+#endif
     }
 #else
     struct SplashScreen {
