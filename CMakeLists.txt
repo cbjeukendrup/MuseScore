@@ -58,6 +58,8 @@ endfunction()
 # This works.
 if(IOS)
     message(STATUS "iOS build engaged, captain.")
+
+    set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
     
     dump_all_cmake_vars()
 
