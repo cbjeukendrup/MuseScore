@@ -10,7 +10,7 @@
 \f0\fs24 \cf0 Building MuseScore Studio for iOS simulator on Intel, starting from scratch:\
 \
 Sequoia 15.3.1\
-MacBook Air (Intel)\
+MacBook Air (Intel) or MacBook Pro (Intel)\
 Xcode 16.3 with command line tools and iOS 18.4 SDK\
 At least 100GB of space (yes, really)\
 \
@@ -18,21 +18,43 @@ At least 100GB of space (yes, really)\
 \
 Overview:\
 \
-Building the current (April 2025) development version of MuseScore Studio for iOS is tricky, but can be done. We have successfully built for the simulator on Apple Silicon and Intel Macs, as well as built for iOS devices on Apple Silicon Macs. Building for a device on an Intel Mac may be possible, we didn\'92t try.\
+Building a development version of MuseScore Studio for iOS is tricky, but can be done. This branch of MSS is way behind the current MSS dev build, but will be brought up to date once the build is more mature. We have successfully built for the simulator on Apple Silicon and Intel Macs, as well as built for iOS devices on Apple Silicon Macs. Building for a device on an Intel Mac may be possible, but we didn\'92t try.\
 \
 We start by building Qt 6.2.4 from source. Due to the way Qt building works, we build for the host Mac first, then do a build for the simulator, then a build for devices (if desired). There are modifications needed for Qt to make this work, we have a patcher script to do so. Someday we will get things set up with the Qt organization so a proper Qt 6.2.4 branch for MSS on iOS can be made public, but until then, a patch script will have to do. We also use the built host Mac tools, such as rcc, for the iOS side.\
 \
 The MuseScore Studio branch is at GitHub.com/tjpadula/MuseScore.git, the branch name is simply \'91iOS\'92. The cmake scripts perform a full configure build from the command line and creates an xcodeproj file. This can then be opened and use to build and run on the simulator (and similarly, a device).\
 \
-The following recipe builds for the simulator on an Intel Mac.\
+MSS depends on vorbis, ogg, and libsndfile. These have (for now) been pre-built and checked in to the iOS branch. They reside in ~/MuseScoreGit/ios_libs, and there are libs for x86_64 simulator, arm64 simulator, and arm64 devices, along with the needed headers. Someday we will build these properly from the MSS project.\
 \
-See the "Running MuseScore Studio on iOS" document for caveats and limitations of the app itself.\
+MSS also depends on the Mac Resources folder. For obscure reasons, we cannot use the name 'Resources' for an iOS build, so we have modified things to use 'ResourcesiOS'. The resources themselves live at ~/MuseScoreGit/ios_resources. Similarly, someday we will process these properly from the source, these came from a Mac build of the same version of MSS source we are using for iOS.\
+\
+The following recipe builds for the simulator on an Intel Mac. The minimum OS and tool versions are given above and below, we haven't tried anything older. We have also not tried building for a device on an Intel Mac. We create a directory at ~/Code and do everything within that. Build products are separate from source for both Qt and MSS.\
+\
+See the "Running MuseScore Studio on iOS" document for caveats and limitations of the app itself, as well as development needs.\
+\
+====\
+\
+Working with and developing MSS from here:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Keep in mind that these build stages can take a long time, as in many hours, if your Intel machine is behind the times. We have not had hardware access to modern (April 2025) Intel Macs for comparison, but if you have access to an Apple Silicon Mac, things will build much faster. The faster your SSD, the better.\
+\
+If you touch a single file in MSS and rebuild, it may take several minutes for the build to finish and launch in the simulator. The linking stage and writing of debug symbols takes the lion's share of this time. Setting breakpoints, however, typically does not require a re-link and is much faster to relaunch.\
+\
+If you need to rebuild Qt, you can generally just rebuild the iOS build and leave the Mac build as it is. OTOH, you can probably skip the command-line build of MSS and just let Xcode rebuild the app once Qt is rebuilt - though if you change any of the Qt externally visible headers, you will need to close Xcode and redo the command line MSS build. We have had mixed results with incremental builds, it seems cmake wants to build everything every time. \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+All the standard logging and Xcode debugging functions work. Breakpoints in MSS code work. One thing to note, though, is that while you can step in to Qt code and set breakpoints there, you cannot set breakpoints in Qt files that were not opened by stepping in the debugger from MSS code. We are working on figuring out how to make all of Qt visible to Xcode's debugger without this caveat.\
 \
 ====\
 \
 Tools:\
 \
-Install make 3.31.6 manually from https://cmake.org/files/v3.31/cmake-3.31.6-macos-universal.dmg, then do:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Cmake 3.31.6:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 We use cmake 3.31.6 (not 4.0.0, which is untested). Install it manually from https://cmake.org/files/v3.31/cmake-3.31.6-macos-universal.dmg, install and launch the app once, then do:\
 \
 \pard\pardeftab720\partightenfactor0
 
@@ -41,16 +63,17 @@ sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0 \cf0 \kerning1\expnd0\expndtw0 \
-Homebrew:\
+Homebrew 4.4.31:\
 \
 
 \f1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"\
-    echo >> /Users/tom/.zprofile\
-    echo 'eval "$(/usr/local/bin/brew shellenv)"' >> /Users/tom/.zprofile\
-    eval "$(/usr/local/bin/brew shellenv)"\
+\
+echo >> ~/.zprofile\
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile\
+eval "$(/usr/local/bin/brew shellenv)"\
 
 \f0 \
-Ninja:\
+Ninja 1.12.1:\
 \
 
 \f1 brew install ninja\
@@ -58,7 +81,7 @@ Ninja:\
 \f0 \
 ====\
 \
-Check out Qt from git: \
+Check out Qt from git. It is vital to switch the branch to 6.2.4 before initializing the repository, because trying to switch afterwards will result in build failures: \
 \
 
 \f1 mkdir -p ~/Code\
@@ -70,7 +93,7 @@ git switch 6.2.4\
 \
 \
 
-\f0 Check out the patcher for Qt and apply:\
+\f0 Check out the patcher for Qt and apply. You can inspect this to see what it will do, mostly it updates search paths but also cleans up a few things in the Qt code that won't build with C++17:\
 \
 
 \f1 cd ~/Code\
@@ -79,7 +102,7 @@ git clone https://github.com/tjpadula/patch_qt.git\
 \
 \
 
-\f0 Build Qt for Mac:\
+\f0 Build Qt for Mac, change the num of cores as appropriate for a parallel build on your machine:\
 \
 
 \f1 cd ~/Code/qt6_complete\
@@ -118,8 +141,8 @@ cd qt6-build-ios-simulator-x86_64\
 -static \\\
 -static-runtime \\\
 -debug \\\
--qt-host-path /Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
--DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+-qt-host-path ~/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+-DQT_HOST_PATH=~/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
 -DQT_BUILD_TESTS=OFF \\\
 -DQT_BUILD_EXAMPLES=OFF \\\
 -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF \\\
@@ -130,10 +153,10 @@ cd qt6-build-ios-simulator-x86_64\
 -DCMAKE_OSX_ARCHITECTURES="x86_64" \\\
 -DCMAKE_SYSTEM_NAME=iOS \\\
 -DCMAKE_BUILD_TYPE=Debug \\\
--DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+-DQT_HOST_PATH=~/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
-\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_PREFIX_PATH=/Users/tom/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
-\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase/cmake:/Users/tom/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_PREFIX_PATH=~/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase/cmake:~/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
 \CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase \cf2 \cb3 \expnd0\expndtw0\kerning0
 \CocoaLigature1 \
 \pard\pardeftab720\partightenfactor0
@@ -151,13 +174,13 @@ cmake --build . --parallel 4\
 \CocoaLigature1 ~/Code/qt6_complete/qt6-build-ios-simulator-x86_64/qtbase\
 \cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 mv bin bin.hide\
 ln -s \cf2 \cb3 \expnd0\expndtw0\kerning0
-\CocoaLigature1 /Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /bin\
+\CocoaLigature1 ~/Code/qt6_complete/qt6-build-mac-x86_64/qtbase\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /bin\
 popd\
 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 \cf0 \CocoaLigature1 \
 
-\f0 Check out MS from my branch:\
+\f0 Check out MSS from my branch, this is way behind the current MSS dev build:\
 \
 
 \f1 cd ~/Code\
@@ -175,7 +198,7 @@ Go to your Apple developer page and create a new iOS app identifier. In our case
 Then in MuseScoreGit/version.cmake, line 31, set up the MUSE_APP_GUI_IDENTIFIER to use your company name as above. Note that MUSE_APP_NAME_MACHINE_READABLE_COMPAT has a camelCased name: MuseScore, as opposed to musescore. This may not matter in the long run.\
 \
 \
-Build MS to generate the xcodeproj. Note the command to Xcode to force a processor architecture:\
+Build MSS to generate the xcodeproj. Note the command to Xcode to force a processor architecture:\
 
 \f1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
@@ -184,7 +207,7 @@ Build MS to generate the xcodeproj. Note the command to Xcode to force a process
 -DCMAKE_SYSTEM_NAME=iOS \\\
 -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
 -DMUSE_ENABLE_UNIT_TESTS=0 \\\
--DQT_HOST_PATH=/Users/tom/Code/qt6_complete/\cf2 \cb3 \expnd0\expndtw0\kerning0
+-DQT_HOST_PATH=~/Code/qt6_complete/\cf2 \cb3 \expnd0\expndtw0\kerning0
 \CocoaLigature1 qt6-build-mac-x86_64\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase \\\
 -DMUSE_MODULE_EXTENSIONS=OFF \\\
 -DMUSE_MODULE_AUDIO_IOS=1 \\\
@@ -204,9 +227,10 @@ Then:\
 	- open the xcodeproj in 
 \f1\fs22 \cf4 \CocoaLigature0 MuseScoreGit/builds/Mac-Qtqt6-build-ios-simulator-x86_64-qtbase-Xcode-Debug
 \f0\fs24 \cf0 \CocoaLigature1 \
-	- let it automatically create schemes\
+	- let it auto-create schemes (this may happen by itself)\
 	- set the target to "MuseScoreStudio",\
-	- set the developer team in "Signing and Capabilities"\
+	- set the MuseScoreStudio developer team in "Signing and Capabilities"\
+	- verify the Bundle Identifier is as expected\
 	- launch the simulator, open an iPad, and turn it to landscape\
 	- in Xcode, select the iPad as a build target\
 	- build and debug.}
