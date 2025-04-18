@@ -94,9 +94,24 @@ string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")
 # IOS_CONFIG_BUG
 # The above applet gets run with the compiler being told which CPU to use, so it always
 # indicates that both x86_64 and aarm64 are available. The two run in parallel, so the
-# answer we get depends on a race condition. Since we're on an M1, we spike the CPU:
-set(ARCH "aarch64")
-#set(ARCH "x86_64")
+# answer we get depends on a race condition.
+
+function(host_uname_machine var)
+    execute_process(COMMAND uname -m
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE ${var})
+    set(${var} ${${var}} PARENT_SCOPE)
+endfunction()
+
+host_uname_machine(UNAME_MACHINE)
+
+if (UNAME_MACHINE MATCHES "arm64")
+    set(ARCH "aarch64")
+elseif (UNAME_MACHINE MATCHES "x86_64")
+    set(ARCH "x86_64")
+else()
+    message (FATAL_ERROR "Unable to determine machine processor: ${UNAME_MACHINE}")
+endif()
 
 message(STATUS "Detected CPU Architecture: ${ARCH}")
 
