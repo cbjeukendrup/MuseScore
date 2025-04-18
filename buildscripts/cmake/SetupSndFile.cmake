@@ -95,7 +95,7 @@ elseif (IOS)
 
     # Include dir
     set (LIBSNDFILE_INCLUDE_DIR_SEARCH_PATH ${PROJECT_SOURCE_DIR}/ios_libs/include/)
-    message(STATUS "Libsndfile include dir path: ${LIBSNDFILE_INCLUDE_DIR_SEARCH_PATH}")
+    message(STATUS "LIBSNDFILE_INCLUDE_DIR_SEARCH_PATH: ${LIBSNDFILE_INCLUDE_DIR_SEARCH_PATH}")
     
     if(FALSE)
         find_path(LIBSNDFILE_INCLUDE_DIR
@@ -113,7 +113,7 @@ elseif (IOS)
 
     # Library
     set (LIBSNDFILE_LIBRARY_SEARCH_PATH ${PROJECT_SOURCE_DIR}/ios_libs/${LIBSNDFILE_TARGET_OS}/${LIBSNDFILE_ARCHITECTURE}/)
-    message(STATUS "Libsndfile library dir path: ${LIBSNDFILE_LIBRARY_SEARCH_PATH}")
+    message(STATUS "LIBSNDFILE_LIBRARY_SEARCH_PATH: ${LIBSNDFILE_LIBRARY_SEARCH_PATH}")
     
     if (FALSE)
         find_library(LIBSNDFILE_LIBRARY
