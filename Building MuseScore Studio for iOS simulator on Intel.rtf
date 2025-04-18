@@ -1,0 +1,212 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red0\green0\blue0;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgray\c0\c0;\csgray\c0;
+}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Building MuseScore Studio for iOS simulator on Intel, starting from scratch:\
+\
+Sequoia 15.3.1\
+MacBook Air (Intel)\
+Xcode 16.3 with command line tools and iOS 18.4 SDK\
+At least 100GB of space (yes, really)\
+\
+====\
+\
+Overview:\
+\
+Building the current (April 2025) development version of MuseScore Studio for iOS is tricky, but can be done. We have successfully built for the simulator on Apple Silicon and Intel Macs, as well as built for iOS devices on Apple Silicon Macs. Building for a device on an Intel Mac may be possible, we didn\'92t try.\
+\
+We start by building Qt 6.2.4 from source. Due to the way Qt building works, we build for the host Mac first, then do a build for the simulator, then a build for devices (if desired). There are modifications needed for Qt to make this work, we have a patcher script to do so. Someday we will get things set up with the Qt organization so a proper Qt 6.2.4 branch for MSS on iOS can be made public, but until then, a patch script will have to do. We also use the built host Mac tools, such as rcc, for the iOS side.\
+\
+The MuseScore Studio branch is at GitHub.com/tjpadula/MuseScore.git, the branch name is simply \'91iOS\'92. The cmake scripts perform a full configure build from the command line and creates an xcodeproj file. This can then be opened and use to build and run on the simulator (and similarly, a device).\
+\
+The following recipe builds for the simulator on an Intel Mac.\
+\
+See the "Running MuseScore Studio on iOS" document for caveats and limitations of the app itself.\
+\
+====\
+\
+Tools:\
+\
+Install make 3.31.6 manually from https://cmake.org/files/v3.31/cmake-3.31.6-macos-universal.dmg, then do:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1 \cf0 \expnd0\expndtw0\kerning0
+sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+Homebrew:\
+\
+
+\f1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"\
+    echo >> /Users/tom/.zprofile\
+    echo 'eval "$(/usr/local/bin/brew shellenv)"' >> /Users/tom/.zprofile\
+    eval "$(/usr/local/bin/brew shellenv)"\
+
+\f0 \
+Ninja:\
+\
+
+\f1 brew install ninja\
+
+\f0 \
+====\
+\
+Check out Qt from git: \
+\
+
+\f1 mkdir -p ~/Code\
+cd ~/Code\
+git clone git://code.qt.io/qt/qt5.git qt6_complete\
+cd qt6_complete\
+git switch 6.2.4\
+./init-repository\
+\
+\
+
+\f0 Check out the patcher for Qt and apply:\
+\
+
+\f1 cd ~/Code\
+git clone https://github.com/tjpadula/patch_qt.git\
+./patch_qt/patch_qt_6.2.4.sh ~/Code/qt6_complete\
+\
+\
+
+\f0 Build Qt for Mac:\
+\
+
+\f1 cd ~/Code/qt6_complete\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \expnd0\expndtw0\kerning0
+mkdir qt6-build-mac-x86_64\
+cd qt6-build-mac-x86_64\
+\
+../configure \\\
+-prefix /usr/local/bin \\\
+-c++std c++17 \\\
+\kerning1\expnd0\expndtw0 \CocoaLigature0 -Wno-dev\expnd0\expndtw0\kerning0
+\CocoaLigature1  \\\
+-debug \\\
+-- \\\
+-DCMAKE_OSX_ARCHITECTURES="x86_64"\
+\
+cmake --build . --parallel 4\
+sudo cmake --install .\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\
+
+\f0 Build Qt for iOS simulator:\
+
+\f1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \expnd0\expndtw0\kerning0
+cd ~/Code/qt6_complete\
+mkdir qt6-build-ios-simulator-x86_64\
+cd qt6-build-ios-simulator-x86_64\
+\
+../configure \\\
+-prefix /usr/local/bin \\\
+-c++std c++17 \\\
+-static \\\
+-static-runtime \\\
+-debug \\\
+-qt-host-path /Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+-DQT_BUILD_TESTS=OFF \\\
+-DQT_BUILD_EXAMPLES=OFF \\\
+-DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF \\\
+-sdk iphonesimulator \\\
+-appstore-compliant\kerning1\expnd0\expndtw0  \\\
+\expnd0\expndtw0\kerning0
+-- \\\
+-DCMAKE_OSX_ARCHITECTURES="x86_64" \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_BUILD_TYPE=Debug \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_PREFIX_PATH=/Users/tom/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase/cmake:/Users/tom/Code/\cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6_complete\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+cmake --build . --parallel 4\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \cb1 \kerning1\expnd0\expndtw0 \
+
+\f0 Use the bin from the Mac build on iOS, since the iOS doesn't generate these tools:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf4 \CocoaLigature0 pushd \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 ~/Code/qt6_complete/qt6-build-ios-simulator-x86_64/qtbase\
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 mv bin bin.hide\
+ln -s \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /Users/tom/Code/qt6_complete/qt6-build-mac-x86_64/qtbase\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /bin\
+popd\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \CocoaLigature1 \
+
+\f0 Check out MS from my branch:\
+\
+
+\f1 cd ~/Code\
+git clone https://github.com/tjpadula/MuseScore.git MuseScoreGit\
+cd MuseScoreGit\
+git switch iOS\
+git pull\
+\
+\
+
+\f0 Set up the bundle identifier, you will only need to do this once:\
+\
+Go to your Apple developer page and create a new iOS app identifier. In our case, this was com.Humble-Earth-Productions-Inc.MuseScore. Someday when MuseScore has an official bundle ID, we will use that, but for local builds this will work.\
+\
+Then in MuseScoreGit/version.cmake, line 31, set up the MUSE_APP_GUI_IDENTIFIER to use your company name as above. Note that MUSE_APP_NAME_MACHINE_READABLE_COMPAT has a camelCased name: MuseScore, as opposed to musescore. This may not matter in the long run.\
+\
+\
+Build MS to generate the xcodeproj. Note the command to Xcode to force a processor architecture:\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \CocoaLigature0 cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=/Users/tom/Code/qt6_complete/\cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qt6-build-mac-x86_64\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf2 \cb3 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+\pard\pardeftab720\partightenfactor0
+\cf2 \expnd0\expndtw0\kerning0
+-DCMAKE_OSX_ARCHITECTURES="x86_64" \\\
+-DCMAKE_XCODE_SCHEME_ENVIRONMENT="ARCHS=x86_64" \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphonesimulator\cf0 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0 \
+Then:\
+	- open the xcodeproj in 
+\f1\fs22 \cf4 \CocoaLigature0 MuseScoreGit/builds/Mac-Qtqt6-build-ios-simulator-x86_64-qtbase-Xcode-Debug
+\f0\fs24 \cf0 \CocoaLigature1 \
+	- let it automatically create schemes\
+	- set the target to "MuseScoreStudio",\
+	- set the developer team in "Signing and Capabilities"\
+	- launch the simulator, open an iPad, and turn it to landscape\
+	- in Xcode, select the iPad as a build target\
+	- build and debug.}
