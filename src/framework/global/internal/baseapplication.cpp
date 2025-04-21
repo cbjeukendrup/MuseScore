@@ -156,7 +156,7 @@ Qt::KeyboardModifiers BaseApplication::keyboardModifiers() const
 
 void BaseApplication::restart()
 {
-#if TARGET_OS_IOS
+#if defined(Q_OS_IOS)
     return;
 #else
 #ifndef NO_QT_SUPPORT
