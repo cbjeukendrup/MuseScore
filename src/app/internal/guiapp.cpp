@@ -102,7 +102,7 @@ void GuiApp::perform()
     }
 
     if (splashScreen) {
-#if defined(Q_OS_IOS)
+#ifdef Q_OS_IOS
         splashScreen->showMaximized();
 #else
         splashScreen->show();
