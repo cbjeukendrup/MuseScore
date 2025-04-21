@@ -260,7 +260,7 @@ bool MultiInstancesProvider::openNewAppInstance(const QStringList& args)
         return false;
     }
     
-#if TARGET_OS_IOS
+#if defined(Q_OS_IOS)
     LOGE() << __PRETTY_FUNCTION__ << " is not implemented for iOS, args: " << args;
     return false;
 #else

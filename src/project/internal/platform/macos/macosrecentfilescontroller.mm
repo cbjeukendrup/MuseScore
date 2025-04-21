@@ -22,7 +22,7 @@
 
 #include <targetconditionals.h>
 
-#if defined(TARGET_OS_IPHONE)
+#if TARGET_OS_IOS
 #include <UIKit/UIKit.h>
 #else
 #include <Cocoa/Cocoa.h>
