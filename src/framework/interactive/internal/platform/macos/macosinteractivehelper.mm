@@ -24,11 +24,9 @@
 #include <QUrl>
 #include <QStandardPaths>
 
-#include <TargetConditionals.h>
-
 // NSWorkspace does not exist on iOS, if we need these calls for regular app use,
 // we will come up with something equivalent. Until then, we're stubbing them out.
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
 #include <UIKit/UIKit.h>
 #else
 #include <Cocoa/Cocoa.h>
@@ -46,7 +44,7 @@ using namespace kors::logger;
 
 bool MacOSInteractiveHelper::revealInFinder(const io::path_t& filePath)
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     std::stringstream aStream;
     aStream << __PRETTY_FUNCTION__ << " is not implemented, trying to open filePath: " << filePath.c_str();
     LogMsg(std::string("Unimplemented"), aStream.str(), Color::Magenta);
@@ -60,7 +58,7 @@ bool MacOSInteractiveHelper::revealInFinder(const io::path_t& filePath)
 
 Ret MacOSInteractiveHelper::isAppExists(const std::string& appIdentifier)
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     std::stringstream aStream;
     aStream << __PRETTY_FUNCTION__ << " is not implemented, appIdentifier: " << appIdentifier;
     LogMsg(std::string("Unimplemented"), aStream.str(), Color::Magenta);
@@ -79,7 +77,7 @@ Ret MacOSInteractiveHelper::canOpenApp(const UriQuery& uri)
         return make_ret(Ret::Code::InternalError, std::string("Invalid UTF-8 string passed as URI"));
     }
 
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     std::stringstream aStream;
     aStream << __PRETTY_FUNCTION__ << " is not implemented, uri: " << uri.toString().c_str();
     return make_ret(Ret::Code::NotImplemented, aStream.str());
@@ -96,7 +94,7 @@ Ret MacOSInteractiveHelper::canOpenApp(const UriQuery& uri)
 
 async::Promise<Ret> MacOSInteractiveHelper::openApp(const UriQuery& uri)
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     return Promise<Ret>([uri](auto /*resolve*/, auto reject) {
         std::stringstream aStream;
         aStream << __PRETTY_FUNCTION__ << " is not implemented, uri: " << uri.toString();

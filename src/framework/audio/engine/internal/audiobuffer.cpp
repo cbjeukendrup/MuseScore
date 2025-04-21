@@ -147,7 +147,7 @@ void AudioBuffer::setSource(IAudioSourcePtr source)
 
 void AudioBuffer::setMinSamplesPerChannelToReserve(const samples_t samplesPerChannel)
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     IF_ASSERT_FAILED(samplesPerChannel > 0) {
         return;
     }
@@ -165,7 +165,7 @@ void AudioBuffer::setMinSamplesPerChannelToReserve(const samples_t samplesPerCha
 
 void AudioBuffer::setRenderStep(const samples_t renderStep)
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     IF_ASSERT_FAILED(renderStep > 0) {
         return;
     }

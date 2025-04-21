@@ -22,7 +22,7 @@
 #include "macosmainwindowbridge.h"
 
 // IOS_CONFIG_BUG
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
 #include <UIKit/UIKit.h>
 #else
 #include <Cocoa/Cocoa.h>
@@ -31,7 +31,7 @@
 
 using namespace muse::ui;
 
-#if !TARGET_OS_IOS
+#ifndef Q_OS_IOS
 static NSWindow* nsWindowForQWindow(QWindow* qWindow)
 {
     if (!qWindow) {
@@ -63,7 +63,7 @@ void MacOSMainWindowBridge::init()
 
 bool MacOSMainWindowBridge::fileModified() const
 {
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     // fixme: We will need to accurately report file modification.
     return false;
 #else
@@ -79,7 +79,7 @@ bool MacOSMainWindowBridge::fileModified() const
 
 void MacOSMainWindowBridge::setFileModified(bool modified)
 {
-#if !TARGET_OS_IOS
+#ifndef Q_OS_IOS
     NSWindow* nsWindow = nsWindowForQWindow(m_window);
     if (!nsWindow) {
         return;

@@ -218,7 +218,7 @@ void updateTableForLyrics(std::string table)
 
 std::string braille_translate(const char* table_name, std::string txt)
 {
-#if defined(Q_OS_IOS)
+#ifdef Q_OS_IOS
     // Avoid a crash deep in the braille compiler. This crashes on the iOS simulator on
     // a MacBook Pro 18,2 with M1Max CPU, 64 GB, Sequoia 15.4, Xcode 16.3.
     return std::string();

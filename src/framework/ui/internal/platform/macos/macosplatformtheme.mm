@@ -24,7 +24,7 @@
 #include "log.h"
 
 // IOS_CONFIG_BUG
-#if TARGET_OS_IPHONE
+#ifdef Q_OS_IOS
 #include <UIKit/UIKit.h>
 #else
 #include <Cocoa/Cocoa.h>
@@ -40,7 +40,7 @@ id<NSObject> darkModeObserverToken = nil;
 
 void MacOSPlatformTheme::startListening()
 {
-#if !TARGET_OS_IPHONE
+#ifndef Q_OS_IOS
     if (!darkModeObserverToken) {
         darkModeObserverToken = [[NSDistributedNotificationCenter defaultCenter]
                                  addObserverForName:@"AppleInterfaceThemeChangedNotification"
@@ -55,7 +55,7 @@ void MacOSPlatformTheme::startListening()
 
 void MacOSPlatformTheme::stopListening()
 {
-#if !TARGET_OS_IPHONE
+#ifndef Q_OS_IOS
     if (darkModeObserverToken) {
         [[NSDistributedNotificationCenter defaultCenter] removeObserver:darkModeObserverToken];
         darkModeObserverToken = nil;
@@ -77,7 +77,7 @@ bool MacOSPlatformTheme::isSystemThemeDark() const
 
 bool MacOSPlatformTheme::isGlobalMenuAvailable() const
 {
-#if TARGET_OS_IPHONE
+#ifdef Q_OS_IOS
     return false;
 #else
     return true;
@@ -91,7 +91,7 @@ Notification MacOSPlatformTheme::platformThemeChanged() const
 
 void MacOSPlatformTheme::applyPlatformStyleOnAppForTheme(const ThemeCode& themeCode)
 {
-#if !TARGET_OS_IPHONE
+#ifndef Q_OS_IOS
     // The system will turn these appearance names into their high contrast
     // counterparts automatically if system high contrast is enabled
     if (isDarkTheme(themeCode)) {
@@ -108,7 +108,7 @@ void MacOSPlatformTheme::applyPlatformStyleOnWindowForTheme(QWindow* window, con
         return;
     }
 
-#if !TARGET_OS_IPHONE
+#ifndef Q_OS_IOS
     QColor backgroundColor = QApplication::palette().window().color();
     NSView* nsView = (__bridge NSView*)reinterpret_cast<void*>(window->winId());
     NSWindow* nsWindow = [nsView window];
