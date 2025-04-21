@@ -23,7 +23,7 @@
 #include "macospopupviewclosecontroller.h"
 
 // IOS_CONFIG_BUG
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
 #include <UIKit/UIKit.h>
 #else
 #include <AppKit/NSEvent.h>
@@ -64,7 +64,7 @@ bool MacOSPopupViewCloseController::nativeEventFilter(const QByteArray& eventTyp
         return false;
     }
 
-#if !TARGET_OS_IOS
+#ifndef Q_OS_IOS
     NSEvent* event = static_cast<NSEvent*>(message);
     if ([event type] == NSEventTypeRightMouseDown || [event type] == NSEventTypeLeftMouseDown) {
         doFocusOut(QCursor::pos());
@@ -76,7 +76,7 @@ bool MacOSPopupViewCloseController::nativeEventFilter(const QByteArray& eventTyp
 
 void MacOSPopupViewCloseController::initWindowMinimizedObserver()
 {
-#if !TARGET_OS_IOS
+#ifndef Q_OS_IOS
     WId wid = parentItem()->window()->winId();
     NSView* nsView = (__bridge NSView*)reinterpret_cast<void*>(wid);
     NSWindow* nsWindow = [nsView window];
