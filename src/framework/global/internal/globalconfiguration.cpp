@@ -76,6 +76,7 @@ QString GlobalConfiguration::resolveAppDataPath() const
     return dir.absolutePath() + "/";
 #elif defined(Q_OS_IOS)
     QDir dir(QCoreApplication::applicationDirPath() + QString("/ResourcesiOS"));
+    LOGD() << "Loading iOS resources from: " << dir.absolutePath();
     return dir.absolutePath() + "/";
 #elif defined(Q_OS_WASM)
     return "/files/share";
@@ -122,6 +123,9 @@ io::path_t GlobalConfiguration::userBackupPath() const
 io::path_t GlobalConfiguration::userDataPath() const
 {
     static io::path_t p = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/" + QCoreApplication::applicationName();
+#if defined(Q_OS_IOS)
+    LOGD() << "Document directory: " << p;
+#endif
     return p;
 }
 
