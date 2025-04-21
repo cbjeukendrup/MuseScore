@@ -24,7 +24,7 @@
 
 #include "macosappmenumodelhook.h"
 
-#if defined(TARGET_OS_IPHONE)
+#if TARGET_OS_IOS
 #include <Foundation/Foundation.h>
 #else
 #include <Cocoa/Cocoa.h>
