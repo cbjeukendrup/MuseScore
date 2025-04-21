@@ -21,7 +21,7 @@
  */
 #include "coremidiinport.h"
 
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
 #include <CoreVideo/CVHostTime.h>
 #else
 #include <CoreAudio/HostTime.h>
