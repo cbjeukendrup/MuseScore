@@ -21,7 +21,7 @@
  */
 #include "coremidioutport.h"
 
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
 #include <CoreVideo/CVHostTime.h>
 #else
 #include <CoreAudio/HostTime.h>
@@ -288,7 +288,7 @@ Ret CoreMidiOutPort::sendEvent(const Event& e)
     }
 
     OSStatus result = noErr;
-#if TARGET_OS_IOS
+#ifdef Q_OS_IOS
     MIDITimeStamp timeStamp = CVGetCurrentHostTime();
 #else
     MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
