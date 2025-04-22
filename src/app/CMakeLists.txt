@@ -357,8 +357,9 @@ if(IOS)
 
     # This might be how to get frameworks in the link list.
     find_library(IOKit_Framework NAMES IOKit)
-    find_library(CoreVideo NAMES CoreVideo)
-    set(MODULE_LINK ${MODULE_LINK} ${IOKit_Framework} ${CoreVideo})
+    find_library(CoreVideo_Framework NAMES CoreVideo)
+    find_library(AVFAudio_Framework NAMES AVFAudio)
+    set(MODULE_LINK ${MODULE_LINK} ${IOKit_Framework} ${CoreVideo_Framework} ${AVFAudio_Framework})
     message(STATUS "Adding MuseScoreStudio target_link_libraries: ${MODULE_LINK}")
     target_link_libraries(MuseScoreStudio PUBLIC ${MODULE_LINK} )
     
