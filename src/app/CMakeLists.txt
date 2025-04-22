@@ -345,9 +345,10 @@ endif()
 if(IOS)
     # This might be how to get frameworks in the link list.
     find_library(IOKit_Framework NAMES IOKit)
-    find_library(CoreVideo NAMES CoreVideo)
+    find_library(CoreVideo_Framework NAMES CoreVideo)
+    find_library(AVFAudio_Framework NAMES AVFAudio)
 
-    target_link_libraries(MuseScoreStudio PRIVATE ${IOKit_Framework} ${CoreVideo})
+    target_link_libraries(MuseScoreStudio PRIVATE ${IOKit_Framework} ${CoreVideo_Framework} ${AVFAudio_Framework})
 endif()
 
 ###########################################
