@@ -33,6 +33,7 @@
 struct AudioTimeStamp;
 struct AudioQueueBuffer;
 struct OpaqueAudioQueue;
+struct AudioStreamPacketDescription;
 
 namespace muse::audio {
 class IOSAudioDriver : public IAudioDriver
@@ -76,6 +77,13 @@ public:
 
 private:
     static void OnFillBuffer(void* context, OpaqueAudioQueue* queue, AudioQueueBuffer* buffer);
+    static void NewBufferRequest(void * __nullable               context,
+                                 OpaqueAudioQueue *              inAQ,
+                                 AudioQueueBuffer*               buffer,
+                                 const AudioTimeStamp *          inStartTime,
+                                 UInt32                          inNumberPacketDescriptions,
+                                 const AudioStreamPacketDescription * __nullable inPacketDescs);
+
     static void logError(const std::string message, OSStatus error);
 
     void initDeviceMapListener();
