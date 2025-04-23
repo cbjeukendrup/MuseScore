@@ -25,15 +25,15 @@ Building a development version of MuseScore Studio for iOS is tricky, but can be
 \f1\fs22 \cf2 \CocoaLigature0 c0ce2e9
 \f0\fs24  on April 22, 2025\cf0 \CocoaLigature1 . We have successfully built for the simulator on Apple Silicon and Intel Macs, as well as built for iOS devices on Apple Silicon Macs. Building for a device on an Intel Mac may be possible, but we didn\'92t try.\
 \
+The following recipe builds for the simulator on either an Apple Silicon or an Intel Mac. Instructions for building for a device are forthcoming. The minimum OS and tool versions are given above and below, we haven't tried anything older. As stated above, we have also not tried building for a device on an Intel Mac. We create a directory at ~/Code and do everything within that. Build products are separate from source for both Qt and MSS.\
+\
 We start by building Qt 6.2.4 from source. Due to the way Qt building works, we build for the host Mac first, then do a build for the simulator, then a build for devices (if desired). There are modifications needed for Qt to make this work, we have a patcher script to do so. Someday we will get things set up with the Qt organization so a proper Qt 6.2.4 branch for MSS on iOS can be made public, but until then, a patch script will have to do. We also use the built host Mac tools, such as rcc, for the iOS side.\
 \
-The MuseScore Studio branch is at GitHub.com/tjpadula/MuseScore.git, the branch name is simply \'91iOS\'92. The cmake scripts perform a full configure build from the command line and creates an xcodeproj file. This can then be opened and use to build and run on the simulator (and similarly, a device).\
+The MuseScore Studio branch is at GitHub.com/tjpadula/MuseScore.git, the branch name is simply \'91iOS\'92. The cmake scripts perform a full configure build from the command line and create an xcodeproj file. This can then be opened and use to build and run on the simulator.\
 \
-MSS depends on vorbis, ogg, and libsndfile. These have (for now) been pre-built and checked in to the iOS branch. They reside in ~/MuseScoreGit/ios_libs, and there are libs for x86_64 simulator, arm64 simulator, and arm64 devices, along with the needed headers. Someday we will build these properly from the MSS project.\
+MSS depends on vorbis, ogg, and libsndfile. These have (for now) been pre-built and checked in to the iOS branch. They reside in ~/Code/MuseScoreGit/ios_libs, and there are libs for x86_64 simulator, arm64 simulator, and arm64 devices, along with the needed headers. Someday we will build these properly from the MSS project.\
 \
-MSS also depends on the Mac Resources folder. For obscure reasons, we cannot use the name 'Resources' for an iOS build, so we have modified things to use 'ResourcesiOS'. The resources themselves live at ~/MuseScoreGit/ios_resources. Similarly, someday we will process these properly from the source, these came from a Mac build of the same version of MSS source we are using for iOS.\
-\
-The following recipe builds for the simulator on either an Apple Silicon or an Intel Mac. The minimum OS and tool versions are given above and below, we haven't tried anything older. We have also not tried building for a device on an Intel Mac. We create a directory at ~/Code and do everything within that. Build products are separate from source for both Qt and MSS.\
+MSS also depends on the Mac Resources folder. For obscure reasons, we cannot use the name 'Resources' for an iOS build, so we have modified things to use 'ResourcesiOS'. The resources themselves live at ~/Code/MuseScoreGit/ios_resources. Similarly, someday we will process these properly from the source, these came from a Mac build of the same version of MSS source we are using for iOS.\
 \
 See the "General issues with running MuseScore Studio on iOS" document for caveats and limitations of the app itself, as well as development needs.\
 \
