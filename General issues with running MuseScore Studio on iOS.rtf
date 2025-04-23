@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c99971\c0;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\partightenfactor0
+
+\f0\b\fs24 \cf2 \cb3 General issues with running MuseScore Studio on iOS:
+\f1\b0 \
+\
+The good news: Our build of MSS for iOS launches and runs. \
+\
+It seems to use a modest amount of both CPU and memory when running and does not appear to leak any resources that would cause iOS to want to kill the app after a 12-hour test. The UI looks good, all the expected views appear to be there except for the menu bar. \
+\
+The app can even be built and run on an actual iOS device, in this case an iPad 13" running iOS 16. (Instructions for that build are forthcoming.)\
+\
+The bad news: the app has significant issues. Loads of them.\
+\
+The main one is that the app is expecting mouse clicks, not touches, and so frequently does not respond as expected. The other is that when new windows are opened or closed, frequently nothing happens until you hit the Home button then click on MSS to bring it forward again. This is likely similarly due to the app expecting a desktop window system rather than the single-fullscreen-window of iOS.\
+\
+The app cannot yet create a new document - that dialog will freeze. OTOH, the app can open documents from iCloud, and this is how we have sent test documents to it.\
+\
+====\
+\
+Some known issues:\
+\
+	
+\f0\b Crash/Freeze/Data loss:
+\f1\b0 \
+\
+The new document dialog leaves the app essentially hung because it\'92s not processing any touches (or doesn\'92t receive them in the first place).\
+Running on an iPhone usually results in the welcome buttons buttons being offscreen, there is no way to dismiss this dialog. User is stuck.\
+We can open the score palettes but tapping on one and trying to use it freezes the UI, the home button trick doesn\'92t help.\
+Tapping the gear menu then tapping the Input Pitch submenu causes a crash trying to delete a menu. There are other submenus that will crash in a similar way.\
+The audio subsystem initializes successfully but does not work. Anything that tries to use it will crash.\
+The score cannot be edited, as trying to do so tries to play the changes, which will crash.\
+\
+	
+\f0\b Feature failures (tries to work):
+\f1\b0 \
+\
+Native dialogs (new file, file open) aren\'92t shown properly, they require switching the app out and back using the Home button to appear and process taps.\
+Tapping on something that should close a native dialog similarly doesn\'92t appear to do anything, the home button trick gets it to go.\
+The app does not appear to be aware of the device screen size, it fails to make things fit.\
+Splash screen \strike \strikec2 doesn\'92t fit\strike0\striked0  and doesn\'92t stay visible as long as it should.\
+The footer percentage popup pops up but doesn\'92t take a tap for a change, it just closes.\
+Same for the Page View popup, though the (+) and (-) buttons work as they should.\
+The default toolbar is too wide in portrait orientation, it should be scrollable perhaps.\
+\'93Parts\'94 and \'93Mixer\'94 are a bit too tall and overdraw the bounding lines for the palettes below.\
+If there is one file open, another one will not be openable until the first is closed, though there are tabs for them.\
+The location in the Mac file system for files for the simulator is not the one the app uses, we need a way to determine that directly for testing.\
+On launch, the app will always think that the previous shutdown was unexpected due to the way iOS keeps apps running until it needs to kick them out of memory. We need to catch that and shut down cleanly.\
+The Mixer view is too short to show anything, even on a 13" iPad Pro.\
+Many dialogs will have a blank OK/default button (such as on the welcome dialogs), but it works.\
+\
+	
+\f0\b Does not work at all:
+\f1\b0 \
+\
+There is no menu bar and no way to access anything that requires it, including saving the document.\
+There are no plugins.\
+We have no tooltip mechanism.\
+We don\'92t redraw/resize when the device is rotated.\
+Dragging the cells in the palettes should allow rearrangement, but they don\'92t drag.\
+Footer objects spill over the right edge, blank areas on the left are too wide, even in landscape.\
+We cannot test SoundFonts until the Mixer view is accessible.\
+The braille library (liblouis) crashes on launch (memory or stack stomper), we disabled use of liblouis.\
+There is no real printing from iOS, we will need to create a PDF export of some sort.\
+\strike \strikec2 We don\'92t see documents in the app\'92s documents area, but we can see and open them in iCloud.\strike0\striked0 \
+\
+	
+\f0\b Major changes needed for iOS:
+\f1\b0 \
+\
+We need to completely rethink the user interaction model for iOS devices. \
+We will need to make layout files (Main.qml and friends) for iPhone and iPad devices, and set that up in guiapp.cpp.\
+App needs to respond to device rotation.\
+Shortcuts need to be replaced by gestures. Pinch gesture will probably be used almost everywhere. OTOH, if there is a (Bluetooth) keyboard attached to the device, the keystroke shortcuts should be respected.\
+We need to make the DevTools view fit, it is too wide.\
+Widget dialogs have no frame, and should they? Is it presuming a Mac window outline and shadow?\
+Do we want to support special input for the Apple Pencil? If so, the app still needs to be fully functional without it.\
+Any plugins that require running code (as opposed to executing a script) will need to be built in to the app, as iOS does not permit an app to load and execute code. \
+\
+The menu bar on the Mac includes things that aren\'92t accessible in iOS. As stated, we will need a full menu bar implementation for iOS. And it seems that the main window on iOS leaves room at the top, \strike \strikec2 perhaps it thinks there is a menu bar there because the app always has one on the desktop platforms?\strike0\striked0  No, this is where the view thinks it has the Mac window header. Hmm, maybe we can make use of the Linux or Windows on-the-window menu bar for iOS. This is in appmenumodel.cpp, and we can make an IOSPlatformTheme for things like indicating that there is no global menu bar.\
+\
+	MSS \'97> 	About MSS\
+			About Qt\'85\
+			Preferences\
+	File \'97>	New\
+			Open	\
+			Import PDF\'85\
+	View\
+	Add\
+	Format\
+	Tools\
+	Plugins\
+	Help\
+}
