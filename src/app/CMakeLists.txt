@@ -273,9 +273,72 @@ if (OS_IS_MAC)
             XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
             
             XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Development"
-            XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "V9R6W356UT"
+            XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "HUMBLE EARTH PRODUCTIONS INC"
             XCODE_ATTRIBUTE_CODE_SIGN_STYLE Automatic
             )
+
+        # XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "V9R6W356UT"
+
+        # Attempt to get cmake to create the Copy Bundle Resources build phase.
+        set(RESOURCES_IOS_PATH "${PROJECT_SOURCE_DIR}/ios_resources/ResourcesiOS")
+        target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH})
+
+        # This created a folder called ResourcesiOS and copied a ResourcesiOS folder into it, 
+        # so we have two levels.
+        #	set_source_files_properties(${RESOURCES_IOS_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION ResourcesiOS)
+
+        # This created a folder called RESOURCE and copied a ResourcesiOS folder into it. We still
+        # have two levels.
+        #	set_source_files_properties(${RESOURCES_IOS_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION RESOURCE)
+
+        # See if this copies the autobotscripts folder to ResourcesiOS at the top level. - IT DOES.
+        #	target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/autobotscripts)
+        #	set_source_files_properties("${RESOURCES_IOS_PATH}/autobotscripts" PROPERTIES MACOSX_PACKAGE_LOCATION ResourcesiOS)
+
+        # This failed because we're trying to assign a directory to RESOURCE, which can only take
+        # a file, and seemingly only a single file.
+        #set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}")
+
+        # See if this copies the app icon file to the top level. - IT DOES. We have an icon.
+        #	target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/AppIcon.icns)
+        #set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/AppIcon.icns")
+
+        file(GLOB RESOURCES_IOS_CONTENTS RELATIVE ${RESOURCES_IOS_PATH} ${RESOURCES_IOS_PATH}/*)
+
+        message(STATUS "RESOURCES_IOS_CONTENTS: ${RESOURCES_IOS_CONTENTS}")
+
+        foreach (RESOURCE_ITEM ${RESOURCES_IOS_CONTENTS})
+            if (RESOURCE_ITEM MATCHES "icns")
+                #target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/${RESOURCE_ITEM})
+                #set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/${RESOURCE_ITEM}")
+                #message(STATUS "Put item ${RESOURCE_ITEM} at top level.")
+            else()
+                target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/${RESOURCE_ITEM})
+                set_source_files_properties("${RESOURCES_IOS_PATH}/${RESOURCE_ITEM}" PROPERTIES MACOSX_PACKAGE_LOCATION ResourcesiOS)
+                message(STATUS "Put item ${RESOURCE_ITEM} into ResourcesiOS.")
+            endif()
+        endforeach()
+
+        # Why is it that only Mscz.icns is actually set to copy?
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/AppIcon.icns)
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/MscxIcon.icns)
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/MsczIcon.icns)
+        #    set_target_properties(MuseScoreStudio PROPERTIES
+        #            RESOURCE ${RESOURCES_IOS_PATH}/AppIcon.icns
+        #            RESOURCE ${RESOURCES_IOS_PATH}/MscxIcon.icns
+        #            RESOURCE ${RESOURCES_IOS_PATH}/MsczIcon.icns)
+                    
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/AppIcon.icns)
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/MscxIcon.icns)
+        #    target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/MsczIcon.icns)
+
+        #    set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/AppIcon.icns")
+        #    set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/MscxIcon.icns")
+        #    set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/MsczIcon.icns")
+
+        # Well if only one of them is going to work, let's make it the application icon.
+        target_sources(MuseScoreStudio PUBLIC ${RESOURCES_IOS_PATH}/AppIcon.icns)
+        set_target_properties(MuseScoreStudio PROPERTIES RESOURCE "${RESOURCES_IOS_PATH}/AppIcon.icns")
 
         if(PROJECT_VERSION)
             set_target_properties(MuseScoreStudio PROPERTIES
