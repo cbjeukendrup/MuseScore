@@ -53,6 +53,8 @@ if (MUE_BUILD_APPSHELL_MODULE)
 
 endif()
 
+# IOS_CONFIG_BUG
+# libloius has memory smasher issues.
 if (MUE_BUILD_BRAILLE_MODULE)
     add_subdirectory(braille)
 endif()
