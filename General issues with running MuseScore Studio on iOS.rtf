@@ -31,12 +31,13 @@ Some known issues:\
 \
 The new document dialog leaves the app essentially hung because it\'92s not processing any touches (or doesn\'92t receive them in the first place) - this may work OK on a real device, iPad Pro 12.9\'94 6th gen with iOS 16.4.\
 Running on an iPhone usually results in the welcome buttons being offscreen, there is no way to dismiss this dialog. User is stuck.\
-We can open the score palettes but tapping on one and trying to use it freezes the UI, the home button trick doesn\'92t help. - this may work OK on a real device.\
-The audio subsystem initializes successfully but does not work. Anything that tries to use it will crash.\
-The score cannot be edited, as trying to do so tries to play the changes, which will crash.\
 \
+Fixed:\
+\uc0\u8730  We can open the score palettes but tapping on one and trying to use it freezes the UI, the home button trick doesn\'92t help. - this may work OK on a real device.\\\
 \pard\tx593\pardeftab593\partightenfactor0
-\cf2 \uc0\u8730  Tapping the gear menu then tapping the Input Pitch submenu causes a crash trying to delete a menu. There are other submenus that will crash in a similar way, such as the Mixer view menu. \'97 submenus are fixed.\
+\cf2 \uc0\u8730  The score cannot be edited, as trying to do so tries to play the changes, which will crash.\
+\uc0\u8730  The audio subsystem initializes successfully but does not work. Anything that tries to use it will crash.\
+\uc0\u8730  Tapping the gear menu then tapping the Input Pitch submenu causes a crash trying to delete a menu. There are other submenus that will crash in a similar way, such as the Mixer view menu. \'97 submenus are fixed.\
 \pard\tx593\pardeftab593\partightenfactor0
 \cf2 \
 	
@@ -55,6 +56,7 @@ On launch, the app will always think that the previous shutdown was unexpected d
 The Mixer view is too short to show anything, even on a 13" iPad Pro.\
 Many dialogs will have a blank OK/default button (such as on the welcome dialogs), but it works.\
 \
+Fixed:\
 \pard\tx593\pardeftab593\partightenfactor0
 \cf2 \uc0\u8730  Native dialogs (new file, file open) aren\'92t shown properly, they require switching the app out and back using the Home button to appear and process taps. - works on a real device\
 \uc0\u8730  Tapping on something that should close a native dialog similarly doesn\'92t appear to do anything, the home button trick gets it to go. - works on a real device\
@@ -81,14 +83,16 @@ There is no real printing from iOS, we will need to create a PDF export of some 
 \f0\b Major changes needed for iOS:
 \f1\b0 \
 \
-We need to completely rethink the user interaction model for iOS devices. \
+We need to completely rethink the user interaction model for iOS devices. Fingers are huge for editing a score.\
 We will need to make layout files (Main.qml and friends) for iPhone and iPad devices, and set that up in guiapp.cpp.\
 App needs to respond to device rotation.\
 Shortcuts need to be replaced by gestures. Pinch gesture will probably be used almost everywhere. OTOH, if there is a (Bluetooth) keyboard attached to the device, the keystroke shortcuts should be respected.\
 We need to make the DevTools view fit, it is too wide.\
 Widget dialogs have no frame, and should they? Is it presuming a Mac window outline and shadow?\
 Do we want to support special input for the Apple Pencil? If so, the app still needs to be fully functional without it.\
-Any plugins that require running code (as opposed to executing a script) will need to be built in to the app, as iOS does not permit an app to load and execute code. \
+\
+Fixed:\
+\uc0\u8730  Any plugins that require running code (as opposed to executing a script) will need to be built in to the app, as iOS does not permit an app to load and execute code. We may be OK on this one, we don\'92t host any audio processing plugins (such as VST) which require running native code.\
 \
 The menu bar on the Mac includes things that aren\'92t accessible in iOS. As stated, we will need a full menu bar implementation for iOS. And it seems that the main window on iOS leaves room at the top, \strike \strikec2 perhaps it thinks there is a menu bar there because the app always has one on the desktop platforms?\strike0\striked0  No, this is where the view thinks it has the Mac window header. Hmm, maybe we can make use of the Linux or Windows on-the-window menu bar for iOS. This is in appmenumodel.cpp, and we can make an IOSPlatformTheme for things like indicating that there is no global menu bar.\
 \
