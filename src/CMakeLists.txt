@@ -22,6 +22,9 @@
 add_subdirectory(framework)
 
 # Modules must be listed in dependency order
+
+# IOS_CONFIG_BUG
+# libloius has memory smasher issues.
 if (MUE_BUILD_BRAILLE_MODULE)
     add_subdirectory(braille)
 else()
