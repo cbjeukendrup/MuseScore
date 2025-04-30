@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2639
+{\rtf1\ansi\ansicpg1252\cocoartf2822
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 .AppleSystemUIFontMonospaced-Regular;
 \f3\fnil\fcharset0 Menlo-Bold;\f4\fmodern\fcharset0 Courier;}
 {\colortbl;\red255\green255\blue255;\red24\green26\blue30;\red244\green246\blue249;\red0\green0\blue0;
@@ -15,7 +15,7 @@
 \csgenericrgb\c81498\c74939\c41233;\csgenericrgb\c39147\c22031\c12446;\csgenericrgb\c10981\c27276\c28869;\csgenericrgb\c98912\c41558\c36568;\cssrgb\c0\c1\c1;
 \cssrgb\c100000\c100000\c99971\c0;\cssrgb\c97255\c97647\c98039;\csgenericrgb\c36526\c42188\c47515;\csgenericrgb\c0\c0\c0;\cssrgb\c95294\c95686\c96078;
 \csgenericrgb\c5882\c40784\c62745;\csgenericrgb\c99131\c56076\c24611;}
-\margl1440\margr1440\vieww15680\viewh15880\viewkind0
+\margl1440\margr1440\vieww14340\viewh15880\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 Looking at building MS for iOS:\
@@ -471,9 +471,8 @@ We are using IOS_CONFIG_BUG to indicate where we needed to make changes to the b
 \f1 \cf9 # FIXME: Make this work with cross-builds\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf9 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
-\f0 \cf9 We walled off a number of packages:\
+\f0 We walled off a number of packages:\
 \
 Qt6CoreTools in Qt6CoreDependencies.cmake\
 Qt6WidgetsTools in Qt6WidgetsDependencies.cmake\
@@ -487,9 +486,8 @@ package
 ...and EGL is already commented out in .../src/app/CmakeLists.txt. -- this wasn't the problem.\
 \
 Turned off MUE_RUN_LRELEASE in the main CMakeLists.txt\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
-\f1 \cf9 \
+\f1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
 \fs22 \cf4 \cb1 \CocoaLigature0 Could not find a package configuration file\
@@ -546,8 +544,9 @@ Need to set up the IPHONEOS_DEPLOYMENT_TARGET properly, it's set up for Mac in S
 \f3\b\fs22 \cf18 \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
 \cf18 Showing Recent Issues\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li240\fi-240\pardirnatural\partightenfactor0
 
-\f1\b0 Run script build phase 'Generate src/engraving/CMakeFiles/big_resources_fonts_Petaluma' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked.\
+\f1\b0 \cf18 Run script build phase 'Generate src/engraving/CMakeFiles/big_resources_fonts_Petaluma' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked.\
 \
 PhaseScriptExecution Generate\\ src/engraving/qrc_fonts_Petalumatmp.cpp /Users/tom/Code/MuseScore-iOS/builds/Mac-Qt6.2.4-ios-Xcode-RelWithDebInfo/build/MuseScore.build/Debug-iphonesimulator/big_resources_fonts_Petaluma.build/Script-F952DDBD126D84D490199DB7.sh (in target 'big_resources_fonts_Petaluma' from project 'MuseScore')\
     cd /Users/tom/Code/MuseScore-iOS\
@@ -653,7 +652,7 @@ So we will probably need to add the last four to the ./init-repository modules l
 Examining the xcodeproj for the Mac side, since we link with a bunch of Qt frameworks, this means we aren't building Qt from xcode (or anywhere else, it seems) and are just linking. We did a build-from-git for Qt 6.2.4 for Mac (and iOS). If we can work out how to make the xcodeproj for Mac link with our built-from-git Qt, that might give us some hints on what we need to do for iOS. Still not sure how the font tools (and other tools) would work, perhaps the iOS xcodeproj needs to depend on a built target in the Mac xcodeproj.\
 \
 Turned off \cf4 \cb1 \CocoaLigature0 AUTORCC, AUTOMOC, and AUTOUICand turned the tools back off in \cf9 \cb8 \CocoaLigature1 Qt6CoreDependencies.cmake\cf4 \cb1 \CocoaLigature0  so we can get the xcodeproj to be created. Found a hint in the Mac side: Qt6::rcc is a placeholder for 
-\f1 \cf16 \cb17 \CocoaLigature1 /Users/tom/Qt/\cf20 \cb17 6.2.4\cf16 \cb17 /macos/libexec/rcc
+\f1 \cf16 \cb17 \CocoaLigature1 /Users/tom/Qt/\cf20 6.2.4\cf16 /macos/libexec/rcc
 \f0 \cf4 \cb1 \CocoaLigature0  and so somewhere in the build scripts, we need to set that up. It may be AUTORCC that does it, or AUTORCC may just use it. 
 \f1\fs22 IMPORTED_LOCATION
 \f0\fs24  is supposed to specify where the _qt_imported_location is, but it doesn't work.\cf9 \cb8 \CocoaLigature1 \
@@ -1665,7 +1664,7 @@ Bonehead attack: if you issue the build commands in the proper directory, you mi
 \
 Wait - since we were building the wrong thing, let's clear the ios stuff we added to CMakeCache.txt.\
 \
-AND WE HAVE UI!\
+AND WE HAVE UI! (April 1, 2025 - yes, really)\
 \
 ...then a timer went off and sent an event which crashed us on the greeting screen, but WE HAVE UI!\
 \
@@ -1990,4 +1989,71 @@ cmake -P build.cmake \\\
 \f0\fs22 \cf4 \cb1 \CocoaLigature0  to the build line. And -D
 \f1\fs24 \cf31 \cb17 \CocoaLigature1 MUSE_MODULE_MULTIINSTANCES
 \f0\fs22 \cf4 \cb1 \CocoaLigature0 =OFF\
+\
+Building for simulator on Apple Silicon: \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1\fs24 \cf0 \CocoaLigature1 cd ~/Code/MuseScoreGit\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \CocoaLigature0 cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=~/Code/qt6_complete/qt6-build-mac-arm64/qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf5 \cb19 -DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx2820\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 -D\CocoaLigature1 MUSE_MODULE_MUSESAMPLER_ENABLE_DEBUG=ON\CocoaLigature0  \\\
+-D\CocoaLigature1 MUSE_MODULE_MULTIINSTANCES\CocoaLigature0 =OFF \\\
+-DMUE_BUILD_BRAILLE_MODULE=OFF \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf5 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+-DPLATFORM=ARM64 \\\
+-D\cf9 \cb8 CMAKE_OSX_ARCHITECTURES=\cf5 "arm64" \\\cb19 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \expnd0\expndtw0\kerning0
+-DCMAKE_XCODE_SCHEME_ENVIRONMENT="ARCHS=arm64" \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphonesimulator\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx2820\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0 And for device, though the 
+\f1 \cf5 \cb19 DMUE_BUILD_BRAILLE_MODULE
+\f0 \cf4 \cb1  flag doesn\'92t seem to work. And that doesn\'92t matter because the braille stub used when braille is disabled doesn\'92t get included in the build. What a PITA:\
+
+\fs22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs24 cd ~/Code/MuseScoreGit\
+cmake -P build.cmake \\\
+-G Xcode \\\
+-DCMAKE_SYSTEM_NAME=iOS \\\
+-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH \\\
+-DMUSE_ENABLE_UNIT_TESTS=0 \\\
+-DQT_HOST_PATH=~/Code/qt6_complete/qt6-build-mac-arm64/qtbase \\\
+-DMUSE_MODULE_EXTENSIONS=OFF \\\
+-DMUSE_MODULE_AUDIO_IOS=1 \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx2820\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \cb19 -D\CocoaLigature1 MUSE_MODULE_MUSESAMPLER_ENABLE_DEBUG=ON\CocoaLigature0  \\\
+-D\CocoaLigature1 MUSE_MODULE_MULTIINSTANCES\CocoaLigature0 =OFF \\\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf5 \CocoaLigature1 -DCMAKE_BUILD_TYPE=Debug \\\
+-DPLATFORM=ARM64 \\\
+-D\cf9 \cb8 CMAKE_OSX_ARCHITECTURES=\cf5 "arm64" \\\cb19 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \expnd0\expndtw0\kerning0
+-DCMAKE_XCODE_SCHEME_ENVIRONMENT="ARCHS=arm64" \\\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf4 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -DCMAKE_OSX_SYSROOT=iphoneos\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx2820\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \
+====\
+\
+We fixed the submenu crash by forcing popup menus to be selected. This prevents the main menu from closing as the submenu is shown, which would leave the submenu parentless. That would cause Qt to delete it, even though it is still on screen, and boom.\
 }

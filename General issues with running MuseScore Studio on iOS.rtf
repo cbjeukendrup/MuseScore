@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2639
+{\rtf1\ansi\ansicpg1252\cocoartf2822
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
 {\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c99971\c0;}
@@ -29,19 +29,20 @@ Some known issues:\
 \f0\b Crash/Freeze/Data loss:
 \f1\b0 \
 \
-The new document dialog leaves the app essentially hung because it\'92s not processing any touches (or doesn\'92t receive them in the first place).\
-Running on an iPhone usually results in the welcome buttons buttons being offscreen, there is no way to dismiss this dialog. User is stuck.\
-We can open the score palettes but tapping on one and trying to use it freezes the UI, the home button trick doesn\'92t help.\
-Tapping the gear menu then tapping the Input Pitch submenu causes a crash trying to delete a menu. There are other submenus that will crash in a similar way.\
+The new document dialog leaves the app essentially hung because it\'92s not processing any touches (or doesn\'92t receive them in the first place) - this may work OK on a real device, iPad Pro 12.9\'94 6th gen with iOS 16.4.\
+Running on an iPhone usually results in the welcome buttons being offscreen, there is no way to dismiss this dialog. User is stuck.\
+We can open the score palettes but tapping on one and trying to use it freezes the UI, the home button trick doesn\'92t help. - this may work OK on a real device.\
 The audio subsystem initializes successfully but does not work. Anything that tries to use it will crash.\
 The score cannot be edited, as trying to do so tries to play the changes, which will crash.\
 \
+\pard\tx593\pardeftab593\partightenfactor0
+\cf2 \uc0\u8730  Tapping the gear menu then tapping the Input Pitch submenu causes a crash trying to delete a menu. There are other submenus that will crash in a similar way, such as the Mixer view menu. \'97 submenus are fixed.\
+\pard\tx593\pardeftab593\partightenfactor0
+\cf2 \
 	
 \f0\b Feature failures (tries to work):
 \f1\b0 \
 \
-Native dialogs (new file, file open) aren\'92t shown properly, they require switching the app out and back using the Home button to appear and process taps.\
-Tapping on something that should close a native dialog similarly doesn\'92t appear to do anything, the home button trick gets it to go.\
 The app does not appear to be aware of the device screen size, it fails to make things fit.\
 Splash screen \strike \strikec2 doesn\'92t fit\strike0\striked0  and doesn\'92t stay visible as long as it should.\
 The footer percentage popup pops up but doesn\'92t take a tap for a change, it just closes.\
@@ -54,6 +55,11 @@ On launch, the app will always think that the previous shutdown was unexpected d
 The Mixer view is too short to show anything, even on a 13" iPad Pro.\
 Many dialogs will have a blank OK/default button (such as on the welcome dialogs), but it works.\
 \
+\pard\tx593\pardeftab593\partightenfactor0
+\cf2 \uc0\u8730  Native dialogs (new file, file open) aren\'92t shown properly, they require switching the app out and back using the Home button to appear and process taps. - works on a real device\
+\uc0\u8730  Tapping on something that should close a native dialog similarly doesn\'92t appear to do anything, the home button trick gets it to go. - works on a real device\
+\pard\tx593\pardeftab593\partightenfactor0
+\cf2 \
 	
 \f0\b Does not work at all:
 \f1\b0 \
@@ -67,6 +73,8 @@ Footer objects spill over the right edge, blank areas on the left are too wide, 
 We cannot test SoundFonts until the Mixer view is accessible.\
 The braille library (liblouis) crashes on launch (memory or stack stomper), we disabled use of liblouis.\
 There is no real printing from iOS, we will need to create a PDF export of some sort.\
+\
+\uc0\u8730  There is no app icon.\
 \strike \strikec2 We don\'92t see documents in the app\'92s documents area, but we can see and open them in iCloud.\strike0\striked0 \
 \
 	
