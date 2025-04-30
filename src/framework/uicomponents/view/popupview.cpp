@@ -183,7 +183,11 @@ void PopupView::initCloseController()
 
     m_closeController->setParentItem(parentItem());
     m_closeController->setWindow(window());
+#if defined (Q_OS_IOS)
+    m_closeController->setPopupHasFocus(true);
+#else
     m_closeController->setPopupHasFocus(!(m_openPolicies & OpenPolicy::NoActivateFocus));
+#endif
     m_closeController->setIsCloseOnPressOutsideParent(m_closePolicies & ClosePolicy::CloseOnPressOutsideParent);
 
     m_closeController->closeNotification().onNotify(this, [this]() {
