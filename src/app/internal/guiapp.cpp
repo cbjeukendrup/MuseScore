@@ -191,8 +191,10 @@ void GuiApp::perform()
 
 #ifdef MUE_CONFIGURATION_IS_APPWEB
     const QString mainQmlFile = "/Main.qml";
-#elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+#elif defined(Q_OS_MACOS)
     const QString mainQmlFile = "/platform/mac/Main.qml";
+#elif defined(Q_OS_IOS)
+    const QString mainQmlFile = "/platform/ios/Main.qml";
 #elif defined(Q_OS_WIN)
     const QString mainQmlFile = "/platform/win/Main.qml";
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)

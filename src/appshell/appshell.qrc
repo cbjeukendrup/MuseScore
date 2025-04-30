@@ -70,6 +70,7 @@
         <file>qml/AppWindow.qml</file>
         <file>qml/WindowContent.qml</file>
         <file>qml/platform/linux/Main.qml</file>
+        <file>qml/platform/ios/Main.qml</file>
         <file>qml/platform/mac/Main.qml</file>
         <file>qml/platform/win/Main.qml</file>
         <file>resources/win_opengl_buglist.json</file>
