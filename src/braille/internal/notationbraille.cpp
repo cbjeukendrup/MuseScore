@@ -46,6 +46,9 @@ using namespace mu::notation;
 namespace mu::engraving {
 void NotationBraille::init()
 {
+    // We are turning this off here because the braille stub does not build
+    // at all, not even when MUE_BUILD_BRAILLE_MODULE is OFF, for iOS.
+#if !defined(Q_OS_IOS)
     setEnabled(brailleConfiguration()->braillePanelEnabled());
     setCurrentItemPosition(-1, -1);
 
@@ -106,6 +109,7 @@ void NotationBraille::init()
             }, Mode::SetReplace);
         }
     }, Mode::SetReplace);
+#endif
 }
 
 void NotationBraille::updateTableForLyricsFromPreferences()
@@ -241,10 +245,12 @@ ValCh<std::string> NotationBraille::cursorColor() const
 
 void NotationBraille::setEnabled(bool enabled)
 {
+#if !defined(Q_OS_IOS)
     if (enabled == m_enabled.val) {
         return;
     }
     m_enabled.set(enabled);
+#endif
 }
 
 void NotationBraille::setIntervalDirection(const BrailleIntervalDirection direction)
