@@ -390,8 +390,10 @@ muse::modularity::ContextPtr GuiApp::setupNewContext(const StringList& args)
 #endif
 
     // Load main window
-#if defined(Q_OS_APPLE)
+#if defined(Q_OS_MACOS)
     QString platform = "mac";
+#elif defined(Q_OS_IOS)
+    QString platform = "ios";
 #elif defined(Q_OS_WIN)
     QString platform = "win";
 #else
