@@ -165,20 +165,11 @@ void AudioBuffer::setMinSamplesPerChannelToReserve(const samples_t samplesPerCha
 
 void AudioBuffer::setRenderStep(const samples_t renderStep)
 {
-#ifdef Q_OS_IOS
-    IF_ASSERT_FAILED(renderStep > 0) {
-        return;
-    }
-
-    m_renderStep = std::max(renderStep, (samples_t)DEFAULT_SIZE_PER_CHANNEL);
-#else
-
     IF_ASSERT_FAILED(renderStep > 0 && renderStep < DEFAULT_SIZE_PER_CHANNEL) {
         return;
     }
 
     m_renderStep = renderStep;
-#endif
 }
 
 void AudioBuffer::forward()
