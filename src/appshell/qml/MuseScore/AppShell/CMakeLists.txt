@@ -110,10 +110,17 @@ qt_add_qml_module(appshell_qml
 )
 
 if (OS_IS_MAC)
-    qt_target_qml_sources(appshell_qml 
-        QML_FILES
-            platform/mac/Main.qml
-    )
+    if (IOS)
+        qt_target_qml_sources(appshell_qml
+            QML_FILES
+                platform/ios/Main.qml
+        )
+    else()
+        qt_target_qml_sources(appshell_qml
+            QML_FILES
+                platform/mac/Main.qml
+        )
+    endif()
 elseif(OS_IS_WIN)
     qt_target_qml_sources(appshell_qml 
         QML_FILES
@@ -130,7 +137,7 @@ else()
     message(FATAL_ERROR "Unsupported OS")
 endif()
 
-if (NOT OS_IS_MAC)
+if (NOT OS_IS_MACOS) # We do want it for iOS, since iOS doesn't have a global menu bar
     target_sources(appshell_qml PRIVATE
         navigableappmenumodel.cpp
         navigableappmenumodel.h
