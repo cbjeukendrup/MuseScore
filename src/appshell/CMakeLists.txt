@@ -138,7 +138,9 @@ if (OS_IS_WIN)
     set(MODULE_LINK ${MODULE_LINK} dwmapi)
 endif(OS_IS_WIN)
 
-if (NOT OS_IS_MAC)
+# Note this is MacOS, we want this class for iOS since it does not have a
+# system menu bar.
+if (NOT OS_IS_MACOS)
     set(MODULE_SRC ${MODULE_SRC}
         ${CMAKE_CURRENT_LIST_DIR}/view/navigableappmenumodel.cpp
         ${CMAKE_CURRENT_LIST_DIR}/view/navigableappmenumodel.h
