@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# IOS_CONFIG_BUG
 if (NOT MUE_BUILD_BRAILLE_MODULE)
     add_subdirectory(braille)
 endif()
