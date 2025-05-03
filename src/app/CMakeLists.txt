@@ -403,8 +403,8 @@ if(IOS)
     message(STATUS "Adding MuseScoreStudio target_link_libraries: ${QT_LIBRARIES}")
     target_link_libraries(MuseScoreStudio PUBLIC ${QT_LIBRARIES})
     
-    find_package(Qt6QmlImportScanner REQUIRED)
-    qt_import_qml_plugins(MuseScoreStudio PATH_TO_SCAN ${CMAKE_SOURCE_DIR})
+    # find_package(Qt6QmlImportScanner REQUIRED)
+    # qt_import_qml_plugins(MuseScoreStudio PATH_TO_SCAN ${CMAKE_SOURCE_DIR})
     
 
 elseif (NOT CC_IS_EMSCRIPTEN)
