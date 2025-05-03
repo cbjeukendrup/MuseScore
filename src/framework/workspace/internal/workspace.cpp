@@ -82,7 +82,9 @@ RetVal<QByteArray> Workspace::rawData(const DataKey& key) const
 {
     TRACEFUNC;
 
-    IF_ASSERT_FAILED(m_file->isLoaded()) {
+    // IOS_CONFIG_BUG
+    // TODO: make sure `share/workspaces/Default.mws` is "installed"
+    IF_FAILED(m_file->isLoaded()) {
         return RetVal<QByteArray>(make_ret(Err::NotLoaded));
     }
 
