@@ -224,12 +224,12 @@ set(MODULE_SRC
     ${STYLEDIALOG_SRC}
     )
 
-if (NOT OS_IS_WASM)
-    set(MODULE_SRC ${MODULE_SRC}
+if (NOT OS_IS_WASM AND NOT IOS)
+    list(APPEND MODULE_SRC
         ${CMAKE_CURRENT_LIST_DIR}/internal/engravingfontscontroller.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/engravingfontscontroller.h
     )
-    set(MODULE_DEF ${MODULE_DEF} -DMUE_BUILD_ENGRAVING_FONTSCONTROLLER)
+    list(APPEND MODULE_DEF -DMUE_BUILD_ENGRAVING_FONTSCONTROLLER)
 endif()
 
 set(MODULE_LINK
