@@ -35,7 +35,10 @@
 #include "internal/positionswriter.h"
 #include "internal/mscnotationwriter.h"
 #include "internal/instrumentsrepository.h"
+
+#ifndef MUE_BUILD_ENGRAVING_FONTSCONTROLLER
 #include "internal/engravingfontscontroller.h"
+#endif
 
 #include "view/notationpaintview.h"
 #include "view/notationswitchlistmodel.h"
