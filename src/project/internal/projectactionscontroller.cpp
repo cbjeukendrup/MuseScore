@@ -207,6 +207,8 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
 
 Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, const QString& displayNameOverride)
 {
+    LOGI() << "Try open project: path = " << givenPath.toQString() << ", displayNameOverride = " << displayNameOverride;
+
     //! NOTE This method is synchronous,
     //! but inside `multiInstancesProvider` there can be an event loop
     //! to wait for the responses from other instances, accordingly,
@@ -228,6 +230,8 @@ Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, con
         // We assume that a valid path has been specified to this method
         return make_ret(Ret::Code::UnknownError);
     }
+
+    LOGI() << "actualPath = " << actualPath.toQString();
 
     //! Step 2. If the project is already open in the current window, then just switch to showing the notation
     if (isProjectOpened(actualPath)) {
@@ -256,8 +260,10 @@ Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, con
 
     //! Step 5. If it's a cloud project, download the latest version
     if (configuration()->isCloudProject(actualPath) && !configuration()->isLegacyCloudProject(actualPath)) {
+        LOGI() << __LINE__ << "Cloud project";
         bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();
         if (isCloudAvailable) {
+            LOGI() << __LINE__ << "Cloud available";
             downloadAndOpenCloudProject(configuration()->cloudScoreIdFromPath(actualPath));
             return make_ret(Ret::Code::Ok);
         }
@@ -343,6 +349,8 @@ Ret ProjectActionsController::doOpenProject(const muse::io::path_t& filePath)
 
 Ret ProjectActionsController::doOpenCloudProject(const muse::io::path_t& filePath, const CloudProjectInfo& info, bool isOwner)
 {
+    LOGI() << __LINE__ << " filePath = " << filePath.toQString()
+           << ", isOwner = " << isOwner;
     RetVal<INotationProjectPtr> rv = loadProject(filePath);
     if (!rv.ret) {
         return rv.ret;
@@ -420,6 +428,10 @@ Ret ProjectActionsController::doFinishOpenProject()
 
 void ProjectActionsController::downloadAndOpenCloudProject(int scoreId, const QString& hash, const QString& secret, bool isOwner)
 {
+    LOGI() << __LINE__ << " scoreId = " << scoreId
+           << ", hash = " << hash
+           << ", secret = ***"// << secret
+           << ", isOwner = " << isOwner;
     if (m_isProjectDownloading) {
         return;
     }
@@ -442,6 +454,7 @@ void ProjectActionsController::downloadAndOpenCloudProject(int scoreId, const QS
     std::string dialogText = muse::trc("project/save", "Log in or create a free account on MuseScore.com to open this score.");
     Ret ret = museScoreComService()->authorization()->ensureAuthorization(false, dialogText).ret;
     if (!ret) {
+        LOGI() << __LINE__ << " " << ret.toString();
         return;
     }
 
@@ -476,6 +489,7 @@ void ProjectActionsController::downloadAndOpenCloudProject(int scoreId, const QS
     // TODO(cloud): conflict checking (don't recklessly overwrite the existing file)
     QFile* projectData = new QFile(localPath.toQString());
     if (!projectData->open(QIODevice::WriteOnly)) {
+        LOGE() << __LINE__ << "Error opening file for writing: " << localPath.toQString();
         openSaveProjectScenario()->showCloudOpenError(make_ret(Err::FileOpenError));
 
         delete projectData;
@@ -494,7 +508,7 @@ void ProjectActionsController::downloadAndOpenCloudProject(int scoreId, const QS
         m_isProjectDownloading = false;
 
         if (!res.ret) {
-            LOGE() << res.ret.toString();
+            LOGE() << __LINE__ << " " << res.ret.toString();
             openSaveProjectScenario()->showCloudOpenError(res.ret);
             return;
         }
@@ -517,6 +531,7 @@ Ret ProjectActionsController::openMuseScoreUrl(const QUrl& url)
 
 Ret ProjectActionsController::openScoreFromMuseScoreCom(const QUrl& url)
 {
+    LOGI() << __LINE__ << " url: " << url.toString();
     //! NOTE See explanation in `openProject(const muse::io::path_t& _path, const QString& displayNameOverride)`
     if (m_isProjectProcessing || m_isProjectDownloading) {
         // TODO: instead of ignoring the open request, queue it?
@@ -532,6 +547,7 @@ Ret ProjectActionsController::openScoreFromMuseScoreCom(const QUrl& url)
     bool ok = false;
     int scoreId = url.fileName().toInt(&ok);
     if (!ok || scoreId <= 0) {
+        LOGE() << __LINE__ << " Invalid score id in URL: " << url.toString();
         return make_ret(Err::MalformedOpenScoreUrl);
     }
 
@@ -539,6 +555,7 @@ Ret ProjectActionsController::openScoreFromMuseScoreCom(const QUrl& url)
     std::string dialogText = muse::trc("project/save", "Log in or create a free account on MuseScore.com to open this score.");
     Ret ret = museScoreComService()->authorization()->ensureAuthorization(false, dialogText).ret;
     if (!ret) {
+        LOGI() << __LINE__ << " " << ret.toString();
         return ret;
     }
 
@@ -551,6 +568,8 @@ Ret ProjectActionsController::openScoreFromMuseScoreCom(const QUrl& url)
         return scoreInfo.ret;
     }
 
+    LOGI() << __LINE__ << " QString::number(scoreInfo.val.owner.id): " << QString::number(scoreInfo.val.owner.id)
+           << ", accountInfo().val.id: " << museScoreComService()->authorization()->accountInfo().val.id;
     bool isOwner = QString::number(scoreInfo.val.owner.id) == museScoreComService()->authorization()->accountInfo().val.id;
 
     // If yes, score will be opened as regular cloud score; check if not yet opened

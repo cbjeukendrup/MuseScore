@@ -370,10 +370,12 @@ Ret MuseScoreComService::doDownloadScore(network::INetworkManagerPtr downloadMan
 
     RetVal<QUrl> downloadUrl = prepareUrlForRequest(baseDownloadUrl, params);
     if (!downloadUrl.ret) {
+        LOGI() << __LINE__ << "Prepare score URL error:" << downloadUrl.ret.toString();
         return downloadUrl.ret;
     }
 
     Ret ret = downloadManager->get(downloadUrl.val, &scoreData, headers());
+    LOGI() << __LINE__ << "Download score ret:" << ret.toString();
 
     return uploadingDownloadingRetFromRawRet(ret);
 }

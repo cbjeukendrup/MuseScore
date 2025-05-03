@@ -238,13 +238,14 @@ void NetworkManager::prepareReplyReceive(QNetworkReply* reply, IncomingDevice* i
 
 void NetworkManager::prepareReplyTransmit(QNetworkReply* reply)
 {
-    connect(reply, &QNetworkReply::uploadProgress, [this](const qint64 curr, const qint64 total) {
+    connect(reply, &QNetworkReply::uploadProgress, this, [this](const qint64 curr, const qint64 total) {
         m_progress.progress(curr, total, "");
     });
 }
 
 Ret NetworkManager::waitForReplyFinished(QNetworkReply* reply, int timeoutMs)
 {
+    LOGI() << __LINE__;
     QTimer timeoutTimer;
     timeoutTimer.setSingleShot(true);
     m_isAborted = false;
@@ -273,10 +274,12 @@ Ret NetworkManager::waitForReplyFinished(QNetworkReply* reply, int timeoutMs)
     m_reply = nullptr;
 
     if (isTimeout) {
+        LOGI() << __LINE__ << " timeout";
         return make_ret(Err::Timeout);
     }
 
     if (isAborted()) {
+        LOGI() << __LINE__ << " aborted";
         return make_ret(Err::Abort);
     }
 
@@ -286,6 +289,7 @@ Ret NetworkManager::waitForReplyFinished(QNetworkReply* reply, int timeoutMs)
 Ret NetworkManager::errorFromReply(const QNetworkReply* reply) const
 {
     if (!reply) {
+        LOGE() << "Error: reply is null";
         return make_ret(Err::NetworkError);
     }
 
@@ -300,7 +304,10 @@ Ret NetworkManager::errorFromReply(const QNetworkReply* reply) const
         ret.setText(errorString.toStdString());
     }
 
+    LOGI() << __LINE__ << " error: " << reply->error() << " errorString: " << errorString;
+
     QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    LOGI() << status;
     if (status.isValid()) {
         ret.setData("status", status.toInt());
     }

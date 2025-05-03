@@ -213,7 +213,9 @@ RequestHeaders AbstractCloudService::defaultHeaders() const
 
 RetVal<QUrl> AbstractCloudService::prepareUrlForRequest(QUrl apiUrl, const QVariantMap& params) const
 {
+    LOGI() << "prepareUrlForRequest:" << apiUrl.toString() << "params:" << params;
     if (m_accessToken.isEmpty()) {
+        LOGE() << "Access token is empty";
         return make_ret(cloud::Err::AccessTokenIsEmpty);
     }
 
