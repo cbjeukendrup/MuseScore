@@ -36,7 +36,10 @@
 #include "internal/mscnotationwriter.h"
 #include "internal/instrumentsrepository.h"
 #include "internal/notationcreator.h"
+
+#ifndef Q_OS_IOS
 #include "internal/engravingfontscontroller.h"
+#endif
 
 #include "view/notationpaintview.h"
 #include "view/notationswitchlistmodel.h"
@@ -125,7 +128,10 @@ void NotationModule::registerExports()
     m_notationUiActions = std::make_shared<NotationUiActions>(m_actionController);
     m_midiInputOutputController = std::make_shared<MidiInputOutputController>();
     m_instrumentsRepository = std::make_shared<InstrumentsRepository>();
+
+#ifndef Q_OS_IOS
     m_engravingFontsController = std::make_shared<EngravingFontsController>();
+#endif
 
     ioc()->registerExport<INotationConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<INotationCreator>(moduleName(), new NotationCreator());
@@ -246,7 +252,10 @@ void NotationModule::onInit(const IApplication::RunMode& mode)
     m_instrumentsRepository->init();
     m_actionController->init();
     m_notationUiActions->init();
+
+#ifndef Q_OS_IOS
     m_engravingFontsController->init();
+#endif
 
     if (mode == IApplication::RunMode::GuiApp) {
         m_midiInputOutputController->init();

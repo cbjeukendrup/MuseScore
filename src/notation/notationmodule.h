@@ -31,7 +31,11 @@ class NotationActionController;
 class NotationUiActions;
 class MidiInputOutputController;
 class InstrumentsRepository;
+
+#ifndef Q_OS_IOS
 class EngravingFontsController;
+#endif
+
 class NotationModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -49,6 +53,9 @@ private:
     std::shared_ptr<NotationUiActions> m_notationUiActions;
     std::shared_ptr<MidiInputOutputController> m_midiInputOutputController;
     std::shared_ptr<InstrumentsRepository> m_instrumentsRepository;
+
+#ifndef Q_OS_IOS
     std::shared_ptr<EngravingFontsController> m_engravingFontsController;
+#endif
 };
 }
