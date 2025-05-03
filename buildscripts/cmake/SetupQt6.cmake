@@ -93,3 +93,6 @@ find_package(Qt6 REQUIRED COMPONENTS ${qt_components})
 include(QtInstallPaths)
 
 qt_standard_project_setup(REQUIRES 6.3 SUPPORTS_UP_TO 6.9)
+
+qt_add_library(all_qml_plugins STATIC)
+qt_import_qml_plugins(all_qml_plugins)

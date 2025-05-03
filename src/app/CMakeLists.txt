@@ -401,12 +401,8 @@ if(IOS)
     
     # This might be how to get the Qt pieces into a static app.
     message(STATUS "Adding MuseScoreStudio target_link_libraries: ${QT_LIBRARIES}")
-    target_link_libraries(MuseScoreStudio PUBLIC ${QT_LIBRARIES})
+    target_link_libraries(MuseScoreStudio PUBLIC ${QT_LIBRARIES} all_qml_plugins)
     
-    # find_package(Qt6QmlImportScanner REQUIRED)
-    # qt_import_qml_plugins(MuseScoreStudio PATH_TO_SCAN ${CMAKE_SOURCE_DIR})
-    
-
 elseif (NOT CC_IS_EMSCRIPTEN)
     target_link_libraries(MuseScoreStudio PRIVATE ${LINK_LIB} ${COVERAGE_LINK_FLAGS})
 else()
