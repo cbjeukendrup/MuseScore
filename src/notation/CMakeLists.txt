@@ -115,7 +115,7 @@ else()
     )
 endif()
 
-if(NOT OS_IS_WASM)
+if(NOT OS_IS_WASM AND NOT IOS)
     target_sources(notation PRIVATE
         internal/engravingfontscontroller.cpp
         internal/engravingfontscontroller.h
