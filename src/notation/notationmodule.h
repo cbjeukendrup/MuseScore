@@ -28,7 +28,11 @@
 namespace mu::notation {
 class NotationConfiguration;
 class InstrumentsRepository;
+
+#ifndef MUE_BUILD_ENGRAVING_FONTSCONTROLLER
 class EngravingFontsController;
+#endif
+
 class NotationModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -55,6 +59,9 @@ public:
 
 private:
     std::shared_ptr<InstrumentsRepository> m_instrumentsRepository;
+
+#ifndef MUE_BUILD_ENGRAVING_FONTSCONTROLLER
     std::shared_ptr<EngravingFontsController> m_engravingFontsController;
+#endif
 };
 }
