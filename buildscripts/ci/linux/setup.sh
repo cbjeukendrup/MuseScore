@@ -46,12 +46,7 @@ rm -f $ENV_FILE
 
 echo "echo 'Setup MuseScore build environment'" >> $ENV_FILE
 
-if [[ "$PACKARCH" == "armv7l" ]]; then
-  SUDO=""
-  export DEBIAN_FRONTEND="noninteractive" TZ="Europe/London"
-else
-  SUDO="sudo"
-fi
+SUDO=""
 
 ##########################################################################
 # GET DEPENDENCIES
