@@ -43,6 +43,10 @@ on:
         type: string
         required: false
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     if: github.event_name != 'workflow_dispatch' || contains(inputs.platforms, 'linux_x64') || contains(inputs.platforms, 'linux_arm64')
@@ -74,6 +78,11 @@ jobs:
     container:
       image: debian:11
     steps:
+    - name: Setup
+      run: |
+        apt-get update
+        apt-get install -y git wget cmake build-essential ninja-build python3 python3-pip
+        pip3 install --upgrade pip
     - name: Cancel Previous Runs
       uses: styfle/cancel-workflow-action@0.12.1
       with:
