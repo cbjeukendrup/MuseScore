@@ -193,6 +193,8 @@ jobs:
         target: 'desktop'
         arch: ${{ matrix.qt-arch }}
         modules: 'qt5compat qtnetworkauth qtscxml qtshadertools qtwebsockets'
+        setup-python: false
+        install-deps: nosudo
     - name: Setup environment
       run: |
         bash ./buildscripts/ci/linux/setup.sh --arch ${{ matrix.arch }}
