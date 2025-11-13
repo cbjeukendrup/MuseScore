@@ -19,8 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ENGRAVING_ENGRAVINGCONFIGURATIONMOCK_H
-#define MU_ENGRAVING_ENGRAVINGCONFIGURATIONMOCK_H
+#pragma once
 
 #include <gmock/gmock.h>
 
@@ -99,6 +98,8 @@ public:
     MOCK_METHOD(bool, doNotSaveEIDsForBackCompat, (), (const, override));
     MOCK_METHOD(void, setDoNotSaveEIDsForBackCompat, (bool), (override));
 
+    MOCK_METHOD(bool, allowReadingImagesFromOutsideMscz, (), (const, override));
+
     MOCK_METHOD(bool, guitarProImportExperimental, (), (const, override));
     MOCK_METHOD(bool, shouldAddParenthesisOnStandardStaff, (), (const, override));
     MOCK_METHOD(bool, negativeFretsAllowed, (), (const, override));
@@ -109,5 +110,3 @@ public:
     MOCK_METHOD(bool, specificSlursLayoutWorkaround, (), (const, override));
 };
 }
-
-#endif // MU_ENGRAVING_ENGRAVINGCONFIGURATIONMOCK_H
