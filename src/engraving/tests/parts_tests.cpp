@@ -22,6 +22,8 @@
 
 #include <gtest/gtest.h>
 
+#include "io/fileinfo.h"
+
 #include "dom/breath.h"
 #include "dom/chord.h"
 #include "dom/chordline.h"
@@ -172,9 +174,21 @@ void Engraving_PartsTests::testPartCreation(const String& test)
 {
     MasterScore* score = ScoreRW::readScore(PARTS_DATA_DIR + test + u".mscx");
     ASSERT_TRUE(score);
-    EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-1.mscx", PARTS_DATA_DIR + test + u".mscx"));
+
+    if (muse::io::FileInfo(ScoreRW::rootPath() + u"/" + PARTS_DATA_DIR + test + u"-ref.mscx").exists()) {
+        EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-1.mscx", PARTS_DATA_DIR + test + u"-ref.mscx"));
+    } else {
+        EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-1.mscx", PARTS_DATA_DIR + test + u".mscx"));
+    }
+
     TestUtils::createParts(score, 2);
-    EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-parts.mscx", PARTS_DATA_DIR + test + u"-parts.mscx"));
+
+    if (muse::io::FileInfo(ScoreRW::rootPath() + u"/" + PARTS_DATA_DIR + test + u"-parts-ref.mscx").exists()) {
+        EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-parts.mscx", PARTS_DATA_DIR + test + u"-parts-ref.mscx"));
+    } else {
+        EXPECT_TRUE(ScoreComp::saveCompareScore(score, test + u"-parts.mscx", PARTS_DATA_DIR + test + u"-parts.mscx"));
+    }
+
     delete score;
 }
 
