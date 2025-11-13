@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ENGRAVING_ENGRAVINGCONFIGURATION_H
-#define MU_ENGRAVING_ENGRAVINGCONFIGURATION_H
+
+#pragma once
 
 #include "async/asyncable.h"
 
@@ -118,6 +118,8 @@ public:
     bool doNotSaveEIDsForBackCompat() const override;
     void setDoNotSaveEIDsForBackCompat(bool doNotSave) override;
 
+    bool allowReadingImagesFromOutsideMscz() const override;
+
     bool guitarProImportExperimental() const override;
     bool shouldAddParenthesisOnStandardStaff() const override;
     bool negativeFretsAllowed() const override;
@@ -146,5 +148,3 @@ private:
     bool m_multiVoice = false;
 };
 }
-
-#endif // MU_ENGRAVING_ENGRAVINGCONFIGURATION_H

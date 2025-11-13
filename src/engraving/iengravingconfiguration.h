@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ENGRAVING_IENGRAVINGCONFIGURATION_H
-#define MU_ENGRAVING_IENGRAVINGCONFIGURATION_H
+
+#pragma once
 
 #include "types/string.h"
 #include "io/path.h"
@@ -137,6 +137,8 @@ public:
     virtual bool doNotSaveEIDsForBackCompat() const = 0;
     virtual void setDoNotSaveEIDsForBackCompat(bool doNotSave) = 0;
 
+    virtual bool allowReadingImagesFromOutsideMscz() const = 0;
+
     /// these configurations will be removed after solving https://github.com/musescore/MuseScore/issues/14294
     virtual bool guitarProImportExperimental() const = 0;
     virtual bool shouldAddParenthesisOnStandardStaff() const = 0;
@@ -150,5 +152,3 @@ public:
     virtual void setPreferSameStringForTranspose(bool preferSameString) = 0;
 };
 }
-
-#endif // MU_ENGRAVING_IENGRAVINGCONFIGURATION_H
