@@ -81,10 +81,7 @@ Container {
     }
 
     function addButton(text, buttonId, buttonRole, isAccent, isLeftSide) {
-        const button = Qt.createQmlObject('
-                                    import Muse.UiComponents
-                                    FlatButton {
-                                    }', root)
+        const button = Qt.createQmlObject("import Muse.UiComponents; FlatButton {}", root)
         button.text = text
         button.accentButton = isAccent
 
