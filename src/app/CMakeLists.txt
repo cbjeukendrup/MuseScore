@@ -488,6 +488,7 @@ elseif(OS_IS_MAC)
     qt_generate_deploy_qml_app_script(
         TARGET MuseScoreStudio
         OUTPUT_SCRIPT deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
         MACOS_BUNDLE_POST_BUILD
     )
 

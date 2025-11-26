@@ -146,7 +146,7 @@ if (NOT OS_IS_MACOS) # We do want it for iOS, since iOS doesn't have a global me
     # we use QKeyMapper to fix https://github.com/musescore/MuseScore/issues/10181
     find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
     target_link_libraries(appshell_qml PRIVATE Qt6::GuiPrivate)
-endif(NOT OS_IS_MAC)
+endif()
 
 fixup_qml_module_dependencies(appshell_qml)
 
