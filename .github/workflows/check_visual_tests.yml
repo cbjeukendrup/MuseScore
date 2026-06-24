@@ -18,7 +18,7 @@ jobs:
       artifact_name: ${{ steps.output_data.outputs.artifact_name }}
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
         sparse-checkout: buildscripts/ci/tools/make_build_number.sh
@@ -66,12 +66,12 @@ jobs:
     if: needs.setup.outputs.do_run == 'true'
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
     - name: Restore ccache files
       id: restore-ccache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{runner.os}}-${{runner.arch}}-vtests-current-ccache-
@@ -117,7 +117,7 @@ jobs:
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
     - name: Save ccache files
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
@@ -130,13 +130,13 @@ jobs:
     if: needs.setup.outputs.do_run == 'true'
     steps:
     - name: Clone repository and checkout reference commit
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         ref: ${{ needs.setup.outputs.reference_ref }}
         submodules: recursive
     - name: Restore ccache files
       id: restore-ccache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{runner.os}}-${{runner.arch}}-vtests-reference-ccache-
@@ -181,7 +181,7 @@ jobs:
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
     - name: Save ccache files
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
@@ -194,7 +194,7 @@ jobs:
     if: needs.setup.outputs.do_run == 'true'
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
     - name: Download current
